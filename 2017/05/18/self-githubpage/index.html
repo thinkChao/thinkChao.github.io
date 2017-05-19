@@ -1,0 +1,910 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="本文是基于WIndows系统，前提是要有一个Github账号，并会创建仓库项目，并在PC端用过git往github上传过代码最好。  创建Github仓库直接在Github官网创建一个新的仓库即可，与创建普通仓库的操作一样，只有一点不同，就是Respository name 中一定要输入：你的用户名.github.io，其它没什么好说的。 PC端环境准备，完成博客创建安装Git去Git官网选择合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Githubpages + Hexo搭建个人博客">
+<meta property="og:url" content="http://yoursite.com/2017/05/18/self-githubpage/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="本文是基于WIndows系统，前提是要有一个Github账号，并会创建仓库项目，并在PC端用过git往github上传过代码最好。  创建Github仓库直接在Github官网创建一个新的仓库即可，与创建普通仓库的操作一样，只有一点不同，就是Respository name 中一定要输入：你的用户名.github.io，其它没什么好说的。 PC端环境准备，完成博客创建安装Git去Git官网选择合">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-3d5fb4885ccd9522.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-05-19T08:47:07.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Githubpages + Hexo搭建个人博客">
+<meta name="twitter:description" content="本文是基于WIndows系统，前提是要有一个Github账号，并会创建仓库项目，并在PC端用过git往github上传过代码最好。  创建Github仓库直接在Github官网创建一个新的仓库即可，与创建普通仓库的操作一样，只有一点不同，就是Respository name 中一定要输入：你的用户名.github.io，其它没什么好说的。 PC端环境准备，完成博客创建安装Git去Git官网选择合">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-3d5fb4885ccd9522.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/18/self-githubpage/"/>
+
+
+
+
+
+  <title>Githubpages + Hexo搭建个人博客 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/18/self-githubpage/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Githubpages + Hexo搭建个人博客</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-18T14:40:12+08:00">
+                2017-05-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/个人整理/" itemprop="url" rel="index">
+                    <span itemprop="name">个人整理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/18/self-githubpage/" class="leancloud_visitors" data-flag-title="Githubpages + Hexo搭建个人博客">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>本文是基于WIndows系统，前提是要有一个Github账号，并会创建仓库项目，并在PC端用过git往github上传过代码最好。</p>
+</blockquote>
+<h2 id="创建Github仓库"><a href="#创建Github仓库" class="headerlink" title="创建Github仓库"></a>创建Github仓库</h2><p>直接在Github官网创建一个新的仓库即可，与创建普通仓库的操作一样，只有一点不同，就是<strong>Respository name 中一定要输入：你的用户名.github.io，</strong>其它没什么好说的。</p>
+<h2 id="PC端环境准备，完成博客创建"><a href="#PC端环境准备，完成博客创建" class="headerlink" title="PC端环境准备，完成博客创建"></a>PC端环境准备，完成博客创建</h2><h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><p>去<a href="https://git-scm.com/download/" target="_blank" rel="external">Git官网</a>选择合适的版本，下载安装即可。</p>
+<h3 id="安装Nodejs"><a href="#安装Nodejs" class="headerlink" title="安装Nodejs"></a>安装Nodejs</h3><p>打开 <a href="https://nodejs.org/en/download/" target="_blank" rel="external">Nodejs官网</a> ，选择 LTS 版本的，然后选择操作系统对应的版本，下载安装。</p>
+<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>打开命令行，在任何目录下都可以，输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure></p>
+<h3 id="创建本地博客"><a href="#创建本地博客" class="headerlink" title="创建本地博客"></a>创建本地博客</h3><p>1）打开命令行，定位到你希望放置博客的位置。</p>
+<p>2）输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init 你的用户名.github.io  //和创建仓库时使用同一个</div></pre></td></tr></table></figure></p>
+<p>操作到此，博客已经搭建完成，使用的是自带的 landscape 主题，所以很丑。因为还没有安装部署发布工具，所以只能在本地打开查看效果。为了一气呵成，如何在本地查看我放在本小节最后来讲，下面安装部署发布工具，我想大家应该迫不及待的想看最终的效果：</p>
+<h3 id="安装部署发布工具"><a href="#安装部署发布工具" class="headerlink" title="安装部署发布工具"></a>安装部署发布工具</h3><p>这里用到了 hexo-deployer-git，使用如下命令安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
+<h3 id="发布博客"><a href="#发布博客" class="headerlink" title="发布博客"></a>发布博客</h3><p>执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo clean #清除缓存 网页正常情况下可以忽略此条命令</div><div class="line">hexo g #生成静态网页</div><div class="line">hexo d #开始部署</div></pre></td></tr></table></figure></p>
+<p>其中，后两条命令可以合并成一条：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo d -g</div></pre></td></tr></table></figure></p>
+<p>等命令执行完之后（需要好几秒钟），在浏览器输入： <a href="http://xxx.github.io" target="_blank" rel="external">http://xxx.github.io</a> ，即可看到你的个人博客了。</p>
+<blockquote>
+<p>注意：如果是第一次部署，终端会提示要求输入用户名和密码。</p>
+<p>以后要发布新文章，执行上述命令即可。</p>
+</blockquote>
+<h3 id="书写文章"><a href="#书写文章" class="headerlink" title="书写文章"></a>书写文章</h3><p>1）文章要使用Markdown格式，所以文件的格式应为“.md”</p>
+<p>2）文件应放在 /source/_post 目录下</p>
+<p>3）文章中除了正文内容，在开头还要指定文章的标题、分类等。例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 文章标题</div><div class="line">categories: Android</div><div class="line">---</div><div class="line"></div><div class="line">这里是正文，这篇文章分类于Android。</div></pre></td></tr></table></figure></p>
+<h3 id="如何在本地查看效果"><a href="#如何在本地查看效果" class="headerlink" title="如何在本地查看效果"></a>如何在本地查看效果</h3><p>很多时候，我们在发布文章之前，需要先看看发布效果如何，再决定是否要发布，操作步骤如下：</p>
+<p>1）打开命令行，定位到 xxx.github.io 目录</p>
+<p>2）输入命令，启动服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s</div></pre></td></tr></table></figure></p>
+<p>3）启动成功可以看到提示，按照提示用浏览器打开提示网址，即可看到你的本地博客了，里面有一篇 Hello World：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-3d5fb4885ccd9522.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<blockquote>
+<p>注意：我们看到启动成功后，提示的是打开 4000 端口，我们此时在浏览器输入该地址很有可能打不开，因为端口被占用，据说是被“福昕阅读器”给占用了，所以如果打不开就要重新开启一个新的端口，如下操作即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s -p 5000 #我们改用5000</div></pre></td></tr></table></figure></p>
+</blockquote>
+<h2 id="安装Next主题"><a href="#安装Next主题" class="headerlink" title="安装Next主题"></a>安装Next主题</h2><p>截止到上一步，我们的个人博客已经完整的搭建完成了，如果你对显示界面没有任何要求，就可以开始使用了，写博客然后发布。不过默认界面太丑了，如果想要美化一下（基本上是必须的），首先要做的就是更换一个主题，然后在这个主题下自定义你的UI。我们这里使用Next主题，因为使用者众多，界面确实也不错。</p>
+<blockquote>
+<p>前言：</p>
+<p>1、在 Hexo 中有两份主要的配置文件，其名称都是 “_config.yml”。其中，一份位于站点根目录下（即 xxx.github.io 目录下），主要包含 Hexo 本身的配置；另一份位于主题目录下（/themes/next/_config.yml），这份配置有主题作者提供，主要用于配置主题相关的选项。为了描述方便，在以下说明中，将前者称为 <strong>站点配置文件</strong>， 后者称为 <strong>主题配置文件</strong>。</p>
+<p>2、在修改配置文件时，配置文件中的键值之间<strong>一定要有空格</strong>，否则会出错。</p>
+</blockquote>
+<h3 id="安装Next"><a href="#安装Next" class="headerlink" title="安装Next"></a>安装Next</h3><p>将命令行切换到上面生成的本地博客目录（xxx.github.io），输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</div></pre></td></tr></table></figure></p>
+<h3 id="配置“站点配置文件（-config-yml）”"><a href="#配置“站点配置文件（-config-yml）”" class="headerlink" title="配置“站点配置文件（ _config.yml）”"></a>配置<strong>“站点配置文件（ _config.yml）”</strong></h3><p>主要有如下需要配置的几个键值，是必须要配置的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">theme: next        #设置主题为 Next</div><div class="line"></div><div class="line">title: xxx         # 博客的名称，会显示在博客主页中</div><div class="line"></div><div class="line">author: xxx        # 作者名字，会显示在博客主页中</div><div class="line"></div><div class="line">description: xxx      # 对站点的描述，相当与“简书”中的自我介绍，会显示在博客主页中</div><div class="line"></div><div class="line">language: zh-Hans      # 语言设置，简体中文</div><div class="line"></div><div class="line">deploy:              # 部署相关配置</div><div class="line">    type: git        # 使用 Git 提交</div><div class="line">    repo: https://github.com/xxx/xxx.github.io.git      # 就是存放博客的仓库地址</div></pre></td></tr></table></figure></p>
+<blockquote>
+<p>再次强调，键值之间<strong>一定要 ”加空格“</strong>，请在文本编辑器中搜索定位后再修改。</p>
+</blockquote>
+<p>主题安装完成后，界面焕然一新，但是还存在一些问题，比如你点击某些菜单会显示“404 not found”，这是因为这些菜单你还没有进行配置，所以对Next主题的自定义设置也是必须的。而且日后对网站所做的界面更改，基本上都是在对Next主题进行自定义了。</p>
+<h2 id="自定义Next主题-——-基本设置"><a href="#自定义Next主题-——-基本设置" class="headerlink" title="自定义Next主题 —— 基本设置"></a>自定义Next主题 —— 基本设置</h2><p>Next主题已经安装完成，下面要做的就是自定义自己的主题了，不同的设置，可以实现不同的效果。这一小节讲解基础的配置，所有操作都在<strong>主题配置文件 （_config.yml）</strong>中，注意是next主题里的 _config.yml 文件，不是根目录下的。主要基础配置如下：</p>
+<h3 id="主题风格-scheme"><a href="#主题风格-scheme" class="headerlink" title="主题风格(scheme)"></a>主题风格(scheme)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#scheme: Muse</div><div class="line">#scheme: Mist</div><div class="line">scheme: Pisces</div></pre></td></tr></table></figure>
+<p>Next主题提供了三种风格，默认的是第一个，我使用的是第三个。大家可以都尝试看看，喜欢哪个就用哪个，只需要取消注释（去掉前面的 # 号）即可。</p>
+<h3 id="设置侧栏菜单-menu"><a href="#设置侧栏菜单-menu" class="headerlink" title="设置侧栏菜单(menu)"></a>设置侧栏菜单(menu)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: / # 在菜单上显示首页</div><div class="line">  #archives: /archives # 在菜单删显示全部</div><div class="line">  categories: /categories # 在菜单上显示 分类</div><div class="line">  #tags: /tags # 在菜单上显示 标签</div><div class="line">  about: /about # 在菜单上显示 关于</div><div class="line">  #commonweal: /404.html</div></pre></td></tr></table></figure>
+<p>这个主要是设置显示哪些菜单，不需要的注释掉即可。在我们刚刚搭建完成时，只有“主页”菜单是可以点击的，其它的“categories”、“about”等由于还没有设置，没有建立相应的页面，所以点击后会显示“404 not found”。如何建立相应的页面，这个会在后面讲解。</p>
+<h3 id="友情链接"><a href="#友情链接" class="headerlink" title="友情链接"></a>友情链接</h3><p>基本上所有的博客都会有这么一个友情链接，来链接到其它网站，这个是如何设置的呢？肯定也是修改相应的键值了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># Blog rolls</div><div class="line">links_title:                       #链接的title，会显示在界面上</div><div class="line">links_layout: block                #它的作用我还没尝试，很明显是设置布局的，和下面的二选一</div><div class="line">#links_layout: inline</div><div class="line">links:                             #添加链接，前面是显示的链接文字，后面是网址，添加新的链接就在下面增加即可</div><div class="line">  简书: http://www.jianshu.com/u/0bb409c7df28</div><div class="line">  Github: https://github.com/thinkChao</div></pre></td></tr></table></figure></p>
+<h2 id="自定义Next主题-——-添加分类-关于"><a href="#自定义Next主题-——-添加分类-关于" class="headerlink" title="自定义Next主题 —— 添加分类/关于"></a>自定义Next主题 —— 添加分类/关于</h2><p>我想实现的分类效果是在菜单栏的分类菜单下，直接显示各种分类，不过默认实现的并不是那种效果，需要其它的一些设置，这个目前我还不知道怎么弄，所以现实现默认的分类效果吧。</p>
+<p>默认实现的分类是：点击分类菜单，会进入一个分类页面，在这个页面下会显示所有的分类条目，点击某个条目，就会显示该分类下的所有文章。具体怎么实现呢？</p>
+<h3 id="新建分类页面"><a href="#新建分类页面" class="headerlink" title="新建分类页面"></a>新建分类页面</h3><p>1）打开命令行，定位到 xxx.github.io 目录</p>
+<p>2）新建一个页面，命名为 categories：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page categories</div></pre></td></tr></table></figure></p>
+<p>3）打开新建的页面：/souce/categories/index.md，配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 分类                  #设置title</div><div class="line">date: 2017-05-17 16:13:17    #创建时间</div><div class="line">type: &quot;categories&quot;           #将页面的类型设置为 categories</div><div class="line">---</div></pre></td></tr></table></figure></p>
+<h3 id="在创作文章时，添加分类"><a href="#在创作文章时，添加分类" class="headerlink" title="在创作文章时，添加分类"></a>在创作文章时，添加分类</h3><p>上一步，我们已经把分类页面创建好了，但是打开一个分类也没有。所以接下来你是不是认为应该开始增加分类了，然而并不是。</p>
+<p>分类条目并不是提前创建好的，像我们在其它的博客中那样可以随意创建一个分类。而是在发布文章的时候，在文章中指定分类。举例如下，我们新建文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 文章标题</div><div class="line">categories: Android</div><div class="line">---</div><div class="line"></div><div class="line">这里是正文，这篇文章分类于Android。</div></pre></td></tr></table></figure></p>
+<p>看到没有，我们在文章开头有一个“categories”标签，然后我们将这篇文章分类与Android下。如果这个分类已经存在，那么直接将这篇文章添加到这个分类；如果是第一次指定这个分类，则会新建这个类别，然后将这篇文章添加到这个分类。当然，你也可以添加二级分类。</p>
+<p>分类功能是主题自动维护的，只要我们的文章按照规范来写就行了。</p>
+<h3 id="添加“关于”页面"><a href="#添加“关于”页面" class="headerlink" title="添加“关于”页面"></a>添加“关于”页面</h3><p>创建“关于”页面和添加分类一样，要现创建出这个页面。</p>
+<p>然后我们只需在 /souce/about/index.md 中书写我们想显示的内容就ok了，没有其它额外的操作。</p>
+<h2 id="六、自定义Next主题-——-添加网站的访客数量、文章的访问数量"><a href="#六、自定义Next主题-——-添加网站的访客数量、文章的访问数量" class="headerlink" title="六、自定义Next主题 —— 添加网站的访客数量、文章的访问数量"></a>六、自定义Next主题 —— 添加网站的访客数量、文章的访问数量</h2><p>添加访问量的统计也是常用功能，虽不必要，但有这个功能也是极好的，可以查看有多少个IP访问过你的网站，哪个文章的点击量最多。</p>
+<p>访问统计这里分为两类：</p>
+<p>1）对网站访问量的统计：包括网站的浏览次数，即pv；以及网站的访客数，即uv。网站每刷新一次，pv就会加1，包括你点击一篇文章，pv也会增加。所以个人感觉这个统计功能很鸡肋。而uv是每当一个新的IP主机访问这个网站，uv加一，以后无论这个主机访问多少次，uv等不会增加。</p>
+<p>2）对文章阅读量的访问统计：每打开一次这篇文章，访问量就加1，这里也包括作者本人的访问。</p>
+<p>下面对这两个访问统计的设置进行讲解：</p>
+<h3 id="对网站访问量的统计"><a href="#对网站访问量的统计" class="headerlink" title="对网站访问量的统计"></a>对网站访问量的统计</h3><p>对网站访问量的统计我们使用Next主题自带的<strong>不蒜子统计</strong>。</p>
+<p>1）安装 busuanzi.js 脚本<br>打开 /theme/next/layout/_partial/footer.swig 文件，拷贝下面的代码至文件的开头：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;script async src=&quot;https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>2）显示统计标签<br>仍是在 /theme/next/layout/_partial/footer.swig 文件中，将想要显示的统计量pv或者uv的显示代码放在合适的位置，我是放在了代码的最后，也就是最后一行代码的上面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#这行代码的目的是显示短竖直的分割线，应该有比这更优雅的设置方式，无奈我不会前端技术</div><div class="line">&lt;div class=&quot;powered-by&quot;&gt;  </div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">#显示 UV 的代码</div><div class="line">&lt;span id=&quot;busuanzi_container_site_uv&quot;&gt;</div><div class="line">   访客数：&lt;span id=&quot;busuanzi_value_site_uv&quot;&gt;&lt;/span&gt;</div><div class="line">&lt;/span&gt;</div><div class="line"></div><div class="line">#显示短竖直的分割线</div><div class="line">&lt;div class=&quot;powered-by&quot;&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">#显示 pv 的代码</div><div class="line">&lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;</div><div class="line">    访问量：&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;/span&gt;</div><div class="line">&lt;/span&gt;</div></pre></td></tr></table></figure></p>
+<h3 id="对文章阅读量的访问统计"><a href="#对文章阅读量的访问统计" class="headerlink" title="对文章阅读量的访问统计"></a>对文章阅读量的访问统计</h3><p>对文章阅读量的访问统计我们使用<strong>leanCloud</strong>，Next主题也对其提供了支持。</p>
+<p>具体步骤参考<a href="http://www.joryhe.com/2016-05-29-how_to_create_leancloud_read_Counter.html" target="_blank" rel="external">leanCloud实现文章阅读量统计</a>，写的很详细，很有条理，我就不再赘述了。</p>
+<h2 id="自定义Next主题-——-添加留言功能"><a href="#自定义Next主题-——-添加留言功能" class="headerlink" title="自定义Next主题 —— 添加留言功能"></a>自定义Next主题 —— 添加留言功能</h2><p>这个目前我还没有实现，因为还不知道该用哪家的服务，比较知名的有两家：</p>
+<p>1）国内的多说：关于它就不多说了，因为马上就停止服务了。</p>
+<p>2）国外的Disqus：这个我试过，需要翻墙才能访问，所以果断放弃。</p>
+<p>其它的就不了解了，以后有好用的会再考虑添加这个模块。</p>
+<h2 id="自定义Next主题-——-其它"><a href="#自定义Next主题-——-其它" class="headerlink" title="自定义Next主题 —— 其它"></a>自定义Next主题 —— 其它</h2><p>1、如果打开我的博客中的一篇文章，会发现每一篇文章的标题下面会显示三个内容：时间、分类、阅读量，并且每个项目前面都会有一个小icon（图标），这个是主题自带的，默认就有，而且默认的是在图标后面还有显示的说明文字，例如在那个眼睛的图标后面，默认带有“阅读量”之类的文字。我为了简洁，就把文字去掉了，是怎么去掉的呢？</p>
+<p>打开 /themes/next/layout/_macro/post.swig 文件，把相应的显示文字的那行代码注释或删除就可以了。我也不懂前端技术，代码我也看不懂，我也是通过搜索相应的关键字，然后查找“可能的代码”，然后尝试着去删除。</p>
+<p>例如你想删除分类icon后面的文字，你就可以在这个文件中关键字搜索“category”，然后查找相应的显示文字的代码，删除就可以了。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Github仓库"><span class="nav-number">1.</span> <span class="nav-text">创建Github仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PC端环境准备，完成博客创建"><span class="nav-number">2.</span> <span class="nav-text">PC端环境准备，完成博客创建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Git"><span class="nav-number">2.1.</span> <span class="nav-text">安装Git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Nodejs"><span class="nav-number">2.2.</span> <span class="nav-text">安装Nodejs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Hexo"><span class="nav-number">2.3.</span> <span class="nav-text">安装Hexo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建本地博客"><span class="nav-number">2.4.</span> <span class="nav-text">创建本地博客</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装部署发布工具"><span class="nav-number">2.5.</span> <span class="nav-text">安装部署发布工具</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发布博客"><span class="nav-number">2.6.</span> <span class="nav-text">发布博客</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#书写文章"><span class="nav-number">2.7.</span> <span class="nav-text">书写文章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何在本地查看效果"><span class="nav-number">2.8.</span> <span class="nav-text">如何在本地查看效果</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装Next主题"><span class="nav-number">3.</span> <span class="nav-text">安装Next主题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装Next"><span class="nav-number">3.1.</span> <span class="nav-text">安装Next</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置“站点配置文件（-config-yml）”"><span class="nav-number">3.2.</span> <span class="nav-text">配置“站点配置文件（ _config.yml）”</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Next主题-——-基本设置"><span class="nav-number">4.</span> <span class="nav-text">自定义Next主题 —— 基本设置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主题风格-scheme"><span class="nav-number">4.1.</span> <span class="nav-text">主题风格(scheme)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置侧栏菜单-menu"><span class="nav-number">4.2.</span> <span class="nav-text">设置侧栏菜单(menu)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#友情链接"><span class="nav-number">4.3.</span> <span class="nav-text">友情链接</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Next主题-——-添加分类-关于"><span class="nav-number">5.</span> <span class="nav-text">自定义Next主题 —— 添加分类/关于</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#新建分类页面"><span class="nav-number">5.1.</span> <span class="nav-text">新建分类页面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在创作文章时，添加分类"><span class="nav-number">5.2.</span> <span class="nav-text">在创作文章时，添加分类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加“关于”页面"><span class="nav-number">5.3.</span> <span class="nav-text">添加“关于”页面</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#六、自定义Next主题-——-添加网站的访客数量、文章的访问数量"><span class="nav-number">6.</span> <span class="nav-text">六、自定义Next主题 —— 添加网站的访客数量、文章的访问数量</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#对网站访问量的统计"><span class="nav-number">6.1.</span> <span class="nav-text">对网站访问量的统计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对文章阅读量的访问统计"><span class="nav-number">6.2.</span> <span class="nav-text">对文章阅读量的访问统计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Next主题-——-添加留言功能"><span class="nav-number">7.</span> <span class="nav-text">自定义Next主题 —— 添加留言功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义Next主题-——-其它"><span class="nav-number">8.</span> <span class="nav-text">自定义Next主题 —— 其它</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
