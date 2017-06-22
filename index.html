@@ -264,6 +264,191 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/22/self-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/22/self-2/" itemprop="url">Git操作整理</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-22T16:43:37+08:00">
+                2017-06-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/个人整理/" itemprop="url" rel="index">
+                    <span itemprop="name">个人整理</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/22/self-2/" class="leancloud_visitors" data-flag-title="Git操作整理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。<br><strong>以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。</strong></p>
+</blockquote>
+<h1 id="如何新建项目，并向github提交代码"><a href="#如何新建项目，并向github提交代码" class="headerlink" title="如何新建项目，并向github提交代码"></a>如何新建项目，并向github提交代码</h1><p>1、在github网站建立一个新的repository，过程很简单就不说了。当然也可以使用命令行先在本地进行创建，然后在上传到远程服务器并进行关联，不过这种方式更简单。</p>
+<p>2、 <code>git clone &lt;git-url&gt;    //将项目下载到本地，自动就进行关联了</code></p>
+<p>3、<code>git add .</code></p>
+<p>4、<code>git commit -m &#39;info&#39;  //提交，并可以添加提交说明</code></p>
+<p>5、<code>git push origin  &lt;分支名&gt;  //push到服务器，刷新项目主页就可以看到了</code></p>
+<h1 id="关于分支"><a href="#关于分支" class="headerlink" title="关于分支"></a>关于分支</h1><h2 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h2><p>1、<code>git branch &lt;分支名&gt;  //在本地新建分支</code></p>
+<p>2、<code>git push origin &lt;分支名&gt;   //将分支提交到远程服务器</code></p>
+<p>新建分之后，新的分支里的初始内容就是当前master中的内容。</p>
+<h2 id="进入分支-获取分支代码"><a href="#进入分支-获取分支代码" class="headerlink" title="进入分支/获取分支代码"></a>进入分支/获取分支代码</h2><p><code>git checkout &lt;分支名&gt;</code></p>
+<p>当进入某一分支后，也就是执行上述操作，本地代码就会切换成相应的分支的代码，如果你开着Studio或者其它IDE，你会发现IDE中的代码也改变了，第一次操作的时候感觉好神奇、好强大。</p>
+<p>也可以打开github网页，打开该分支下的网页，选择“Download ZIp”就会下载相应的代码，而使用git clone下载的是master中的代码。</p>
+<h2 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h2><p>1、<code>git branch -d &lt;分支名&gt;  //删除本地分支</code></p>
+<p>2、<code>git push origin --delete &lt;分支名&gt;  //删除远程分支</code></p>
+<h1 id="关于标签"><a href="#关于标签" class="headerlink" title="关于标签"></a>关于标签</h1><p>标签可以用来作版本控制。</p>
+<p>一开始我以为标签有点像分支的下级目录，先建立一个标签，然后将相应的代码push到这个标签下，后来发现理解错了。标签其实是后来打上去的，就是先commit代码，然后新建一个标签，该标签下的内容就是最新commit中的内容。</p>
+<h2 id="新建标签"><a href="#新建标签" class="headerlink" title="新建标签"></a>新建标签</h2><p>1、先切换到相应分支下</p>
+<p>2、<code>git tag &lt;标签名&gt;  //在本地新建标签</code></p>
+<p>3、<code>git push origin &lt;标签名&gt;   //将新建的标签提交到远程服务器</code></p>
+<p>新建标签后，新的标签里的初始内容就是最新一次commit中的内容。</p>
+<h2 id="进入标签-获取某标签代码"><a href="#进入标签-获取某标签代码" class="headerlink" title="进入标签/获取某标签代码"></a>进入标签/获取某标签代码</h2><p>1、先切换到相应分支下</p>
+<p>2、<code>git checkout &lt;标签名&gt;</code></p>
+<p>同分支一样，当进入某一标签后，也就是执行上述操作，本地代码就会切换成相应的标签下的代码。</p>
+<p>同样，也可以打开github网页，打开该标签下的网页，选择“Download ZIp”就会下载相应的代码。</p>
+<h2 id="删除标签"><a href="#删除标签" class="headerlink" title="删除标签"></a>删除标签</h2><p>1、先切换到相应分支下</p>
+<p>2、<code>git tag-d &lt;标签名&gt;  //删除本地标签</code></p>
+<p>3、<code>git push origin --delete &lt;标签名&gt;  //删除远程标签</code></p>
+<h1 id="如何撤销commit"><a href="#如何撤销commit" class="headerlink" title="如何撤销commit"></a>如何撤销commit</h1><p>1、切换到相应分支下</p>
+<p>2、<code>git log  //查找相应的commit的ID</code></p>
+<p>3、<code>git reset --hard &lt;commit_id&gt;  //彻底回退到某个版本</code></p>
+<p>注意，这里的commit_id是你要回退到那个版本，而不是想删除的版本，这里一定要注意。</p>
+<p>4、<code>git push origin HEAD --force  //提交到远程服务器</code></p>
+<h1 id="错误的删除了commit，如何补救"><a href="#错误的删除了commit，如何补救" class="headerlink" title="错误的删除了commit，如何补救"></a>错误的删除了commit，如何补救</h1><p>1、<code>git reflog  //查看之前的操作,查找想恢复的commit的id</code></p>
+<p>2、<code>git reset --hard &lt;commit_id&gt;  //恢复</code></p>
+<p>3、<code>git push -f origin &lt;分支名&gt;  //提交到远程</code></p>
+<h1 id="如何将分支合并到master"><a href="#如何将分支合并到master" class="headerlink" title="如何将分支合并到master"></a>如何将分支合并到master</h1><p>1、切换到master分支</p>
+<p>2、<code>git merge &lt;要合并的分支名&gt;</code></p>
+<h1 id="其它git命令"><a href="#其它git命令" class="headerlink" title="其它git命令"></a>其它git命令</h1>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/22/suibi/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -847,7 +1032,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
