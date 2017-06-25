@@ -1,0 +1,891 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="在刚开始使用ListView或者RecyclerView的时候，就一直懵懵懂懂的，感觉它的使用与其它控件相比，稍显复杂。尤其在使用Adapter的时候，就一直困惑Adapter是干嘛的？为什么叫Adapter呢？虽然会使用了，但困惑仍然在，心里很不爽。直到随着使用次数的增加，再加上多次的思考，以及后来开始结合设计模式（真的是相见恨晚），才慢慢有了点感觉。这篇文章，就结合设计模式、源码、我的思考以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android源码中的设计模式 —— RecyclerView">
+<meta property="og:url" content="http://yoursite.com/2017/06/25/android-5/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="在刚开始使用ListView或者RecyclerView的时候，就一直懵懵懂懂的，感觉它的使用与其它控件相比，稍显复杂。尤其在使用Adapter的时候，就一直困惑Adapter是干嘛的？为什么叫Adapter呢？虽然会使用了，但困惑仍然在，心里很不爽。直到随着使用次数的增加，再加上多次的思考，以及后来开始结合设计模式（真的是相见恨晚），才慢慢有了点感觉。这篇文章，就结合设计模式、源码、我的思考以">
+<meta property="og:updated_time" content="2017-06-25T09:12:02.700Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android源码中的设计模式 —— RecyclerView">
+<meta name="twitter:description" content="在刚开始使用ListView或者RecyclerView的时候，就一直懵懵懂懂的，感觉它的使用与其它控件相比，稍显复杂。尤其在使用Adapter的时候，就一直困惑Adapter是干嘛的？为什么叫Adapter呢？虽然会使用了，但困惑仍然在，心里很不爽。直到随着使用次数的增加，再加上多次的思考，以及后来开始结合设计模式（真的是相见恨晚），才慢慢有了点感觉。这篇文章，就结合设计模式、源码、我的思考以">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/25/android-5/"/>
+
+
+
+
+
+  <title>Android源码中的设计模式 —— RecyclerView | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/25/android-5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android源码中的设计模式 —— RecyclerView</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-25T17:12:11+08:00">
+                2017-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/25/android-5/" class="leancloud_visitors" data-flag-title="Android源码中的设计模式 —— RecyclerView">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>在刚开始使用ListView或者RecyclerView的时候，就一直懵懵懂懂的，感觉它的使用与其它控件相比，稍显复杂。尤其在使用Adapter的时候，就一直困惑Adapter是干嘛的？为什么叫Adapter呢？虽然会使用了，但困惑仍然在，心里很不爽。直到随着使用次数的增加，再加上多次的思考，以及后来开始结合设计模式（真的是<a href="http://www.jianshu.com/p/0e04da8107d5" target="_blank" rel="external">相见恨晚</a>），才慢慢有了点感觉。这篇文章，就结合设计模式、源码、我的思考以及其它参考，来一解心中的疑惑。</p>
+<p>因为RecyclerView是ListView的继承和发展，有了RecyclerView，ListView已经可以弃之不用了，所以本文讲的是RecyclerView，但为了更好的理解，也会通过讲解ListView来进行一个过渡。文中若有讲解的有误和理解不到位的地方，还望批评指正，希望这篇文章也对您也有所帮助。</p>
+</blockquote>
+<p>要想更好的理解RecyclerView的设计，结合它所使用的设计模式是非常有必要的，之前之所以感到RecyclerView很不好理解，就是因为不懂设计模式，开发者使用了一些很经典，但我却从来不知道的“套路”。在RecyclerView中，使用了两个很明显的设计模式：适配器模式和观察者模式。下面，我就透过这两个模式在RecyclerView中的运用，来揭开一小部分RecyclerView的神秘面纱。如果对这两个设计模式还不太了解的同学，可以浏览我之前的一篇文章，或者参阅相关书籍。</p>
+<h2 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h2><h3 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h3><p>使用过RecyclerView的同学都知道，虽然我们使用的是它，但更多的代码却写给了Adapter，可见Adapter很重要，但也不太好懂。Adapter翻译过来就是“适配器”，很明显它是想实现一个适配的目的，但问题是谁和谁进行适配呢？之前也看了不少文章，绝大多数都说是“data和view进行适配”，听起来是挺有道理的。而且适配器模式本身就是起一个粘合剂的作用，这里说将data和view进行数据的绑定，这样解释也没有什么问题。但如果细想，还是会心生疑问：</p>
+<p><em>适配器模式有三个角色：Target（目标角色）、Adaptee（需要适配的接口）、Adapter（适配器）。在RecyclerView中，Adapter就是适配器本身，这个没什么可说的。那data和view谁是Target，谁是Adaptee呢？如果按照那套解释，data是Adaptee，也就是被适配者，view是Target，也就是我们的目标。</em></p>
+<p><em>但是data和view是两个不同的层次，而这里却说是把data通过适配器转化成view，总感觉这么说很牵强。而且我们都知道MVP模式，M是数据层，V是视图层，在这里，我们也没说它们之间有“适配”的关系啊，并没有说通过适配器把M适配成V。</em></p>
+<p>所以，这套解释说不通，那RecyclerView中的适配器模式一定是用到了其它的地方，所以还是追溯源码，得到的答案更靠谱一些。</p>
+<h3 id="分析源码"><a href="#分析源码" class="headerlink" title="分析源码"></a>分析源码</h3><p>我们这里分析ListView的源码，之所以要从ListView看起，是因为RecyclerView是对ListView的进一步封装和优化，但实现逻辑和思想基本没变化，所以看ListView的源码更原始，更容易寻找答案。</p>
+<p>ListView所要解决的一个最重要的问题就是：将每一项Item的视图输出。ListView允许我们自定义ItemView，所以ItemView的样式千变万化，而不管我们如何定义我们的ItemView，ListView都可以很好的自动的将其显示，那它是如何做到的呢？</p>
+<p>先进入ListView的<code>layoutChildren()</code>方法，这个方法负责对所有的子元素进行布局：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    protected void layoutChildren() &#123;</div><div class="line"></div><div class="line">	…………</div><div class="line"></div><div class="line"> 	try &#123;</div><div class="line">            super.layoutChildren();</div><div class="line"></div><div class="line">            invalidate();</div><div class="line">            switch (mLayoutMode) &#123;</div><div class="line"></div><div class="line">            …………</div><div class="line"></div><div class="line">            case LAYOUT_FORCE_BOTTOM:</div><div class="line">                sel = fillUp(mItemCount - 1, childrenBottom);</div><div class="line">                adjustViewsUpOrDown();</div><div class="line">                break;</div><div class="line">            case LAYOUT_FORCE_TOP:</div><div class="line">                mFirstPosition = 0;</div><div class="line">                sel = fillFromTop(childrenTop);</div><div class="line">                adjustViewsUpOrDown();</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line">	    default:</div><div class="line">		……</div><div class="line">	…………</div><div class="line">        </div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>在该方法中，根据设定的布局模式来布局ItemView，然后我们进入其中一个查看即可，我们进入<code>fillUp()</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">private View fillUp(int pos, int nextBottom) &#123;</div><div class="line">        View selectedView = null;</div><div class="line"></div><div class="line">        int end = 0;</div><div class="line">        if ((mGroupFlags &amp; CLIP_TO_PADDING_MASK) == CLIP_TO_PADDING_MASK) &#123;</div><div class="line">            end = mListPadding.top;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        while (nextBottom &gt; end &amp;&amp; pos &gt;= 0) &#123;</div><div class="line">            boolean selected = pos == mSelectedPosition;</div><div class="line">            //通过下面的方法获得ItemView</div><div class="line">            View child = makeAndAddView(pos, nextBottom, false, mListPadding.left, selected);</div><div class="line">            nextBottom = child.getTop() - mDividerHeight;</div><div class="line">            if (selected) &#123;</div><div class="line">                selectedView = child;</div><div class="line">            &#125;</div><div class="line">            pos--;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        mFirstPosition = pos + 1;</div><div class="line">        setVisibleRangeHint(mFirstPosition, mFirstPosition + getChildCount() - 1);</div><div class="line">        return selectedView;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>从代码可以看出，该布局方式（其它也是如此）会调用<code>makeAndAddView()</code>方法获取一个View，这个View就是ListView中的每一个Item，我们继续跟进：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">private View makeAndAddView(int position, int y, boolean flow, int childrenLeft,</div><div class="line">           boolean selected) &#123;</div><div class="line">       if (!mDataChanged) &#123;</div><div class="line">           final View activeView = mRecycler.getActiveView(position);</div><div class="line">           if (activeView != null) &#123;</div><div class="line">               setupChild(activeView, position, y, flow, childrenLeft, selected, true);</div><div class="line">               return activeView;</div><div class="line">           &#125;</div><div class="line">       &#125;</div><div class="line"></div><div class="line">       final View child = obtainView(position, mIsScrap);  //获取一个ItemView</div><div class="line">       setupChild(child, position, y, flow, childrenLeft, selected, mIsScrap[0]);  //将ItemView设置到对应的地方</div><div class="line"></div><div class="line">       return child;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>该方法主要有两步：首先调用<code>obtainView()</code>获取一个ItemView；然后调用<code>setupChild()</code>将这个View布局到特定位置。下面我们进入获取一个View的方法，也就是<code>obtainView()</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">View obtainView(int position, boolean[] outMetadata) &#123;</div><div class="line">	…………</div><div class="line"></div><div class="line">        final View scrapView = mRecycler.getScrapView(position);//从缓存的ItemView中获取，ListView的复用机制</div><div class="line"></div><div class="line">        final View child = mAdapter.getView(position, scrapView, this);//调用getView()方法获得ItemView</div><div class="line">        if (scrapView != null) &#123;</div><div class="line">            if (child != scrapView) &#123;</div><div class="line">                mRecycler.addScrapView(scrapView, position);</div><div class="line">            &#125; else if (child.isTemporarilyDetached()) &#123;</div><div class="line">                outMetadata[0] = true;</div><div class="line">                child.dispatchFinishTemporaryDetach();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        …………</div><div class="line"></div><div class="line">        return child;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>从代码可以看出：该方法首先调用<code>getScrapView</code>获取缓存的View，如果存在，则传入<code>getView()</code>的第二个参数，<code>getView()</code>方法是由我们用户自己来实现的，我们一般会判断convertView是否为空，如果为空则从xml中创建一个新的视图，否则使用缓存的View。所以，<code>getView()</code>方法获取的是一个View。</p>
+<h3 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h3><p>我们总结一下上述的过程：ListView通过调用Adapter的<code>getView()</code>方法来获取一个ItemView，这个方法返回的是一个View类型的对象。所以，不管我们如何定义自己的ItemView，尽管它千变万化，它都是View的子类，通过依赖抽象的原则和Adapter模式就将ItemView的变化隔离了，保证了ListView的高度可定制化。在获取了View之后，再将这些View放到对应的位置上，再加上其复用机制，整个ListView就运转起来了。所以，Adapter的适配作用是将ItemView统一适配成了View，角色对应如下：</p>
+<ul>
+<li>Adaptee（被适配者）：自定义的ItemView</li>
+<li>Target（目标）：View</li>
+<li>Adapter：就是我们定义的Adapter</li>
+</ul>
+<h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><h3 id="疑问-1"><a href="#疑问-1" class="headerlink" title="疑问"></a>疑问</h3><p>观察者模式在RecyclerView中表现的没有像适配器模式那么明显，但只要稍加思考，就会发现：在我们平时使用RecyclerView的时候，当往里面添加数据后，都会调用Adapter的<code>notifyDataSetChanged()</code>方法来更新界面显示。那你有没有想过，这个方法是如何工作的，为什么一个方法就全都搞定了。如果想要探寻它的工作原理，就必须要了解观察者模式，而当你学会了观察者模式，你就会特别想知道RecyclerView在这里是如何运用的，到底谁是观察者？谁是被观察者？</p>
+<p>使用过RecyclerView的同学可能会对这个问题有自己的判断，就像我们上面提到的适配器模式一样有自己想法，虽然分析看起来很合理，但源码告诉我们事实并非如此。RecyclerView在这个模式的运用上，我一开始认为：data是被观察者，ItemView是观察者，当data发生变化时，就会通知ItemView进行相应的操作。是不是听起来也挺合理的，但这只是我一厢情愿的猜测，事实并非如此，到底谁是观察者？谁是被观察者？我们下面就来跟踪源码。</p>
+<h3 id="分析源码-1"><a href="#分析源码-1" class="headerlink" title="分析源码"></a>分析源码</h3><p>我们首先就进入<code>notifyDataSetChanged()</code>方法，它定义在Adapter中：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public final void notifyDataSetChanged() &#123;</div><div class="line">            mObservable.notifyChanged();</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>代码我没有做任何删除，的确就只有这一行。从这一行代码的变量名称上我们就可以看出，它确实是使用了观察者模式，因为出现了<code>mObservable</code>，很明显这个变量是被观察者，那么我们只要找到它是在哪里创建的实例，我们就可以确定谁是观察者，那我们接下来就开始追溯它是在哪被创建的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public static abstract class Adapter&lt;VH extends ViewHolder&gt; &#123;</div><div class="line">        private final AdapterDataObservable mObservable = new AdapterDataObservable();</div><div class="line">        ……</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>找到了，<code>mObservable</code>是在Adapter中被实例化的，它的类是<code>AdapterDataObservable</code>，所以它就是被观察者。而Adapter保有一个AdapterDataObservable 的引用，所以我们是不是可以说：Adapter就是被观察者？</p>
+<p>如果Adapter是通过继承的方式来成为被观察者的，那毫无疑问它就是被观察者，不过这里是使用的组合的方式，组合可以实现与继承同样的效果，但组合在概念上是“has-a”的关系，而继承是“is-a”的关系，这样一来，我们只能说Adapter包含被观察者，但不能说它就是被观察者。</p>
+<p>不过我觉得，在理解上，我们可以把Adapter当成被观察者。</p>
+<p>找到了被观察者，我们继续跟踪，去寻找观察者，我们接着进入<code>notifyChanged()</code>方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void notifyChanged() &#123;</div><div class="line">            for (int i = mObservers.size() - 1; i &gt;= 0; i--) &#123;</div><div class="line">                mObservers.get(i).onChanged();</div><div class="line">            &#125;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>这个代码很简单，就是遍历所有观察者，然后调用它们的<code>onChanged()</code>方法，从而告知观察者发生了变化。mObservers是一个ArrayList，里面保存了已经注册过的所有的观察者，那它是在哪里被注册的呢？其实这些观察者就是RecyclerView通过<code>setAdapter</code>方法注册的，我们进入这个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void setAdapter(Adapter adapter) &#123;</div><div class="line">        setLayoutFrozen(false);</div><div class="line">        setAdapterInternal(adapter, false, true);</div><div class="line">        requestLayout();</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>发现代码很简单，主要逻辑在<code>setAdapterInternal()</code>方法中，我们进入该方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">private void setAdapterInternal(Adapter adapter, boolean compatibleWithPrevious,</div><div class="line">           boolean removeAndRecycleViews) &#123;</div><div class="line">       if (mAdapter != null) &#123;</div><div class="line">           mAdapter.unregisterAdapterDataObserver(mObserver);</div><div class="line">           mAdapter.onDetachedFromRecyclerView(this);</div><div class="line">       &#125;</div><div class="line">       if (!compatibleWithPrevious || removeAndRecycleViews) &#123;</div><div class="line">           removeAndRecycleViews();</div><div class="line">       &#125;</div><div class="line">       mAdapterHelper.reset();</div><div class="line">       final Adapter oldAdapter = mAdapter;</div><div class="line">       mAdapter = adapter;</div><div class="line">       if (adapter != null) &#123;</div><div class="line">           adapter.registerAdapterDataObserver(mObserver);  //在这里注册</div><div class="line">           adapter.onAttachedToRecyclerView(this);</div><div class="line">       &#125;</div><div class="line">       if (mLayout != null) &#123;</div><div class="line">           mLayout.onAdapterChanged(oldAdapter, mAdapter);</div><div class="line">       &#125;</div><div class="line">       mRecycler.onAdapterChanged(oldAdapter, mAdapter, compatibleWithPrevious);</div><div class="line">       mState.mStructureChanged = true;</div><div class="line">       markKnownViewsInvalid();</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>注册的逻辑代码找到了，而且我们还找到了<code>mObserver</code>变量，这个就是观察者的实例，我们追溯去看看其是在哪里被实例化的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">public class RecyclerView extends ViewGroup implements ScrollingView, NestedScrollingChild &#123;</div><div class="line"></div><div class="line">    …………</div><div class="line"></div><div class="line">    private final RecyclerViewDataObserver mObserver = new RecyclerViewDataObserver();</div><div class="line"></div><div class="line">    …………</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>从代码可以看出，变量<code>mObserver</code>的类是<code>RecyclerViewDataObserver</code>，是在RecyclerView 中被实例化，RecyclerViewDataObserver 就是观察者，同上面一样，也是通过组合的方式，让RecyclerView 保有一个RecyclerViewDataObserver 的实例，那我们就可以说，RecyclerView就是一个观察者。</p>
+<h3 id="解答-1"><a href="#解答-1" class="headerlink" title="解答"></a>解答</h3><p>1）</p>
+<ul>
+<li>观察者：RecyclerViewDataObserver ，也就是RecyclerView。</li>
+<li>被观察者：AdapterDataObservable，也就是Adapter</li>
+</ul>
+<p>2）我们再捋一捋上面的代码，整理一下数据更新的整个过程：在数据数量发生变更时，开发者手动调用<code>Adapter.notifyDataSetChanged()</code>，而<code>notifyDataSetChanged()</code>实际上会调用<code>AdapterDataObservable</code>的<code>notifyChanged()</code>方法，该方法会遍历所有观察者的<code>onChanged()</code>方法。在<code>RecyclerViewDataObserver</code>的<code>onChanged(）</code>方法中会获取Adapter中数据集的新数量，然后调用<code>Recyclerview</code>的<code>requestLayout()</code>方法进行重新布局（我在本文没有给出这段代码，但就是这样），然后更新用户界面。</p>
+<p>参考：《Android源码设计模式》</p>
+<p>完。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/25/android-3/" rel="next" title="Android事件分发机制">
+                <i class="fa fa-chevron-left"></i> Android事件分发机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#适配器模式"><span class="nav-number">1.</span> <span class="nav-text">适配器模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#疑问"><span class="nav-number">1.1.</span> <span class="nav-text">疑问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析源码"><span class="nav-number">1.2.</span> <span class="nav-text">分析源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答"><span class="nav-number">1.3.</span> <span class="nav-text">解答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#观察者模式"><span class="nav-number">2.</span> <span class="nav-text">观察者模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#疑问-1"><span class="nav-number">2.1.</span> <span class="nav-text">疑问</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析源码-1"><span class="nav-number">2.2.</span> <span class="nav-text">分析源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解答-1"><span class="nav-number">2.3.</span> <span class="nav-text">解答</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
