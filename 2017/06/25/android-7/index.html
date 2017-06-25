@@ -1,0 +1,905 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。 重点还是培养自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建一个简单的Http请求框架">
+<meta property="og:url" content="http://yoursite.com/2017/06/25/android-7/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。 重点还是培养自">
+<meta property="og:updated_time" content="2017-06-25T08:15:00.448Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建一个简单的Http请求框架">
+<meta name="twitter:description" content="目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。 重点还是培养自">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/25/android-7/"/>
+
+
+
+
+
+  <title>搭建一个简单的Http请求框架 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/25/android-7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">搭建一个简单的Http请求框架</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-25T19:08:29+08:00">
+                2017-06-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/25/android-7/" class="leancloud_visitors" data-flag-title="搭建一个简单的Http请求框架">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。</p>
+<p>重点还是培养自己的思维方式，学习利用各种设计模式和编程原则，如何搭建一个框架，如何封装，如何解耦合，如何给用户留下方便易用的API来供调用。</p>
+<p>这两天跟着stay的一个<a href="http://www.stay4it.com/course/4" target="_blank" rel="external">项目</a>学习，尝试着搭建一个网络请求框架出来，项目名称我定为SimpleHttp。这篇文章对开发思路和过程做一个简单的整理，源码也跟随进度上传到Github，每次更新对应着不同的tag，tag名称为版本号，方便下载查看。</p>
+</blockquote>
+<p><strong>设计方式：</strong>在对一个框架的架构进行设计时，我的理解是应该遵循自顶向下的原则，要事先设计好有那些功能模块、要预留哪些API供开发者调用、要有哪些类、哪些方法，并设计出UML类图作为指导。</p>
+<p>不过作为经验不足的程序员来说，架构的设计难度还是挺大的，也不知道应该从何做起。所以这个项目使用的方法是：<strong>先实现最基本的功能，然后再一步步进行封装、功能的扩展以及优化。</strong><br><a id="more"></a></p>
+<h2 id="封装HttpUrlConnection"><a href="#封装HttpUrlConnection" class="headerlink" title="封装HttpUrlConnection"></a>封装HttpUrlConnection</h2><p><a href="https://github.com/thinkChao/SimpleHttp/tree/v1.0" target="_blank" rel="external">对应代码版本：V1.0</a></p>
+<p>1、首先新建一个<code>HttpUrlConnectionUtil</code>类，先分别封装实现最常用的<code>GET</code>、<code>POST</code>方法，其它的例如<code>PUT</code>、<code>DELETE</code>暂时不实现。</p>
+<p>2、第一层封装：我们发现，在用<code>GET</code>、<code>POST</code>方法进行Http请求时，方法中需要输入许多参数，包括请求行（请求方法、URL）、头（Header）、体（请求参数）。<code>GET</code>与<code>POST</code>的区别就是，<code>GET</code>方法的请求参数是写在URL里的，<code>POST</code>的参数是写在请求体中的，然后与url直接拼接在一起。</p>
+<p>我们发现，调用这两个方法有时需要输入多个参数，这样调用起来感觉很不友好，代码看起来也乱，所以我们可以想到将这些参数都封装在一个类中，这里就新建一个<code>Request</code>类来封装这些请求参数，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public enum RequestMethod&#123;GET,POST,PUT,DELETE&#125;</div><div class="line">public RequestMethod method;</div><div class="line">public String url;</div><div class="line">public Map&lt;String,String&gt; header;</div><div class="line">public String content;</div></pre></td></tr></table></figure></p>
+<p>为了测试方便，暂时先将成员变量都设置成public的。</p>
+<p>3、封转完请求参数后，我们就可以直接调用<code>SimpleHttp.get()</code>或<code>SimpleHttp.post()</code>方法来进行Http请求了。但是问题也很明显，因为除了<code>GET</code>和<code>POST</code>，我们还有其它方法没实现呢，这样不仅暴露的API多，开发人员需要记住的API也多，所以这里我们还需要做进一步的封装。</p>
+<p>所以我们在<code>HttpUrlConnectionUtil</code>类中新建一个<code>execute()</code>方法，来统一处理请求，通过一个分支判断来实现，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">public static String execute(Request request) throws IOException &#123;</div><div class="line">    switch (request.method)&#123;</div><div class="line">        case GET:</div><div class="line">            return get(request);</div><div class="line">        case POST:</div><div class="line">            return post(request);</div><div class="line">        //TODO:后面还可以添加其它请求方法</div><div class="line">    &#125;</div><div class="line">    return null;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>做到这一步我们已经对Http请求做了一个基础的封装，当然还有很多瑕疵，这个就需要仔细考虑一些细节问题了。这里主要是学习一下整体的框架搭建的思路，所以不再深究一些细节问题。</p>
+<h2 id="实现将请求切换到子线程"><a href="#实现将请求切换到子线程" class="headerlink" title="实现将请求切换到子线程"></a>实现将请求切换到子线程</h2><p><a href="https://github.com/thinkChao/SimpleHttp/tree/v1.1" target="_blank" rel="external">对应代码版本：V1.1</a></p>
+<p>Android系统要求，网络请求不能在主线程中进行操作，必须切换到子线程，所以这里我们要考虑如何实现在子线程中进行操作。Android线程间的通信也是一个非常重要的模块，主角是Handler，不过让我们自己用Handler来实现线程间的通信还是很麻烦的，那又是一个需要深入学习的功能模块，所以我们这里借用系统封装好的框架<strong>AsyncTask</strong>来实现。</p>
+<p>1、我们新建一个<code>RequestTask</code>类，并继承<code>AsyncTask</code>，然后把<code>HttpUrlConnectionUtil</code>类中的<code>execute()</code>方法放到<code>doInBackground()</code>方法中去执行即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">    protected Object doInBackground(Object[] params) &#123;</div><div class="line">        try &#123;</div><div class="line">            return HttpUrlConnectionUtil.execute(request);</div><div class="line">        &#125; catch (IOException e) &#123;</div><div class="line">            return e;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>2、执行结束后，要如何获取请求返回的结果呢？如果熟悉<code>AsyncTask</code>，我们知道子线程的执行操作在<code>doInbackGround()</code>方法中执行，而它返回的数据会传给<code>onPostExecute()</code>方法，所以我们可以在这个方法中获取返回数据。</p>
+<p>但问题是当<code>onPostExecute()</code>方法获得这个返回的数据后，还要将结果传给程序的最上层，就是在我们写的测试方法中取得这个数据，这个要怎么做呢？答案是<strong>使用回调</strong>。这里大体介绍一下回调的实现，具体可以参考代码：</p>
+<p>1）首先建立一个回调接口<code>ICallback</code>，该接口有两个回调方法<code>OnSuccess</code>和<code>OnFailure</code>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface ICallback &#123;</div><div class="line">    void onSuccess(String result);</div><div class="line">    void onFailure(Exception e);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>2）在<code>Request</code>类中设置一个Callback方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public ICallback iCallBack;</div><div class="line"></div><div class="line">   public void setCallback(ICallback iCallback) &#123;</div><div class="line">       this.iCallBack = iCallback;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>3）在<code>OnPostExecute()</code>方法中调用<code>ICallback</code>的两个方法，并传入在<code>doInBackground()</code>中得到的结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line">   protected void onPostExecute(Object o) &#123;</div><div class="line">       super.onPostExecute(o);</div><div class="line">       if(o instanceof Exception)&#123;</div><div class="line">           request.iCallBack.onFailure((Exception) o);</div><div class="line">       &#125;else &#123;</div><div class="line">           request.iCallBack.onSuccess((String) o);</div><div class="line">       &#125;</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>4）在我们的测试方法中调用Callback方法，得到结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">request.setCallback(new ICallback() &#123;</div><div class="line">            @Override</div><div class="line">            public void onSuccess(String result) &#123;</div><div class="line">                Log.e(&quot;Test result3:&quot;,result);</div><div class="line">            &#125;</div><div class="line">            @Override</div><div class="line">            public void onFailure(Exception e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure></p>
+<p>切换到子线程的操作就基本完成了。</p>
+<h2 id="处理返回的数据，实现解析Json数据"><a href="#处理返回的数据，实现解析Json数据" class="headerlink" title="处理返回的数据，实现解析Json数据"></a>处理返回的数据，实现解析Json数据</h2><p><a href="https://github.com/thinkChao/SimpleHttp/tree/v1.2" target="_blank" rel="external">对应代码版本：V1.2</a></p>
+<p>之前统一返回数据的都是String类型，这很明显不能满足需求，比如还有常用的Json数据、文件等等，这节就先实现Json相关的功能。</p>
+<p>1、在之前的实现当中，我们的<code>ICallback</code>接口中的<code>onSuccess()</code>方法里的参数是String格式的，所以这就导致我们只能返回String格式的数据，如果我们想返回其它的任意我们想要的格式（比如Json、Xml）要怎么做呢？答案是<strong>使用泛型</strong>，也就是在<code>ICallback</code>接口中使用泛型：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public interface ICallback&lt;T&gt; &#123;</div><div class="line">    void onSuccess(T result);</div><div class="line">    void onFailure(Exception e);</div><div class="line">    T parse(HttpURLConnection conn) throws Exception;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这样一来，接口当中的<code>T</code>我们声明为什么格式，那么<code>Onsuccess()</code>参数中的<code>T</code>就是什么格式的。</p>
+<p>2、当我们能够接收Json数据了，拿到Json数据后，我们还要进行解析的操作，例如将Json解析成我们自定义的JavaBean，不同的数据格式对应不同的解析操作，这一步要在哪里完成呢？</p>
+<p>先看我们之前在只接收String格式的数据时是在哪里做的，之前是直接在<code>HttpURLConnection</code>类中返回String结果。但现在数据类型多了，我们既要返回不同的数据类型，又要对不同的类型进行相应的解析。但是我们不可能将这些操作都放在<code>HttpURLConnection</code>类中，因为根据单一职责原则，这个类只负责请求，接收和解析操作就放到别的类中去吧，那如何来做呢？</p>
+<p>之前这个类返回的格式是String，现在返回的格式有多种，但是一个方法必须要有一个统一的返回格式吧，所以我们可以考虑提取<code>get()</code>和<code>post()</code>方法中的共性，来达到返回相同数据格式的目的。查看代码就很明了了，这两个方法的共性就是都会先建立connection，那么我们就返回connection，也就是<code>HttpUrlConnection</code>格式，把接收数据的操作移到别的类中。这里我们移到了<code>Callback</code>类中，它实现了<code>ICallback</code>接口：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public abstract class Callback&lt;T&gt; implements ICallback&lt;T&gt; &#123;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public T parse(HttpURLConnection conn) throws Exception &#123;</div><div class="line">        //发起请求</div><div class="line">        conn.connect();</div><div class="line">        //获取结果</div><div class="line">        InputStream in = conn.getInputStream();</div><div class="line">        InputStreamReader isReader = new InputStreamReader(in);//将字节转成字符，适配器模式</div><div class="line">        BufferedReader reader = new BufferedReader(isReader);</div><div class="line">        StringBuilder result = new StringBuilder();</div><div class="line">        String line;</div><div class="line">        while((line = reader.readLine()) != null)&#123;</div><div class="line">            result.append(line);</div><div class="line">        &#125;</div><div class="line">        in.close();</div><div class="line">        //返回结果</div><div class="line">        return parseResult(result.toString());</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>3、接收数据后，还要针对不同的数据格式进行不同的解析操作，格式不同，解析不同。我们自然想到，针对不同的格式，我们可以通过继承<code>Callback</code>类，在子类中实现不同的解析，例如我们这里就实现了一个<code>JsonCallback</code>子类来对Json数据进行解析：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">public abstract class JsonCallback&lt;T&gt; extends Callback&lt;T&gt; &#123;</div><div class="line">    @Override</div><div class="line">    protected T parseResult(String result) throws Exception &#123;</div><div class="line">        JSONObject json = new JSONObject(result);</div><div class="line">        JSONObject data = json.optJSONObject(&quot;data&quot;);</div><div class="line">        Gson gson = new Gson();</div><div class="line">        Type type = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];</div><div class="line">        return gson.fromJson(data.toString(), type);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这一小节整理的有些啰嗦，也没有讲很清楚，还是要多思考，仔细想想应该如何来实现。现在发现，要把自己理解的东西讲明白，也是一件不容易的事，更何况自己的理解也不是很到位，只能是多实践、多总结吧。</p>
+<h2 id="实现文件下载和进度更新"><a href="#实现文件下载和进度更新" class="headerlink" title="实现文件下载和进度更新"></a>实现文件下载和进度更新</h2><p><a href="https://github.com/thinkChao/SimpleHttp/tree/v1.3" target="_blank" rel="external">对应代码版本：V1.3</a></p>
+<p>实现文件下载功能与实现返回Json或其它数据格式类似，就是实现一个FileCallback子类来返回相应的结果。</p>
+<p>不过文件下载的过程就是一个接收返回数据的过程，数据接收完了，文件也就下载完了，它不需要返回什么结果，更不需要解析。所以我们这里返回一个path（下载路径）就可以了，要不然没什么可返回的。</p>
+<p>这里整理一下大体过程，具体参考代码。</p>
+<p>1、首先我们要在Callback中设置一个<code>setPath()</code>方法，因为我们要传入一个下载路径吧。</p>
+<p>2、然后在接收数据的方法中做一个判断，判断path是否为空，如果为空，则是请求的其它格式的数据，则做相应的操作。如果非空则是下载文件，则执行下载操作。</p>
+<p>3、实现进度更新，这里也用到了回调，注意这里要给是否需要进度更新加一个判断，因为如果不是下载文件，是不需要这个功能的。具体参考代码:<a href="https://github.com/thinkChao/SimpleHttp/tree/v1.5" target="_blank" rel="external">V1.5</a>，因为这个功能是后来添加上的，是在添加异常处理之后，所以对应代码版本为V1.5。</p>
+<h2 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h2><p><a href="https://github.com/thinkChao/SimpleHttp/tree/v1.4" target="_blank" rel="external">对应代码版本：V1.4</a></p>
+<p><strong>1、先看都有哪些地方可能会出现异常，需要处理：</strong></p>
+<p>1）在HttpUrlConnectionUtil中请求Http时，我们想返回status，要如何拿到呢？</p>
+<p>2）如何处理TimeOut，出现TimeOut的可能的地方：请求时、解析数据时。（暂时还没实现）</p>
+<p><strong>2、需要返回哪些数据</strong></p>
+<p>1）status</p>
+<p>2）ResponseMessage</p>
+<p><strong>3、如何来做？</strong></p>
+<p>1）出现异常也就是Exception，服务器会返回status（200、403等等），但是Exception里没有status，所以我们可以考虑自己封装一个HttpException，在里面加入status，这样我们就可以i在回调的时候取得这个状态码了。</p>
+<p>2）将所有的Exception都替换成我们自定义的HttpException。</p>
+<h2 id="取消Http请求的实现"><a href="#取消Http请求的实现" class="headerlink" title="取消Http请求的实现"></a>取消Http请求的实现</h2><p>待更……</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/25/android-6/" rel="next" title="Android APP启动过程分析（2） —— Measure、Layout、Draw">
+                <i class="fa fa-chevron-left"></i> Android APP启动过程分析（2） —— Measure、Layout、Draw
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#封装HttpUrlConnection"><span class="nav-number">1.</span> <span class="nav-text">封装HttpUrlConnection</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现将请求切换到子线程"><span class="nav-number">2.</span> <span class="nav-text">实现将请求切换到子线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理返回的数据，实现解析Json数据"><span class="nav-number">3.</span> <span class="nav-text">处理返回的数据，实现解析Json数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现文件下载和进度更新"><span class="nav-number">4.</span> <span class="nav-text">实现文件下载和进度更新</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异常处理"><span class="nav-number">5.</span> <span class="nav-text">异常处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#取消Http请求的实现"><span class="nav-number">6.</span> <span class="nav-text">取消Http请求的实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
