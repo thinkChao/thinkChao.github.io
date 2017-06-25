@@ -366,11 +366,10 @@
 
       
         
-          <blockquote>
-<p>讲解Handler机制的博文很多，我也看了很多，但说实话，在我对Handler几乎不怎么了解的情况下，每一篇文章我都没太看懂，看完之后脑子里还是充满了疑问。究其原因，是因为几乎每一篇文章一上来就开始深入Handler源码，使得在一些宏观的问题上还是充满疑问，如果你从来没接触过Handler，对一些基础的问题还充满疑问，那深入源码去探究根源肯定会有些吃力。</p>
-<p>下面，我就从一个初学者思考的角度，来讲一讲Handler运行机制，准确的说应该是Android消息处理机制，因为虽然说Handler很重要，它最多被提到，但其它的几个角色也是各司其职，一个都不能少。</p>
-</blockquote>
-<p>先完整叙述一遍我们要讲解的问题：<strong>Android线程间通信机制</strong><br>
+          
+          
+讲解Handler机制的博文很多，我也看了很多，但说实话，在我对Handler几乎不怎么了解的情况下，每一篇文章我都没太看懂，看完之后脑子里还是充满了疑问。究其原因，是因为几乎每一篇文章一上来就开始深入Handler源码，使得在一些宏观的问题上还是充满疑问，如果你从来没接触过Handler，对一些
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/25/android-2/#more" rel="contents">
@@ -521,13 +520,10 @@
 
       
         
-          <blockquote>
-<p>目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。</p>
-<p>重点还是培养自己的思维方式，学习利用各种设计模式和编程原则，如何搭建一个框架，如何封装，如何解耦合，如何给用户留下方便易用的API来供调用。</p>
-<p>这两天跟着stay的一个<a href="http://www.stay4it.com/course/4" target="_blank" rel="external">项目</a>学习，尝试着搭建一个网络请求框架出来，项目名称我定为SimpleHttp。这篇文章对开发思路和过程做一个简单的整理，源码也跟随进度上传到Github，每次更新对应着不同的tag，tag名称为版本号，方便下载查看。</p>
-</blockquote>
-<p><strong>设计方式：</strong>在对一个框架的架构进行设计时，我的理解是应该遵循自顶向下的原则，要事先设计好有那些功能模块、要预留哪些API供开发者调用、要有哪些类、哪些方法，并设计出UML类图作为指导。</p>
-<p>不过作为经验不足的程序员来说，架构的设计难度还是挺大的，也不知道应该从何做起。所以这个项目使用的方法是：<strong>先实现最基本的功能，然后再一步步进行封装、功能的扩展以及优化。</strong><br>
+          
+          
+目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/25/android-1/#more" rel="contents">
@@ -679,47 +675,18 @@
       
         
           
-            <blockquote>
-<p>网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。<br><strong>以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。</strong></p>
-</blockquote>
-<h1 id="如何新建项目，并向github提交代码"><a href="#如何新建项目，并向github提交代码" class="headerlink" title="如何新建项目，并向github提交代码"></a>如何新建项目，并向github提交代码</h1><p>1、在github网站建立一个新的repository，过程很简单就不说了。当然也可以使用命令行先在本地进行创建，然后在上传到远程服务器并进行关联，不过这种方式更简单。</p>
-<p>2、 <code>git clone &lt;git-url&gt;    //将项目下载到本地，自动就进行关联了</code></p>
-<p>3、<code>git add .</code></p>
-<p>4、<code>git commit -m &#39;info&#39;  //提交，并可以添加提交说明</code></p>
-<p>5、<code>git push origin  &lt;分支名&gt;  //push到服务器，刷新项目主页就可以看到了</code></p>
-<h1 id="关于分支"><a href="#关于分支" class="headerlink" title="关于分支"></a>关于分支</h1><h2 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h2><p>1、<code>git branch &lt;分支名&gt;  //在本地新建分支</code></p>
-<p>2、<code>git push origin &lt;分支名&gt;   //将分支提交到远程服务器</code></p>
-<p>新建分之后，新的分支里的初始内容就是当前master中的内容。</p>
-<h2 id="进入分支-获取分支代码"><a href="#进入分支-获取分支代码" class="headerlink" title="进入分支/获取分支代码"></a>进入分支/获取分支代码</h2><p><code>git checkout &lt;分支名&gt;</code></p>
-<p>当进入某一分支后，也就是执行上述操作，本地代码就会切换成相应的分支的代码，如果你开着Studio或者其它IDE，你会发现IDE中的代码也改变了，第一次操作的时候感觉好神奇、好强大。</p>
-<p>也可以打开github网页，打开该分支下的网页，选择“Download ZIp”就会下载相应的代码，而使用git clone下载的是master中的代码。</p>
-<h2 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h2><p>1、<code>git branch -d &lt;分支名&gt;  //删除本地分支</code></p>
-<p>2、<code>git push origin --delete &lt;分支名&gt;  //删除远程分支</code></p>
-<h1 id="关于标签"><a href="#关于标签" class="headerlink" title="关于标签"></a>关于标签</h1><p>标签可以用来作版本控制。</p>
-<p>一开始我以为标签有点像分支的下级目录，先建立一个标签，然后将相应的代码push到这个标签下，后来发现理解错了。标签其实是后来打上去的，就是先commit代码，然后新建一个标签，该标签下的内容就是最新commit中的内容。</p>
-<h2 id="新建标签"><a href="#新建标签" class="headerlink" title="新建标签"></a>新建标签</h2><p>1、先切换到相应分支下</p>
-<p>2、<code>git tag &lt;标签名&gt;  //在本地新建标签</code></p>
-<p>3、<code>git push origin &lt;标签名&gt;   //将新建的标签提交到远程服务器</code></p>
-<p>新建标签后，新的标签里的初始内容就是最新一次commit中的内容。</p>
-<h2 id="进入标签-获取某标签代码"><a href="#进入标签-获取某标签代码" class="headerlink" title="进入标签/获取某标签代码"></a>进入标签/获取某标签代码</h2><p>1、先切换到相应分支下</p>
-<p>2、<code>git checkout &lt;标签名&gt;</code></p>
-<p>同分支一样，当进入某一标签后，也就是执行上述操作，本地代码就会切换成相应的标签下的代码。</p>
-<p>同样，也可以打开github网页，打开该标签下的网页，选择“Download ZIp”就会下载相应的代码。</p>
-<h2 id="删除标签"><a href="#删除标签" class="headerlink" title="删除标签"></a>删除标签</h2><p>1、先切换到相应分支下</p>
-<p>2、<code>git tag-d &lt;标签名&gt;  //删除本地标签</code></p>
-<p>3、<code>git push origin --delete &lt;标签名&gt;  //删除远程标签</code></p>
-<h1 id="如何撤销commit"><a href="#如何撤销commit" class="headerlink" title="如何撤销commit"></a>如何撤销commit</h1><p>1、切换到相应分支下</p>
-<p>2、<code>git log  //查找相应的commit的ID</code></p>
-<p>3、<code>git reset --hard &lt;commit_id&gt;  //彻底回退到某个版本</code></p>
-<p>注意，这里的commit_id是你要回退到那个版本，而不是想删除的版本，这里一定要注意。</p>
-<p>4、<code>git push origin HEAD --force  //提交到远程服务器</code></p>
-<h1 id="错误的删除了commit，如何补救"><a href="#错误的删除了commit，如何补救" class="headerlink" title="错误的删除了commit，如何补救"></a>错误的删除了commit，如何补救</h1><p>1、<code>git reflog  //查看之前的操作,查找想恢复的commit的id</code></p>
-<p>2、<code>git reset --hard &lt;commit_id&gt;  //恢复</code></p>
-<p>3、<code>git push -f origin &lt;分支名&gt;  //提交到远程</code></p>
-<h1 id="如何将分支合并到master"><a href="#如何将分支合并到master" class="headerlink" title="如何将分支合并到master"></a>如何将分支合并到master</h1><p>1、切换到master分支</p>
-<p>2、<code>git merge &lt;要合并的分支名&gt;</code></p>
-<h1 id="其它git命令"><a href="#其它git命令" class="headerlink" title="其它git命令"></a>其它git命令</h1>
           
+网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。
+
+如何新建项目，并向github
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/22/self-2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -864,17 +831,16 @@
       
         
           
-            <p>时间的概念很难定义，我们总是不得不陷入用时间来定义时间的逻辑怪圈。地球公转一次是一年，自传一周是一天，这才有了今天和明天的说法，所以我们对时间的定义与地球的自传和公转是紧密联系的。从这个角度来看，时间管理就是个伪命题，因为我们管不了地球的旋转速度，亿万年来就从没变过。</p>
-<p>再换个角度来看，时间还是连续的， 而且因为有了白天和黑夜，还变得有了周期性。黑夜像是给时间打下了一个断点，然后第二天醒来又是一个循环。我们每天都会学习，会遗忘，但这还好，只要学习，就会有积累，积累使人进步。</p>
-<p>最可怕的是回到中学时候的那种生活模式。每天都是一样的课程表，每天都要做许多作业，来应付老师第二天的检查。一件当时让我感到特别快乐的事，就是今天做完了明天的作业，明天继续做后天的，虽然每天的生活状态毫无变化，但幸福感的的确确是增加了。中学时期，我们每天都是在为第二天做准备，时间在流逝，但生活却陷入了循环。每天好像都在学习，却不知道自己都积累了些什么，导致我的思考、表达、写作等各项能力都不合格，许多非常值得怀疑的道理我们也没工夫去想。但人还是观念的产物，一个人可以依据一个想法，就那么过一辈子，看看最近讲女德的丁璇，如果不去认真思考，就将某个观念当作我们的信念去奉行，不是太可怜了吗？当然，可怜的不是丁璇，而是迷信她的观点的人。</p>
-<p>上面有些跑题，写这篇文章，主要是想谈谈有关时间与积累的问题。因为我发现了一个关于我为什么总是会坚持不下去的秘密，而且想法与《自控力》这本书的作者如出一辙。</p>
-<p>我今年给自己定了一个小目标，就是每周坚持写两篇文章，坚持的年底，内容不限，坚持写就行。但是近一个月有所中断，最近就明显感觉到想要放弃了。然后我仔细想了想我内心的活动状态，发现并不是不想写，也不是没有想法，表达的欲望一直都在，只是不想动笔（码字）。我想了想，问题就出在中断的那一个月。</p>
-<p>那一个月的中断，导致了我有特别想去弥补的欲望，但是一周写两篇已经有些困难，再去补前面的就更费劲。进度的滞后让我有些无力，索性就不写了，最后直到放弃。想想为什么我要强迫自己去弥补过去，应该是一种心理作用，遗传自中学时代。那时总感觉自己比别人少做一张试卷，少写一天作业，学的就比别人少，会错过许多重点，而且老师也经常强迫我们去补作业。这种心理作用，会让我对过去的“失败”产生消极的态度，在加上惯性的作用，消极的情绪让我一蹶不振。不过现在不一样了，很多事情并没有时间限制我们，需要的只是积累。然而我们每个人却还强迫症似的给自己安排一场期中考试，而且总感觉留给我们的时间已经不多了，所以才会导致太过急功近利，结果我们我们的生活又有了周期，计划-失败-再计划……</p>
-<p>内心的冲动和欲望是我们想要做某事的动力，可我们总想把它们安排成任务，还要制定计划，此时原始的想法已经淡漠，满脑子都是计划的实施。而计划的中断和目标的未达成，都会让我们的大脑产生自我怀疑的想法，而且这几乎是无法避免的。</p>
-<p>我们都倾向于自我怀疑和自我批评，但这并不会让我们离目标更近。当我们在积累的道路上遭遇挫折时（这种情况难以避免），我们需要原谅曾经的失败，不要让惯性的力量引导我们走向放弃，自我同情比自我打击有效的多。</p>
-<p>又或许有些事情，根本不需要计划，就像写作，想法和灵感不知道什么时候会来，我们无法计划，只是一旦来了，去做就可以了。</p>
-
-          
+          时间的概念很难定义，我们总是不得不陷入用时间来定义时间的逻辑怪圈。地球公转一次是一年，自传一周是一天，这才有了今天和明天的说法，所以我们对时间的定义与地球的自传和公转是紧密联系的。从这个角度来看，时间管理就是个伪命题，因为我们管不了地球的旋转速度，亿万年来就从没变过。
+再换个角度来看，时间还是连续的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/22/suibi-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1019,33 +985,18 @@
       
         
           
-            <blockquote>
-<p>有许许多多的概念，我们常把它挂在嘴边，却从没有真正理解过它。而且我们常常意识不到这个问题，因为我们以为这个概念就是我们理解的那样，而且所有人理解的都一样。当需要对这个概念进行解释时，我们也往往是用这个概念本身来阐述这个概念。</p>
-</blockquote>
-<p>这篇文章谈一谈我们时常挂在嘴边的一个概念——智商，之前一直在使用它，但从没搞懂不过它，不是不想搞清楚，而是没有碰到把它讲清楚的著作。《超越智商：为什么聪明人也会做蠢事》这本书把这个问题讲的很透彻，不过还是要吐槽一下，这本书的名字听起来还是有点标题党的味道，导致我的同伴只瞟了一眼题目，就说我在看“心灵鸡汤”。</p>
-<p>作者提出了一个“三重加工心智模型”，全书围绕这个模型进行各种讲解和阐述，智商只占其一，理解了这个模型，我们就知道如何修正其中的“参数”，来让自己变得更聪明了，是真的可以变聪明！</p>
-<h2 id="三重加工心智模型"><a href="#三重加工心智模型" class="headerlink" title="三重加工心智模型"></a>三重加工心智模型</h2><p><img src="http://upload-images.jianshu.io/upload_images/2412005-7ba87cf549b0a764.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="三种心智加工模型"></p>
-<p>大脑的运作可以分为三种不同的认知过程，功能各不相同，各有优劣。</p>
-<h3 id="自主心智"><a href="#自主心智" class="headerlink" title="自主心智"></a>自主心智</h3><p>自主心智是一种自动化加工过程，当人接受到外部的信息或刺激时，他会首先被触发并被无意识的执行，比如面部识别、语言理解，再比如别人趁你不注意朝你的后脑勺猛地拍一下，会立刻激发你的愤怒情绪等等，都是由自主心智自动完成的，这些操作一般是在无意识状态下完成的。</p>
-<p>这种反应模式具有速度快、自动化、计算负荷低、消耗能量少，以及无须对所有可能情况进行大量分析等特点，而且不同个体之间，自主心智的差别并不大，除了该研究领域的专家，也没人关心这方面的水平差异。倘若出现问题，一般都是大脑先天或后天受损，导致某些认知模块出现问题，结果就会出现我们常提到的自闭症、失读症等现象。</p>
-<p>我们可以把自主心智简单理解为人类本能，所有的人类本能都是在进化过程中逐渐形成，然后一代一代的遗传下来。不仅个体之间差异不大，而且还相当稳定，比如孔子距今已经2568年，但儒家思想对人性的各种阐述，至今看来依然非常精准，我想可以作为这方面的佐证。</p>
-<h3 id="算法心智"><a href="#算法心智" class="headerlink" title="算法心智"></a>算法心智</h3><p>算法心智就是我们平时所谈论的“智力”这个概念了，下文我直接用“智力”代替“算法心智”。</p>
-<p>“智商”是智力商数的的简称，也就是通过对人的智力进行测试，而得出来的一个分数。小时候不懂，以为把一个神奇的插满各种电极的帽子戴在人的头上，接通电源，然后交由电脑终端进行各种运算，结果就出来了，然而实际并没有那么神奇。其实是让被测试者做各种类型的题目，成绩得分越高，则认为智商越高。虽然这类测试也受到过争议，但基本可以准确的反应出一个人的有关“智力”这方面的能力，也就是大脑运算水平。那究竟我们所说的那些高智商的人，到底比一般人高在哪了呢？</p>
-<h4 id="认知去耦"><a href="#认知去耦" class="headerlink" title="认知去耦"></a>认知去耦</h4><p><img src="http://upload-images.jianshu.io/upload_images/2412005-26b2f6bcdf0ebc75.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>人与人之间智力的差异，很重要一点就是人的认知去耦能力的不同，那何为认知去耦呢？</p>
-<p>我们知道，人类在从事智力活动的时候，绝大多数情况是与现实世界相分离的，想想我们在中学时候学的数、理、化，在学习这些科目时，我们很难直接在生活经验中找到直接映射，不得不在大脑中进行各种模拟，暂时的“脱离真实世界”。我们将现实世界在我们大脑中的直接映射称为“初级表征”，“次级表征”是初级表征的复制品，但与真实世界相分离，从而能够被操控，即被模拟。人类的智力活动一般是屏蔽初级表征，在次级表征下进行的，这样一种过程就是在进行“认知去耦”。</p>
-<p>从认知能力的角度来分析，处理次级表征，即保持它们的去耦状态，对认知能力的要求很高，进化理论在这方面给出了很好的解释：在我们逐渐进化为强烈依赖认知模拟的动物的过程中，有一点非常重要，那就是我们不能长时间地“脱离”世界。因此，处理对世界的初级表征必然有着独一无二的特殊地位。去耦的困难之处会表现在某些行为方面，比如苦苦思索时我们常常会闭起眼睛（或者抬头看着天空，或者转移视线），此类行为旨在试图阻止初级表征发生改变，从而干扰正在进行模拟的次级表征，避免将真实世界表征与假想的情景相混淆。</p>
-<p>所以可见，维持模拟的同时保持去耦表征，这些操作体现了大脑的计算能力，也就是我们所说的智力的差异。此外，人的智力受遗传和环境影响特别大。</p>
-<h4 id="工作记忆"><a href="#工作记忆" class="headerlink" title="工作记忆"></a>工作记忆</h4><p>人的智力的差异，除了体现在认知去耦的能力不同，工作记忆也是重要的一点。工作记忆是一个容量有限的系统，用来暂时存储信息，因此是思维过程的一个基础支撑，就好像电脑没有内存就无法运行程序一样。关于工作记忆，书中没有做过多解释，只是提了一点说它是智力的重要组成部分。</p>
-<h3 id="反省心智"><a href="#反省心智" class="headerlink" title="反省心智"></a>反省心智</h3><p>三重心智加工模型已经说完了两个，还剩下一个”反省心智“，那什么是反省心智呢？</p>
-<p>我们想，如果一个人有着正常的自主心智（本能），有着高效率的算法心智（智力），那我们可以说这是一个聪明人吗？恐怕还不行，要不然一个人是否聪明，岂不是从出生的那一刻就已经决定了，那我们读书学习还有何意义。一个人高智商，是说他有很强的认知去耦能力，大脑运算能力很强，但还谈不上聪明，否则作者也不会说”聪明人也会做傻事“了，作者这里所说的聪明是狭义上的聪明，也就是”高智商“。要想做到真正的聪明，还需要在”反省心智“上下功夫。</p>
-<p>反省心智对应着人的”理性思维“，一个聪明人，一定是非常理性的。那理性从何而来呢？很明显不是天生的，反而天生的本能很多总是非理性的，因为随着社会、文化的发展，对于原始社会来说很理性的行为，到了文明社会有些会显得非常愚蠢，这点应该是个共识了。毫无疑问，要想让自己变得理性，只能通过后天的学习来获取知识，让知识来帮助自己变得更加理性，我们把这些能够让自己变的更加理性的知识形象的称为”心智程序“。</p>
-<h4 id="心智程序"><a href="#心智程序" class="headerlink" title="心智程序"></a>心智程序</h4><p>”心智程序“这个概念很形象，就像我们的计算机一样，只配备高运算能力的CPU和内存是不够的，没有可运行的程序它还是无法被人们所使用，所以我们需要给电脑安装各种我们需要的APP，来完成各种各样的任务。人也一样，复杂的社会让我们无法单纯的生活在这个世界上，我们需要运用概率、逻辑、经济学等各种思维方式，来应对生活的种种不确定性，这些知识或者思维方式，就是我们需要的各种“心智程序”。</p>
-<p>所以，人与人之间的差异，既可以源自智力（算法心智），也可以源自思维方式（反省心智）的不同。换句话说，一个人是否聪明，包含两个方面：算法心智和反省心智。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>通过上述三种心智加工理论，我们可以看出人类有三种不同的心理特征。首先，需要具备算法心智层面的认知能力，以维持压制和模拟活动。其次，在模拟的过程中，可以获取所需的心智程序。</p>
-<p>在这三种心智中，自主心智每个人基本一样，区别在于智力和反省心智。好在智力是呈正态分布的，并没有太大差别，极高和极低的都很少。差别最大的就是反省心智，因为每个人都有安装各自不同的心智程序，这就导致有的人充满智慧，而有的人则很愚蠢。</p>
-
           
+有许许多多的概念，我们常把它挂在嘴边，却从没有真正理解过它。而且我们常常意识不到这个问题，因为我们以为这个概念就是我们理解的那样，而且所有人理解的都一样。当需要对这个概念进行解释时，我们也往往是用这个概念本身来阐述这个概念。
+
+这篇文章谈一谈我们时常挂在嘴边的一个概念——智商，之前一直在使用它，但
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/13/read-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1190,83 +1141,18 @@
       
         
           
-            <blockquote>
-<p>本文是基于WIndows系统，前提是要有一个Github账号，并会创建仓库项目，并在PC端用过git往github上传过代码最好。</p>
-</blockquote>
-<h2 id="创建Github仓库"><a href="#创建Github仓库" class="headerlink" title="创建Github仓库"></a>创建Github仓库</h2><p>直接在Github官网创建一个新的仓库即可，与创建普通仓库的操作一样，只有一点不同，就是<strong>Respository name 中一定要输入：你的用户名.github.io，</strong>其它没什么好说的。</p>
-<h2 id="PC端环境准备，完成博客创建"><a href="#PC端环境准备，完成博客创建" class="headerlink" title="PC端环境准备，完成博客创建"></a>PC端环境准备，完成博客创建</h2><h3 id="安装Git"><a href="#安装Git" class="headerlink" title="安装Git"></a>安装Git</h3><p>去<a href="https://git-scm.com/download/" target="_blank" rel="external">Git官网</a>选择合适的版本，下载安装即可。</p>
-<h3 id="安装Nodejs"><a href="#安装Nodejs" class="headerlink" title="安装Nodejs"></a>安装Nodejs</h3><p>打开 <a href="https://nodejs.org/en/download/" target="_blank" rel="external">Nodejs官网</a> ，选择 LTS 版本的，然后选择操作系统对应的版本，下载安装。</p>
-<h3 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h3><p>打开命令行，在任何目录下都可以，输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-cli -g</div></pre></td></tr></table></figure></p>
-<h3 id="创建本地博客"><a href="#创建本地博客" class="headerlink" title="创建本地博客"></a>创建本地博客</h3><p>1）打开命令行，定位到你希望放置博客的位置。</p>
-<p>2）输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo init 你的用户名.github.io  //和创建仓库时使用同一个</div></pre></td></tr></table></figure></p>
-<p>操作到此，博客已经搭建完成，使用的是自带的 landscape 主题，所以很丑。因为还没有安装部署发布工具，所以只能在本地打开查看效果。为了一气呵成，如何在本地查看我放在本小节最后来讲，下面安装部署发布工具，我想大家应该迫不及待的想看最终的效果：</p>
-<h3 id="安装部署发布工具"><a href="#安装部署发布工具" class="headerlink" title="安装部署发布工具"></a>安装部署发布工具</h3><p>这里用到了 hexo-deployer-git，使用如下命令安装：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">npm install hexo-deployer-git --save</div></pre></td></tr></table></figure></p>
-<h3 id="发布博客"><a href="#发布博客" class="headerlink" title="发布博客"></a>发布博客</h3><p>执行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">hexo clean #清除缓存 网页正常情况下可以忽略此条命令</div><div class="line">hexo g #生成静态网页</div><div class="line">hexo d #开始部署</div></pre></td></tr></table></figure></p>
-<p>其中，后两条命令可以合并成一条：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo d -g</div></pre></td></tr></table></figure></p>
-<p>等命令执行完之后（需要好几秒钟），在浏览器输入： <a href="http://xxx.github.io" target="_blank" rel="external">http://xxx.github.io</a> ，即可看到你的个人博客了。</p>
-<blockquote>
-<p>注意：如果是第一次部署，终端会提示要求输入用户名和密码。</p>
-<p>以后要发布新文章，执行上述命令即可。</p>
-</blockquote>
-<h3 id="书写文章"><a href="#书写文章" class="headerlink" title="书写文章"></a>书写文章</h3><p>1）文章要使用Markdown格式，所以文件的格式应为“.md”</p>
-<p>2）文件应放在 /source/_post 目录下</p>
-<p>3）文章中除了正文内容，在开头还要指定文章的标题、分类等。例如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 文章标题</div><div class="line">categories: Android</div><div class="line">---</div><div class="line"></div><div class="line">这里是正文，这篇文章分类于Android。</div></pre></td></tr></table></figure></p>
-<h3 id="如何在本地查看效果"><a href="#如何在本地查看效果" class="headerlink" title="如何在本地查看效果"></a>如何在本地查看效果</h3><p>很多时候，我们在发布文章之前，需要先看看发布效果如何，再决定是否要发布，操作步骤如下：</p>
-<p>1）打开命令行，定位到 xxx.github.io 目录</p>
-<p>2）输入命令，启动服务：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s</div></pre></td></tr></table></figure></p>
-<p>3）启动成功可以看到提示，按照提示用浏览器打开提示网址，即可看到你的本地博客了，里面有一篇 Hello World：</p>
-<p><img src="http://upload-images.jianshu.io/upload_images/2412005-3d5fb4885ccd9522.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<blockquote>
-<p>注意：我们看到启动成功后，提示的是打开 4000 端口，我们此时在浏览器输入该地址很有可能打不开，因为端口被占用，据说是被“福昕阅读器”给占用了，所以如果打不开就要重新开启一个新的端口，如下操作即可：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo s -p 5000 #我们改用5000</div></pre></td></tr></table></figure></p>
-</blockquote>
-<h2 id="安装Next主题"><a href="#安装Next主题" class="headerlink" title="安装Next主题"></a>安装Next主题</h2><p>截止到上一步，我们的个人博客已经完整的搭建完成了，如果你对显示界面没有任何要求，就可以开始使用了，写博客然后发布。不过默认界面太丑了，如果想要美化一下（基本上是必须的），首先要做的就是更换一个主题，然后在这个主题下自定义你的UI。我们这里使用Next主题，因为使用者众多，界面确实也不错。</p>
-<blockquote>
-<p>前言：</p>
-<p>1、在 Hexo 中有两份主要的配置文件，其名称都是 “_config.yml”。其中，一份位于站点根目录下（即 xxx.github.io 目录下），主要包含 Hexo 本身的配置；另一份位于主题目录下（/themes/next/_config.yml），这份配置有主题作者提供，主要用于配置主题相关的选项。为了描述方便，在以下说明中，将前者称为 <strong>站点配置文件</strong>， 后者称为 <strong>主题配置文件</strong>。</p>
-<p>2、在修改配置文件时，配置文件中的键值之间<strong>一定要有空格</strong>，否则会出错。</p>
-</blockquote>
-<h3 id="安装Next"><a href="#安装Next" class="headerlink" title="安装Next"></a>安装Next</h3><p>将命令行切换到上面生成的本地博客目录（xxx.github.io），输入命令：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">git clone https://github.com/iissnan/hexo-theme-next themes/next</div></pre></td></tr></table></figure></p>
-<h3 id="配置“站点配置文件（-config-yml）”"><a href="#配置“站点配置文件（-config-yml）”" class="headerlink" title="配置“站点配置文件（ _config.yml）”"></a>配置<strong>“站点配置文件（ _config.yml）”</strong></h3><p>主要有如下需要配置的几个键值，是必须要配置的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">theme: next        #设置主题为 Next</div><div class="line"></div><div class="line">title: xxx         # 博客的名称，会显示在博客主页中</div><div class="line"></div><div class="line">author: xxx        # 作者名字，会显示在博客主页中</div><div class="line"></div><div class="line">description: xxx      # 对站点的描述，相当与“简书”中的自我介绍，会显示在博客主页中</div><div class="line"></div><div class="line">language: zh-Hans      # 语言设置，简体中文</div><div class="line"></div><div class="line">deploy:              # 部署相关配置</div><div class="line">    type: git        # 使用 Git 提交</div><div class="line">    repo: https://github.com/xxx/xxx.github.io.git      # 就是存放博客的仓库地址</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>再次强调，键值之间<strong>一定要 ”加空格“</strong>，请在文本编辑器中搜索定位后再修改。</p>
-</blockquote>
-<p>主题安装完成后，界面焕然一新，但是还存在一些问题，比如你点击某些菜单会显示“404 not found”，这是因为这些菜单你还没有进行配置，所以对Next主题的自定义设置也是必须的。而且日后对网站所做的界面更改，基本上都是在对Next主题进行自定义了。</p>
-<h2 id="自定义Next主题-——-基本设置"><a href="#自定义Next主题-——-基本设置" class="headerlink" title="自定义Next主题 —— 基本设置"></a>自定义Next主题 —— 基本设置</h2><p>Next主题已经安装完成，下面要做的就是自定义自己的主题了，不同的设置，可以实现不同的效果。这一小节讲解基础的配置，所有操作都在<strong>主题配置文件 （_config.yml）</strong>中，注意是next主题里的 _config.yml 文件，不是根目录下的。主要基础配置如下：</p>
-<h3 id="主题风格-scheme"><a href="#主题风格-scheme" class="headerlink" title="主题风格(scheme)"></a>主题风格(scheme)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">#scheme: Muse</div><div class="line">#scheme: Mist</div><div class="line">scheme: Pisces</div></pre></td></tr></table></figure>
-<p>Next主题提供了三种风格，默认的是第一个，我使用的是第三个。大家可以都尝试看看，喜欢哪个就用哪个，只需要取消注释（去掉前面的 # 号）即可。</p>
-<h3 id="设置侧栏菜单-menu"><a href="#设置侧栏菜单-menu" class="headerlink" title="设置侧栏菜单(menu)"></a>设置侧栏菜单(menu)</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">menu:</div><div class="line">  home: / # 在菜单上显示首页</div><div class="line">  #archives: /archives # 在菜单删显示全部</div><div class="line">  categories: /categories # 在菜单上显示 分类</div><div class="line">  #tags: /tags # 在菜单上显示 标签</div><div class="line">  about: /about # 在菜单上显示 关于</div><div class="line">  #commonweal: /404.html</div></pre></td></tr></table></figure>
-<p>这个主要是设置显示哪些菜单，不需要的注释掉即可。在我们刚刚搭建完成时，只有“主页”菜单是可以点击的，其它的“categories”、“about”等由于还没有设置，没有建立相应的页面，所以点击后会显示“404 not found”。如何建立相应的页面，这个会在后面讲解。</p>
-<h3 id="友情链接"><a href="#友情链接" class="headerlink" title="友情链接"></a>友情链接</h3><p>基本上所有的博客都会有这么一个友情链接，来链接到其它网站，这个是如何设置的呢？肯定也是修改相应的键值了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"># Blog rolls</div><div class="line">links_title:                       #链接的title，会显示在界面上</div><div class="line">links_layout: block                #它的作用我还没尝试，很明显是设置布局的，和下面的二选一</div><div class="line">#links_layout: inline</div><div class="line">links:                             #添加链接，前面是显示的链接文字，后面是网址，添加新的链接就在下面增加即可</div><div class="line">  简书: http://www.jianshu.com/u/0bb409c7df28</div><div class="line">  Github: https://github.com/thinkChao</div></pre></td></tr></table></figure></p>
-<h2 id="自定义Next主题-——-添加分类-关于"><a href="#自定义Next主题-——-添加分类-关于" class="headerlink" title="自定义Next主题 —— 添加分类/关于"></a>自定义Next主题 —— 添加分类/关于</h2><p>我想实现的分类效果是在菜单栏的分类菜单下，直接显示各种分类，不过默认实现的并不是那种效果，需要其它的一些设置，这个目前我还不知道怎么弄，所以现实现默认的分类效果吧。</p>
-<p>默认实现的分类是：点击分类菜单，会进入一个分类页面，在这个页面下会显示所有的分类条目，点击某个条目，就会显示该分类下的所有文章。具体怎么实现呢？</p>
-<h3 id="新建分类页面"><a href="#新建分类页面" class="headerlink" title="新建分类页面"></a>新建分类页面</h3><p>1）打开命令行，定位到 xxx.github.io 目录</p>
-<p>2）新建一个页面，命名为 categories：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">hexo new page categories</div></pre></td></tr></table></figure></p>
-<p>3）打开新建的页面：/souce/categories/index.md，配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 分类                  #设置title</div><div class="line">date: 2017-05-17 16:13:17    #创建时间</div><div class="line">type: &quot;categories&quot;           #将页面的类型设置为 categories</div><div class="line">---</div></pre></td></tr></table></figure></p>
-<h3 id="在创作文章时，添加分类"><a href="#在创作文章时，添加分类" class="headerlink" title="在创作文章时，添加分类"></a>在创作文章时，添加分类</h3><p>上一步，我们已经把分类页面创建好了，但是打开一个分类也没有。所以接下来你是不是认为应该开始增加分类了，然而并不是。</p>
-<p>分类条目并不是提前创建好的，像我们在其它的博客中那样可以随意创建一个分类。而是在发布文章的时候，在文章中指定分类。举例如下，我们新建文章：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">---</div><div class="line">title: 文章标题</div><div class="line">categories: Android</div><div class="line">---</div><div class="line"></div><div class="line">这里是正文，这篇文章分类于Android。</div></pre></td></tr></table></figure></p>
-<p>看到没有，我们在文章开头有一个“categories”标签，然后我们将这篇文章分类与Android下。如果这个分类已经存在，那么直接将这篇文章添加到这个分类；如果是第一次指定这个分类，则会新建这个类别，然后将这篇文章添加到这个分类。当然，你也可以添加二级分类。</p>
-<p>分类功能是主题自动维护的，只要我们的文章按照规范来写就行了。</p>
-<h3 id="添加“关于”页面"><a href="#添加“关于”页面" class="headerlink" title="添加“关于”页面"></a>添加“关于”页面</h3><p>创建“关于”页面和添加分类一样，要现创建出这个页面。</p>
-<p>然后我们只需在 /souce/about/index.md 中书写我们想显示的内容就ok了，没有其它额外的操作。</p>
-<h2 id="自定义Next主题-——-添加网站的访客数量、文章的访问数量"><a href="#自定义Next主题-——-添加网站的访客数量、文章的访问数量" class="headerlink" title="自定义Next主题 —— 添加网站的访客数量、文章的访问数量"></a>自定义Next主题 —— 添加网站的访客数量、文章的访问数量</h2><p>添加访问量的统计也是常用功能，虽不必要，但有这个功能也是极好的，可以查看有多少个IP访问过你的网站，哪个文章的点击量最多。</p>
-<p>访问统计这里分为两类：</p>
-<p>1）对网站访问量的统计：包括网站的浏览次数，即pv；以及网站的访客数，即uv。网站每刷新一次，pv就会加1，包括你点击一篇文章，pv也会增加。所以个人感觉这个统计功能很鸡肋。而uv是每当一个新的IP主机访问这个网站，uv加一，以后无论这个主机访问多少次，uv等不会增加。</p>
-<p>2）对文章阅读量的访问统计：每打开一次这篇文章，访问量就加1，这里也包括作者本人的访问。</p>
-<p>下面对这两个访问统计的设置进行讲解：</p>
-<h3 id="对网站访问量的统计"><a href="#对网站访问量的统计" class="headerlink" title="对网站访问量的统计"></a>对网站访问量的统计</h3><p>对网站访问量的统计我们使用Next主题自带的<strong>不蒜子统计</strong>。</p>
-<p>1）安装 busuanzi.js 脚本<br>打开 /theme/next/layout/_partial/footer.swig 文件，拷贝下面的代码至文件的开头：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">&lt;script async src=&quot;https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js&quot;&gt;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
-<p>2）显示统计标签<br>仍是在 /theme/next/layout/_partial/footer.swig 文件中，将想要显示的统计量pv或者uv的显示代码放在合适的位置，我是放在了代码的最后，也就是最后一行代码的上面：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">#这行代码的目的是显示短竖直的分割线，应该有比这更优雅的设置方式，无奈我不会前端技术</div><div class="line">&lt;div class=&quot;powered-by&quot;&gt;  </div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">#显示 UV 的代码</div><div class="line">&lt;span id=&quot;busuanzi_container_site_uv&quot;&gt;</div><div class="line">   访客数：&lt;span id=&quot;busuanzi_value_site_uv&quot;&gt;&lt;/span&gt;</div><div class="line">&lt;/span&gt;</div><div class="line"></div><div class="line">#显示短竖直的分割线</div><div class="line">&lt;div class=&quot;powered-by&quot;&gt;</div><div class="line">&lt;/div&gt;</div><div class="line"></div><div class="line">#显示 pv 的代码</div><div class="line">&lt;span id=&quot;busuanzi_container_site_pv&quot;&gt;</div><div class="line">    访问量：&lt;span id=&quot;busuanzi_value_site_pv&quot;&gt;&lt;/span&gt;</div><div class="line">&lt;/span&gt;</div></pre></td></tr></table></figure></p>
-<h3 id="对文章阅读量的访问统计"><a href="#对文章阅读量的访问统计" class="headerlink" title="对文章阅读量的访问统计"></a>对文章阅读量的访问统计</h3><p>对文章阅读量的访问统计我们使用<strong>leanCloud</strong>，Next主题也对其提供了支持。</p>
-<p>具体步骤参考<a href="http://www.joryhe.com/2016-05-29-how_to_create_leancloud_read_Counter.html" target="_blank" rel="external">leanCloud实现文章阅读量统计</a>，写的很详细，很有条理，我就不再赘述了。</p>
-<h2 id="自定义Next主题-——-添加留言功能"><a href="#自定义Next主题-——-添加留言功能" class="headerlink" title="自定义Next主题 —— 添加留言功能"></a>自定义Next主题 —— 添加留言功能</h2><p>这个目前我还没有实现，因为还不知道该用哪家的服务，比较知名的有两家：</p>
-<p>1）国内的多说：关于它就不多说了，因为马上就停止服务了。</p>
-<p>2）国外的Disqus：这个我试过，需要翻墙才能访问，所以果断放弃。</p>
-<p>其它的就不了解了，以后有好用的会再考虑添加这个模块。</p>
-<h2 id="自定义Next主题-——-其它"><a href="#自定义Next主题-——-其它" class="headerlink" title="自定义Next主题 —— 其它"></a>自定义Next主题 —— 其它</h2><p>1、如果打开我的博客中的一篇文章，会发现每一篇文章的标题下面会显示三个内容：时间、分类、阅读量，并且每个项目前面都会有一个小icon（图标），这个是主题自带的，默认就有，而且默认的是在图标后面还有显示的说明文字，例如在那个眼睛的图标后面，默认带有“阅读量”之类的文字。我为了简洁，就把文字去掉了，是怎么去掉的呢？</p>
-<p>打开 /themes/next/layout/_macro/post.swig 文件，把相应的显示文字的那行代码注释或删除就可以了。我也不懂前端技术，代码我也看不懂，我也是通过搜索相应的关键字，然后查找“可能的代码”，然后尝试着去删除。</p>
-<p>例如你想删除分类icon后面的文字，你就可以在这个文件中关键字搜索“category”，然后查找相应的显示文字的代码，删除就可以了。</p>
-
           
+本文是基于WIndows系统，前提是要有一个Github账号，并会创建仓库项目，并在PC端用过git往github上传过代码最好。
+
+创建Github仓库直接在Github官网创建一个新的仓库即可，与创建普通仓库的操作一样，只有一点不同，就是Respository name 中一定要输入：你的用户
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/18/self-1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

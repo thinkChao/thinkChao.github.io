@@ -96,7 +96,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/06/25/android-1/index.html">
 <meta property="og:site_name" content="thinkChao">
 <meta property="og:description" content="目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。 重点还是培养自">
-<meta property="og:updated_time" content="2017-06-25T08:08:54.237Z">
+<meta property="og:updated_time" content="2017-06-25T08:12:28.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="搭建一个简单的Http请求框架">
 <meta name="twitter:description" content="目前Android常用的网络请求框架有很多，比如Volley和Rettofit，功能强大且调用方便，学习这些框架的使用还算简单。不过只会调用这些API，其实跟学习Android系统框架层自带的API是一样的，无非是多用几次就熟悉了。API会的再多，对自己的开发水平的提高作用甚少。这就跟学英语类似，多学会几个API，就跟多学几个单词一样，单词是学不完的，而且学而不用，很快就会忘掉。 重点还是培养自">
@@ -368,7 +368,7 @@
 <p>这两天跟着stay的一个<a href="http://www.stay4it.com/course/4" target="_blank" rel="external">项目</a>学习，尝试着搭建一个网络请求框架出来，项目名称我定为SimpleHttp。这篇文章对开发思路和过程做一个简单的整理，源码也跟随进度上传到Github，每次更新对应着不同的tag，tag名称为版本号，方便下载查看。</p>
 </blockquote>
 <p><strong>设计方式：</strong>在对一个框架的架构进行设计时，我的理解是应该遵循自顶向下的原则，要事先设计好有那些功能模块、要预留哪些API供开发者调用、要有哪些类、哪些方法，并设计出UML类图作为指导。</p>
-<p>不过作为经验不足的程序员来说，架构的设计难度还是挺大的，也不知道应该从何做起。所以这个项目使用的方法是：<strong>先实现最基本的功能，然后再一步步进行封装、功能的扩展以及优化。</strong><br><a id="more"></a></p>
+<p>不过作为经验不足的程序员来说，架构的设计难度还是挺大的，也不知道应该从何做起。所以这个项目使用的方法是：<strong>先实现最基本的功能，然后再一步步进行封装、功能的扩展以及优化。</strong></p>
 <h2 id="封装HttpUrlConnection"><a href="#封装HttpUrlConnection" class="headerlink" title="封装HttpUrlConnection"></a>封装HttpUrlConnection</h2><p><a href="https://github.com/thinkChao/SimpleHttp/tree/v1.0" target="_blank" rel="external">对应代码版本：V1.0</a></p>
 <p>1、首先新建一个<code>HttpUrlConnectionUtil</code>类，先分别封装实现最常用的<code>GET</code>、<code>POST</code>方法，其它的例如<code>PUT</code>、<code>DELETE</code>暂时不实现。</p>
 <p>2、第一层封装：我们发现，在用<code>GET</code>、<code>POST</code>方法进行Http请求时，方法中需要输入许多参数，包括请求行（请求方法、URL）、头（Header）、体（请求参数）。<code>GET</code>与<code>POST</code>的区别就是，<code>GET</code>方法的请求参数是写在URL里的，<code>POST</code>的参数是写在请求体中的，然后与url直接拼接在一起。</p>
