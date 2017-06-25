@@ -90,16 +90,16 @@
 
 
 
-<meta name="description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。">
+<meta name="description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。  如何新建项目，并向github提交代码">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git操作整理">
 <meta property="og:url" content="http://yoursite.com/2017/06/22/self-2/index.html">
 <meta property="og:site_name" content="thinkChao">
-<meta property="og:description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。">
-<meta property="og:updated_time" content="2017-06-25T08:15:44.720Z">
+<meta property="og:description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。  如何新建项目，并向github提交代码">
+<meta property="og:updated_time" content="2017-06-25T08:17:16.753Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Git操作整理">
-<meta name="twitter:description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。">
+<meta name="twitter:description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。  如何新建项目，并向github提交代码">
 
 
 
@@ -363,9 +363,10 @@
 
       
         <blockquote>
-<p>网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。<br><strong>以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。</strong><br><a id="more"></a></p>
-<h1 id="如何新建项目，并向github提交代码"><a href="#如何新建项目，并向github提交代码" class="headerlink" title="如何新建项目，并向github提交代码"></a>如何新建项目，并向github提交代码</h1><p>1、在github网站建立一个新的repository，过程很简单就不说了。当然也可以使用命令行先在本地进行创建，然后在上传到远程服务器并进行关联，不过这种方式更简单。</p>
+<p>网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。<br><strong>以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。</strong></p>
 </blockquote>
+<h1 id="如何新建项目，并向github提交代码"><a href="#如何新建项目，并向github提交代码" class="headerlink" title="如何新建项目，并向github提交代码"></a>如何新建项目，并向github提交代码</h1><a id="more"></a>
+<p>1、在github网站建立一个新的repository，过程很简单就不说了。当然也可以使用命令行先在本地进行创建，然后在上传到远程服务器并进行关联，不过这种方式更简单。</p>
 <p>2、 <code>git clone &lt;git-url&gt;    //将项目下载到本地，自动就进行关联了</code></p>
 <p>3、<code>git add .</code></p>
 <p>4、<code>git commit -m &#39;info&#39;  //提交，并可以添加提交说明</code></p>
