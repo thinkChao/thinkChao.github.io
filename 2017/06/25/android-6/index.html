@@ -100,7 +100,7 @@
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-e6d9158a31a50eb3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-55c71e6a62605110.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-d3cc6b03d15c0a44.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-06-26T07:44:22.870Z">
+<meta property="og:updated_time" content="2017-06-26T07:46:33.330Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android APP启动过程分析（2） —— Measure、Layout、Draw">
 <meta name="twitter:description" content="上一篇文章从ActivityTHread.main()讲到了ViewRootImpl.performTraversals()，这篇则进入performTraversals()的执行流程，也就是大家所熟知的Measure、Layout、Draw三大流程。  关于三大流程讲解的相关文章太多太多了，之所以自己想写一篇，是因为看别人的文章总是磕磕绊绊，他们的讲解方法、重点各不相同，所以总是需要自己参考多">
@@ -382,7 +382,7 @@
 <p><strong>记住三张图</strong><br><img src="http://upload-images.jianshu.io/upload_images/2412005-a93a25130b4c6918.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="MeasureSpec"></p>
 <p><img src="http://upload-images.jianshu.io/upload_images/2412005-e6d9158a31a50eb3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="SpecMode"></p>
 <p><img src="http://upload-images.jianshu.io/upload_images/2412005-55c71e6a62605110.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-<p>我们前面说MeasureSpec是由父View的MeasureSpec和子View的LayoutParams共同决定得出的，上面这幅图就是决定的结果。但是注意里面有两个坑（被圈出来的地方），我们可以看到：只要子View的布局是WRAP_CONTENT，不论父View是EXACTLY还是AT_MOST的，子View最终的布局都是parentLeftSize（即填满父容器剩下的内容），是不是感觉不太对？这里确实不太对，所以需要我们开发者来做些处理，即我们在自定义View的Measure过程中，通过继承onMeasure()，来根据自己的情况对这一问题做相应处理。实际上，Android系统也是这么做的，比如TextView等控件都对此做了相应的处理（来自谷歌的小弟）。</p>
+<p>我们前面说MeasureSpec是由父View的MeasureSpec和子View的LayoutParams共同决定得出的，上面这幅图就是通过源码总结的决定的结果。但是注意里面有两个坑（被圈出来的地方），我们可以看到：只要子View的布局是WRAP_CONTENT，不论父View是EXACTLY还是AT_MOST的，子View最终的布局都是parentLeftSize（即填满父容器剩下的内容），是不是感觉不太对？这里确实不太对，所以需要我们开发者来做些处理，即我们在自定义View的Measure过程中，通过继承onMeasure()，来根据自己的情况对这一问题做相应处理。实际上，Android系统也是这么做的，比如TextView等控件都对此做了相应的处理（来自谷歌的小弟）。</p>
 <p><strong>三点总结</strong><br>1） EXACTLY与AT_MOST的区别就是：只要一个View的SpecMode是EXACTLY的，不论它的子View是match_parent还是wrap_content的，它的size都是固定的；如果一个View的SpecMode是AT_MOST的，那么分两种情况：如果它的子View是match_parent的，那么它的size就是指定的size，如果它的子View是wrap_content的，而且比parent小，那么它的size也会相应的跟随其子View变化。</p>
 <p>2） MeasureSpec是<strong>测量要求</strong>，而不是<strong>测量结果</strong>，测量结果的确定需要子View的反馈，为什么？就因为有些View的SpecMode是AT_MOST的，也就是不确定的。如果都是EXACTLY的，那整个ViewTree遍历完，测量结果也就出来了，就不需要再层层反馈回去了。</p>
 <p>3） 定义中说：MeasureSpec是由父View的MeasureSpec和子View的LayoutParams通过简单的计算得来的，那顶层View（也就是DecorView）的MeasureSpec是怎么来的？答案是：DecorView 的 MeasureSpec是Windows传过来的，其SpecMode是EXACTLY，size是屏幕的高和宽。</p>

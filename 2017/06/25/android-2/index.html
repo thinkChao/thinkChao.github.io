@@ -97,7 +97,8 @@
 <meta property="og:site_name" content="thinkChao">
 <meta property="og:description" content="先放张流程图，本文的所有内容都基于这张图，如下：  讲解Android事件分发的文章很多了，这里我是在理解之后，做的一个总结。按照事件传递的流程，把每一步的事件处理和返回结果做个梳理，这里的总结只包含了ACTION_DOWN事件。">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-bbdaebe6a741f47d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-06-25T08:43:45.063Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-742b3a8890af98ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-06-26T23:47:13.040Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android事件分发机制">
 <meta name="twitter:description" content="先放张流程图，本文的所有内容都基于这张图，如下：  讲解Android事件分发的文章很多了，这里我是在理解之后，做的一个总结。按照事件传递的流程，把每一步的事件处理和返回结果做个梳理，这里的总结只包含了ACTION_DOWN事件。">
@@ -394,8 +395,11 @@
 <h2 id="6"><a href="#6" class="headerlink" title="6"></a>6</h2><p>如果View能接受到事件，那么它的<code>onTouchEvent()</code>方法将是最后被调用的，它的事件处理规则与ViewGroup的是一样的：</p>
 <p>1）返回true，说明自行处理，传递结束。</p>
 <p>2）返回false，意味着不处理该事件，回溯给上一级View的<code>onTouchEvent()</code>方法处理。</p>
-<h2 id="onTouchEvent与onTouchListener"><a href="#onTouchEvent与onTouchListener" class="headerlink" title="onTouchEvent与onTouchListener"></a>onTouchEvent与onTouchListener</h2><p>1、onTouchEvent是基于回调的，onTouchListener基于监听。</p>
-<p>2、onTouchListener的优先级高于onTouchEvent，如果onTouchListener被调用，且返回true，则onTouchEvent不会被执行，如果返回false，onTouchEvent则会被执行。</p>
+<h2 id="onTouchEvent、onTouchListener、onClickListener"><a href="#onTouchEvent、onTouchListener、onClickListener" class="headerlink" title="onTouchEvent、onTouchListener、onClickListener"></a>onTouchEvent、onTouchListener、onClickListener</h2><p>在区别这三者之前，先上一张View的<code>dispatchTouchEvent()</code>的内部执行逻辑流程图，图片来自谷哥的小弟：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-742b3a8890af98ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>1、<code>onTouchEvent</code>与<code>onTouchListener</code>都是处理Touch事件的API。不同的是，<code>onTouchEvent</code>是Android系统自身对于Touch事件处理的一个实现，<code>onTouchListener</code>是View暴露给用户的接口，方便用户处理Touch事件。</p>
+<p><code>onTouchListener</code>的优先级高于<code>onTouchEvent</code>，如果<code>onTouchListene</code>r被调用，且返回true，则<code>onTouchEvent</code>不会被执行，如果返回false，<code>onTouchEvent</code>则会被执行。</p>
+<p>2、<code>onClickListener</code>是在<code>ACTIN_UP</code>之后才会被调用，它是这三者中最后一个被调用的。</p>
 
       
     </div>
@@ -582,7 +586,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1"><span class="nav-number">1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-number">2.</span> <span class="nav-text">2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-number">3.</span> <span class="nav-text">3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4"><span class="nav-number">4.</span> <span class="nav-text">4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5"><span class="nav-number">5.</span> <span class="nav-text">5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6"><span class="nav-number">6.</span> <span class="nav-text">6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#onTouchEvent与onTouchListener"><span class="nav-number">7.</span> <span class="nav-text">onTouchEvent与onTouchListener</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1"><span class="nav-number">1.</span> <span class="nav-text">1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2"><span class="nav-number">2.</span> <span class="nav-text">2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3"><span class="nav-number">3.</span> <span class="nav-text">3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4"><span class="nav-number">4.</span> <span class="nav-text">4</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5"><span class="nav-number">5.</span> <span class="nav-text">5</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#6"><span class="nav-number">6.</span> <span class="nav-text">6</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#onTouchEvent、onTouchListener、onClickListener"><span class="nav-number">7.</span> <span class="nav-text">onTouchEvent、onTouchListener、onClickListener</span></a></li></ol></div>
             
 
           </div>
