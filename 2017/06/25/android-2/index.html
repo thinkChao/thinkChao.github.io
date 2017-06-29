@@ -98,7 +98,7 @@
 <meta property="og:description" content="先放张流程图，本文的所有内容都基于这张图，如下：  讲解Android事件分发的文章很多了，这里我是在理解之后，做的一个总结。按照事件传递的流程，把每一步的事件处理和返回结果做个梳理，这里的总结只包含了ACTION_DOWN事件。">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-bbdaebe6a741f47d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-742b3a8890af98ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-06-26T23:47:13.040Z">
+<meta property="og:updated_time" content="2017-06-26T23:59:59.632Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android事件分发机制">
 <meta name="twitter:description" content="先放张流程图，本文的所有内容都基于这张图，如下：  讲解Android事件分发的文章很多了，这里我是在理解之后，做的一个总结。按照事件传递的流程，把每一步的事件处理和返回结果做个梳理，这里的总结只包含了ACTION_DOWN事件。">
@@ -399,7 +399,7 @@
 <p><img src="http://upload-images.jianshu.io/upload_images/2412005-742b3a8890af98ca.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
 <p>1、<code>onTouchEvent</code>与<code>onTouchListener</code>都是处理Touch事件的API。不同的是，<code>onTouchEvent</code>是Android系统自身对于Touch事件处理的一个实现，<code>onTouchListener</code>是View暴露给用户的接口，方便用户处理Touch事件。</p>
 <p><code>onTouchListener</code>的优先级高于<code>onTouchEvent</code>，如果<code>onTouchListene</code>r被调用，且返回true，则<code>onTouchEvent</code>不会被执行，如果返回false，<code>onTouchEvent</code>则会被执行。</p>
-<p>2、<code>onClickListener</code>是在<code>ACTIN_UP</code>之后才会被调用，它是这三者中最后一个被调用的。</p>
+<p>2、<code>onClickListener</code>是<strong>在ACTIN_UP之后才会被调用</strong>，它是这三者中最后一个被调用的。</p>
 
       
     </div>
@@ -436,8 +436,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/25/android-3/" rel="next" title="设计模式 —— 相见恨晚">
-                <i class="fa fa-chevron-left"></i> 设计模式 —— 相见恨晚
+              <a href="/2017/06/25/android-4/" rel="next" title="Android源码中的设计模式 —— RecyclerView">
+                <i class="fa fa-chevron-left"></i> Android源码中的设计模式 —— RecyclerView
               </a>
             
           </div>
@@ -446,8 +446,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/25/android-5/" rel="prev" title="Android APP启动过程分析（1） —— Activity、Window、DecorView">
-                Android APP启动过程分析（1） —— Activity、Window、DecorView <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/25/android-3/" rel="prev" title="设计模式 —— 相见恨晚">
+                设计模式 —— 相见恨晚 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -520,7 +520,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

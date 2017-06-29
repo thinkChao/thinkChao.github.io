@@ -1,0 +1,919 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="反射作用我们知道Java代码会被编译成字节码文件，当一个类编译完成后，在生成的.class文件中会产生一个Class对象，该对象用于表示这个类的信息，比如类的属性，字段，构造方法等等。 既然Class中包含了这么多有用的信息，那么我们就可以使用反射的技术，获得这些编译之后的Class对象当中的内容。反射的最大作用就是开发各种通用框架。比如在Android的数据库框架中，就是使用了反射和注解两个技术">
+<meta property="og:type" content="article">
+<meta property="og:title" content="框架搭建必备 —— 反射、注解">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/android-8/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="反射作用我们知道Java代码会被编译成字节码文件，当一个类编译完成后，在生成的.class文件中会产生一个Class对象，该对象用于表示这个类的信息，比如类的属性，字段，构造方法等等。 既然Class中包含了这么多有用的信息，那么我们就可以使用反射的技术，获得这些编译之后的Class对象当中的内容。反射的最大作用就是开发各种通用框架。比如在Android的数据库框架中，就是使用了反射和注解两个技术">
+<meta property="og:updated_time" content="2017-06-29T07:09:39.363Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="框架搭建必备 —— 反射、注解">
+<meta name="twitter:description" content="反射作用我们知道Java代码会被编译成字节码文件，当一个类编译完成后，在生成的.class文件中会产生一个Class对象，该对象用于表示这个类的信息，比如类的属性，字段，构造方法等等。 既然Class中包含了这么多有用的信息，那么我们就可以使用反射的技术，获得这些编译之后的Class对象当中的内容。反射的最大作用就是开发各种通用框架。比如在Android的数据库框架中，就是使用了反射和注解两个技术">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/android-8/"/>
+
+
+
+
+
+  <title>框架搭建必备 —— 反射、注解 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/android-8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">框架搭建必备 —— 反射、注解</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T15:07:01+08:00">
+                2017-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/29/android-8/" class="leancloud_visitors" data-flag-title="框架搭建必备 —— 反射、注解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h1><h2 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h2><p>我们知道Java代码会被编译成字节码文件，当一个类编译完成后，在生成的.class文件中会产生一个Class对象，该对象用于表示这个类的信息，比如类的属性，字段，构造方法等等。 既然Class中包含了这么多有用的信息，那么我们就可以使用反射的技术，获得这些编译之后的Class对象当中的内容。<strong>反射的最大作用就是开发各种通用框架。</strong>比如在Android的数据库框架中，就是使用了反射和注解两个技术配合完成工作。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="获取Class的三种方式"><a href="#获取Class的三种方式" class="headerlink" title="获取Class的三种方式"></a>获取Class的三种方式</h3><p>1）类名.class<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Class clazz = Girl.class;</div></pre></td></tr></table></figure></p>
+<p>2）对象.getClass()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Girl girl = new Girl();</div><div class="line">clazz = girl.getClass();</div></pre></td></tr></table></figure></p>
+<p>3）Class.forName(“类名”)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">clazz = Class.forName(&quot;cc.testreflection.Girl&quot;);</div></pre></td></tr></table></figure></p>
+<p>在获取到Class之后，就可以利用newInstance()方法生成一个对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Object object = clazz.newInstance();</div></pre></td></tr></table></figure></p>
+<p>实际上在调用<code>newInstance()</code>方法时实际上是调用了该类的无参构造方法。</p>
+<h3 id="获取构造方法"><a href="#获取构造方法" class="headerlink" title="获取构造方法"></a>获取构造方法</h3><p>1） <code>getConstructors()</code>获取类的构造器，但获取不到私有构造器：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Class clazz = Class.forName(&quot;cc.testreflection.Girl&quot;);</div><div class="line">Constructor[] Constructors = clazz.getConstructors();</div></pre></td></tr></table></figure></p>
+<p>2） <code>getDeclaredConstructors()</code>获取类的所有构造器：</p>
+<p>获取类所有的构造器，这个没啥可说的。</p>
+<p>3） <code>getDeclaredConstructor()</code>获取指定的构造器：</p>
+<p>一个类可能有多个重载的构造方法，它们的方法名都是一样的,那么怎么获取指定的构造器呢？所以此时需要从构造器的输入参数入手，比如：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">clazz.getDeclaredConstructor(String.class, Integer.class);</div></pre></td></tr></table></figure></p>
+<p>就可以获取到如下的构造方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private Girl(String name,Integer age)&#123; &#125;</div></pre></td></tr></table></figure></p>
+<p>但是请注意该构造方法是private的，所以需要将该方法的accessible标志设置为true 表示取消语言访问检查。即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">constructor.setAccessible(true);</div></pre></td></tr></table></figure></p>
+<h3 id="获取字段"><a href="#获取字段" class="headerlink" title="获取字段"></a>获取字段</h3><p>同获取构造函数一样，对于私有字段同样要先取消语言访问检查再进行操作。</p>
+<p>1 ）<code>getFields()</code>获取类的字段，但是获取不到私有字段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Class clazz = Class.forName(&quot;cc.testreflection.Girl&quot;);</div><div class="line">Field[] fields = clazz.getFields();</div></pre></td></tr></table></figure></p>
+<p>2） <code>getDeclaredFields()</code>获取类的所有字段：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Field[] declaredFields = clazz.getDeclaredFields();</div></pre></td></tr></table></figure></p>
+<p>3） 获取指定的字段及其type：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Field field = clazz.getDeclaredField(&quot;name&quot;);</div><div class="line">Class type = field.getType();</div></pre></td></tr></table></figure></p>
+<p>4） 获取指定对象的某个字段值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Girl girl = new Girl(&quot;lucy&quot;, 100, 100, 100, 18);</div><div class="line">field.setAccessible(true);</div><div class="line">String name = (String) field.get(girl);</div></pre></td></tr></table></figure></p>
+<p>5） 设置指定对象的某个字段值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">field.set(girl, &quot;hanmeimei&quot;);</div></pre></td></tr></table></figure></p>
+<h3 id="获取方法"><a href="#获取方法" class="headerlink" title="获取方法"></a>获取方法</h3><p>同上，对于私有方法同样要先取消语言访问检查再进行操作。</p>
+<p>1 ）<code>getMethods()</code>获取该类及其父类的方法，但不能获取到私有方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Method[] methods = clazz.getMethods();</div></pre></td></tr></table></figure></p>
+<p>2） <code>getDeclaredMethods()</code>获取该类本身所声明的所有方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Method[] declaredMethods = clazz.getDeclaredMethods();</div></pre></td></tr></table></figure></p>
+<p>3）反射出类中的指定方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Method method = clazz.getDeclaredMethod(&quot;getMobile&quot;, String.class);</div><div class="line">Class returnType = method.getReturnType();</div></pre></td></tr></table></figure></p>
+<h3 id="获取泛型的参数类型"><a href="#获取泛型的参数类型" class="headerlink" title="获取泛型的参数类型"></a>获取泛型的参数类型</h3><p>在许多框架中有这样的需求：根据不同的泛型参数响应不同的操作。但是，泛型主要是写给编译器看的；那么在编译完成之后生成的字节码里，泛型会被擦除<br>。比如<code>ArrayList&lt;String&gt;</code>在编译后就变成了<code>ArrayList</code>，它原本的泛型被”擦除”了。但是我们有时确实需要知道泛型的参数类型，又该怎么来实现呢？一共需要五步：</p>
+<p>1）定义<code>getGenericHelper()</code>方法，其输入参数为带泛型的参数，比如<code>ArrayList&lt;String,Integer&gt;</code>。</p>
+<p>2）利用反射获取到该getGenericHelper()方法，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Method method=getClass().getDeclaredMethod(“getGenericHelper”,HashMap.class);</div></pre></td></tr></table></figure></p>
+<p>3）获取到该方法的带泛型的输入参数，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Type[] genericParameterTypes = method.getGenericParameterTypes();</div></pre></td></tr></table></figure></p>
+<p>注意getGenericParameterTypes()方法返回的是一个数组，因为方法可能有多个参数，但是依据我们的需求这个数组中是仅有一个元素的。</p>
+<p>4）获取到该带泛型参数的所有泛型的类型，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Type[] actualTypeArguments =parameterizedType.getActualTypeArguments();</div></pre></td></tr></table></figure></p>
+<p>因为一个参数的泛型可能有多个，所以getActualTypeArguments()的返值是一个数组。 比如，此处的ArrayList<string,integer>该参数就有两个泛型。</string,integer></p>
+<p>5）获取每个泛型的类型，即：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Type type = actualTypeArguments[i];</div></pre></td></tr></table></figure></p>
+<h2 id="关于Type"><a href="#关于Type" class="headerlink" title="关于Type"></a>关于Type</h2><p>在JDK1.5之前还没有泛型时，我们的数据都是这样的：int，double，String，User，Girl…….在泛型出来之后又多了这些东西：<t>HashMap<string,number>，List<string>[]…..这些新出来的数据类型又该用什么去表示呢？为了兼容和统一以前的JDK版本，这才出现了Type。</string></string,number></t></p>
+<p>Type一共有四个子接口： TypeVariable，ParameterizedType，GenericArrayType，WildcardType。</p>
+<p>它还有一个实现类Class<br>Class所表示的是原始类型，或者说是泛型出现之前的类型。比如String，User，Girl,Integer等等。</p>
+<h3 id="TypeVariable"><a href="#TypeVariable" class="headerlink" title="TypeVariable"></a>TypeVariable</h3><h3 id="ParameterizedType"><a href="#ParameterizedType" class="headerlink" title="ParameterizedType"></a>ParameterizedType</h3><h3 id="GenericArrayType"><a href="#GenericArrayType" class="headerlink" title="GenericArrayType"></a>GenericArrayType</h3><h3 id="WildcardType"><a href="#WildcardType" class="headerlink" title="WildcardType"></a>WildcardType</h3><h1 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h1><p><strong>定义：用一个词就可以描述注解，那就是元数据，即一种描述数据的数据。</strong></p>
+<h2 id="作用-1"><a href="#作用-1" class="headerlink" title="作用"></a>作用</h2><p>注解出现之前（包括之后），XML被广泛的应用于描述元数据，XML配置其实就是为了分离代码和配置而引入的。假如你想为应用设置很多的常量或参数，这种情况下，XML是一个很好的选择，因为它不会同特定的代码相连。</p>
+<p>后来开发者希望使用一些和代码紧耦合的东西，而不是像XML那样和代码是松耦合的(有时是完全分离的)代码描述。比如如果你想把某个方法声明为服务，那么使用注解会更好一些，因为这种情况下需要注解和方法紧密耦合起来。而且，注解定义了一种标准的描述元数据的方式，之前开发人员通常使用他们自己的方式定义元数据。</p>
+<p>目前，许多框架将XML和注解两种方式结合使用，平衡两者之间的利弊。</p>
+<p>总结注解的作用：</p>
+<p>1、代码检查：例如@Override是告诉编译器这个方法是一个重写方法，如果父类中不存在该方法，编译器会报错，提示该方法不是父类中的方法。如果不小心拼写错误，将onCreate写成了onCreat，而且没有使用@Override注解，程序依然能够编译通过，但运行结果肯定就不正确了。</p>
+<p>2、减少重复性工作：比如第三方框架xUtils，通过注解@ViewInject减少对findViewById的调用</p>
+<p>3、用于搭建通用框架，例如在数据库框架中，注解的作用就是实现Model类中的成员变量与数据库表中的字段形成映射。</p>
+<h2 id="注解的分类"><a href="#注解的分类" class="headerlink" title="注解的分类"></a>注解的分类</h2><h3 id="标准注解"><a href="#标准注解" class="headerlink" title="标准注解"></a>标准注解</h3><p>在Java的JDK中内置了一些系统自带的注解，这些注解也常称为标准注解，常见的有：@Override, @Deprecated, @SuppressWarnings等。</p>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><p>注解是用来标记或者说明类，方法，变量的，与此类似，Java还提供了元注解用于标记注解。 常见的元注解有：@Target、@Retention、@Documented、@Inherited。</p>
+<h4 id="Target"><a href="#Target" class="headerlink" title="@Target"></a>@Target</h4><p>Target用于确定Annotation所修饰的对象范围，我们知道注解可用于packages、types(类、接口、枚举)、类型成员(方法、成员变量、枚举值)、方法参数等等。所以，可用@Target表示Annotation修饰的目标。比如@Override的源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">@Target(ElementType.METHOD)</div><div class="line">@Retention(RetentionPolicy.SOURCE)</div><div class="line">public @interface Override &#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>常用的描述参数：<br><strong>METHOD：</strong>用于对方法进行注解</p>
+<p><strong>TYPE：</strong>用于描述类</p>
+<p><strong>CONSTRUCTOR：</strong>用于描述构造器 </p>
+<p><strong>FIELD：</strong>用于描述类成员变量 </p>
+<p><strong>LOCAL_VARIABLE：</strong>用于描述局部变量 </p>
+<p><strong>PACKAGE：</strong>用于描述包 </p>
+<p><strong>PARAMETER：</strong>用于描述参数</p>
+<h4 id="Retention"><a href="#Retention" class="headerlink" title="@Retention"></a>@Retention</h4><p>@Retention定义了Annotation的有效范围，类似于Android中常提到的生命周期。Java文件从生产到执行，要经过三个主要的阶段：java源文件，Class文件，JVM运行。与此类似，有的Annotation仅出现在源代码中而被编译器丢弃，而另一些却被编译在Class文件中；有的编译在Class文件中的Annotation在运行时会被虚拟机忽略，而另一些在运行时被读取读取。</p>
+<p><strong>SOURCE:在源文件中有效 </strong><br>该注解只保留在源文件即.java文件中。RetentionPolicy.SOURCE是我们平常见得最多的保留策略。比如：@Override, @SuppressWarnings</p>
+<p><strong>CLASS:在Class文件中有效 </strong><br>该注解会保留至.class阶段扔不会被丢弃，但加载到JVM虚拟机时会被丢弃。RetentionPolicy.CLASS是默认的注解保留策略</p>
+<p><strong>RUNTIME:在运行时有效 </strong><br>该注解保留至程序运行时即被装载进JVM虚拟机后，此时可通过反射获取与注解的相关信息，比如注解的属性及其值。RetentionPolicy.RUNTIME是一个非常有用的保留策略，尤其是在框架开发的时候。</p>
+<h4 id="Documented"><a href="#Documented" class="headerlink" title="@Documented"></a>@Documented</h4><p>@Documented表示在生成javadoc文档时将该Annotation也写入到帮助文档。 </p>
+<h4 id="Inherited"><a href="#Inherited" class="headerlink" title="@Inherited"></a>@Inherited</h4><p>@Inherited用于指示注释类型被自动继承。</p>
+<h3 id="自定义注解"><a href="#自定义注解" class="headerlink" title="自定义注解"></a>自定义注解</h3><p>顾名思义就是由程序员自己来定义的注解。</p>
+<h4 id="定义注解"><a href="#定义注解" class="headerlink" title="定义注解"></a>定义注解</h4><p>自定义注解和创建接口非常相似，但注解需要以@开头。如下我举了一个例子，在大括号里面看着像是声明了一个方法，但实际上是声明了一个属性，其中“方法名”是属性的名称，“方法的返回值类型“就是属性的类型，返回值类型只能是基本类型：String、enum、Class等。此外，可以通过default来声明属性的默认值。 我在这个例子中还用到了元注解：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">@Retention(RetentionPolicy.RUNTIME)</div><div class="line">@Target(ElementType.TYPE)</div><div class="line">public @interface Table &#123;</div><div class="line">    public String name();</div><div class="line">    public int age() default 20;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="使用注解"><a href="#使用注解" class="headerlink" title="使用注解"></a>使用注解</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">@Table(name=&quot;developer&quot;)</div><div class="line">public class Developer &#123;</div><div class="line">   </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="提取注解的值"><a href="#提取注解的值" class="headerlink" title="提取注解的值"></a>提取注解的值</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public void testAnnotation()&#123;</div><div class="line">    Class&lt;?&gt; clz = Developer.class;</div><div class="line">    if(clz.isAnnotationPresent(Table.class))&#123;   //判断这个类中是否有这个注解</div><div class="line">        Table table = clz.getAnnotation(Table.class);</div><div class="line">        System.err.print(&quot;---table-----&quot;+table.name());</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在提取注解时，我们用到了反射技术。上面这段代码只是提取了对这个类的注解的值，如果对里面的成员变量也使用了注解，那我们则要依次判断每一个成员变量是否使用了注解，如果有则取出。</p>
+<hr>
+<p><strong>参考：</strong><a href="http://blog.csdn.net/lfdfhl/article/details/52673536" target="_blank" rel="external">详解Android主流框架不可或缺的基石</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/26/read-2/" rel="next" title="《自控力》">
+                <i class="fa fa-chevron-left"></i> 《自控力》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#反射"><span class="nav-number">1.</span> <span class="nav-text">反射</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用"><span class="nav-number">1.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用"><span class="nav-number">1.2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#获取Class的三种方式"><span class="nav-number">1.2.1.</span> <span class="nav-text">获取Class的三种方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取构造方法"><span class="nav-number">1.2.2.</span> <span class="nav-text">获取构造方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取字段"><span class="nav-number">1.2.3.</span> <span class="nav-text">获取字段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取方法"><span class="nav-number">1.2.4.</span> <span class="nav-text">获取方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#获取泛型的参数类型"><span class="nav-number">1.2.5.</span> <span class="nav-text">获取泛型的参数类型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Type"><span class="nav-number">1.3.</span> <span class="nav-text">关于Type</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#TypeVariable"><span class="nav-number">1.3.1.</span> <span class="nav-text">TypeVariable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ParameterizedType"><span class="nav-number">1.3.2.</span> <span class="nav-text">ParameterizedType</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#GenericArrayType"><span class="nav-number">1.3.3.</span> <span class="nav-text">GenericArrayType</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WildcardType"><span class="nav-number">1.3.4.</span> <span class="nav-text">WildcardType</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#注解"><span class="nav-number">2.</span> <span class="nav-text">注解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#作用-1"><span class="nav-number">2.1.</span> <span class="nav-text">作用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#注解的分类"><span class="nav-number">2.2.</span> <span class="nav-text">注解的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#标准注解"><span class="nav-number">2.2.1.</span> <span class="nav-text">标准注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#元注解"><span class="nav-number">2.2.2.</span> <span class="nav-text">元注解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Target"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">@Target</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Retention"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">@Retention</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Documented"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">@Documented</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Inherited"><span class="nav-number">2.2.2.4.</span> <span class="nav-text">@Inherited</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义注解"><span class="nav-number">2.2.3.</span> <span class="nav-text">自定义注解</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义注解"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">定义注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用注解"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">使用注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#提取注解的值"><span class="nav-number">2.2.3.3.</span> <span class="nav-text">提取注解的值</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
