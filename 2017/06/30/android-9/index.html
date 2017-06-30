@@ -1,0 +1,981 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="从按下电源键的那一刻开始 这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。 现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从按下电源键的那一刻开始">
+<meta property="og:url" content="http://yoursite.com/2017/06/30/android-9/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="从按下电源键的那一刻开始 这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。 现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-d2d235ceece85b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-f805bf70a9d489b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-06-30T04:18:52.945Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从按下电源键的那一刻开始">
+<meta name="twitter:description" content="从按下电源键的那一刻开始 这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。 现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-d2d235ceece85b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/30/android-9/"/>
+
+
+
+
+
+  <title>从按下电源键的那一刻开始 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/30/android-9/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从按下电源键的那一刻开始</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-30T11:07:19+08:00">
+                2017-06-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/06/30/android-9/" class="leancloud_visitors" data-flag-title="从按下电源键的那一刻开始">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h5 id="从按下电源键的那一刻开始"><a href="#从按下电源键的那一刻开始" class="headerlink" title="从按下电源键的那一刻开始"></a>从按下电源键的那一刻开始</h5><blockquote>
+<p>这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。</p>
+<p>现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新编辑一下，把它发布出来，肯定会有收获。</p>
+</blockquote>
+<h2 id="第一步：Boot-ROM"><a href="#第一步：Boot-ROM" class="headerlink" title="第一步：Boot ROM"></a>第一步：Boot ROM</h2><p>当电源键按下，引导芯片代码开始从预定义的地方（固化在ROM中）开始执行，加载引导程序到RAM，然后执行。此后，计算机的执行就完全交给程序设计者了。</p>
+<h2 id="第二步：Boot-Loader（引导程序）"><a href="#第二步：Boot-Loader（引导程序）" class="headerlink" title="第二步：Boot Loader（引导程序）"></a>第二步：Boot Loader（引导程序）</h2><p>引导程序是在Android操作系统开始运行前的一个小程序，是运行的第一个程序，它的终极目标是让OS运行起来。BootLoader要做硬件初始化类的工作，必然和硬件相关，所以它的代码并非通用，不同的硬件需要不同的BootLoader代码，各大厂商都有自己的，并加入开机画面之类的。当然有的也支持多个平台，常用的有UBoot、RedBoot等。</p>
+<p>以UBoot为例，U-Boot启动内核的过程可以分为两个阶段，两个阶段的功能如下（按执行顺序进行的整理）：</p>
+<h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ul>
+<li>硬件设备初始化</li>
+<li>加载U-Boot第二阶段代码到RAM空间</li>
+<li>设置好栈</li>
+<li>跳转到第二阶段代码入口<h3 id="第二阶段"><a href="#第二阶段" class="headerlink" title="第二阶段"></a>第二阶段</h3></li>
+<li>初始化本阶段使用的硬件设备</li>
+<li>检测系统内存映射</li>
+<li>将内核从Flash读取到RAM中</li>
+<li>为内核设置启动参数</li>
+<li>调用内核</li>
+</ul>
+<h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>1、如果用户在BootLoader运行期间，按下预定义的组合键，可以进入系统更新模块。可以选择进入fastboot模式或者recovery模式，fastboot是Android设计的一套通过USB来更新手机分区映像的协议，方便开发人员能快速更新指定的手机分区，但是一般零售机往往去掉了fastboot。Recovery从某种意义上说是一个小型操作系统，和正常启动进入系统的Kernel是一样的。</p>
+<p>2、root是开发者通过内核的一些漏洞而获得最高权限，root是在操作系统层面，而BootLoader是偏硬件层面。</p>
+<p>3、初始化RAM:因为Linux内核在RAM中执行，所以在调用Linux内核前必须设置和初始化RAM，任务包括设置CPU的控制寄存器参数，以便能正常使用RAM及检测RAM大小。</p>
+<p>4、初始化串口：通过串口输出信息是调试BootLoader和Linux内核的强有力的工具，它是Linux内核和用户交互的方式之一。</p>
+<p>5、检测处理器类型：Linux内核在启动过程中会根据处理器类型调用相应地初始化程序。</p>
+<p>6、设置Linux启动参数：Linux在启动过程中会根据该启动参数进行相应的初始化工作。</p>
+<p>7、调用Linux内核映像：将Linux内核拷贝到RAM中，然后跳转到RAM中去执行。Linux内核有两种映像：一种是非压缩内核，叫Image；另一种是它的压缩版本，叫zImage。考虑到嵌入式系统的存储容量一般比较小，所以嵌入式系统均采用内核压缩方式。为了能使用zImage，必须在开头加上解压缩代码。</p>
+<h2 id="第三步：启动内核Kernel"><a href="#第三步：启动内核Kernel" class="headerlink" title="第三步：启动内核Kernel"></a>第三步：启动内核Kernel</h2><p>由BootLoader装载内核映像到代码段内存，分别放置实模式代码和保护模式代码到不同位置，然后进入实模式代码执行，执行完后转入保护模式代码。一旦Linux内核装载完毕，BootLoader将会从内存中清除掉。</p>
+<p>内核启动时，设置缓存、计划列表、<strong>加载驱动</strong>，完成系统设置后，它首先在系统文件中寻找“init”文件，然后启动第一个进程。</p>
+<h2 id="第四步：启动init进程"><a href="#第四步：启动init进程" class="headerlink" title="第四步：启动init进程"></a>第四步：启动init进程</h2><p><strong>由于zImage在内核空间运行，而我们平时使用的软件是在应用空间运行，这两个空间是不能直接通过内存地址级别访问的，所以就需要建立某种通讯机制。</strong></p>
+<p>目前Linux有许多通讯机制可以在用户空间和内核空间交互，例如驱动文件、内存文件。Linux的特征之一是一切以文件形式存在，<strong>这些与内核交互的文件都在用户空间，所以Linux内核装载完成后，需要首先建立这些文件所在的目录，而完成这些工作的程序就是init。</strong></p>
+<h3 id="init进程的作用"><a href="#init进程的作用" class="headerlink" title="init进程的作用"></a>init进程的作用</h3><p>1、    挂载目录：比如/sys、/dev、/proc。</p>
+<p>2、    运行init.rc脚本</p>
+<ul>
+<li>初始化属性：属性系统是Android的一个重要特征，它作为一个服务运行，管理系统配置和状态，所有这些配置和状态都是属性，每个属性是一个键值对。这些属性可能是某些资源的使用状态、进程的执行状态、系统的特有属性……Android为了存储关于全局和设置的信息，使用了一个公共缓冲区。属性系统首先得有个固定地址空间，这是初始化的任务，初始化工作的最佳位置就是init进程。Android系统级应用和底层模块非常依赖属性系统，常常依靠属性值来决定它们的行为。在Android的系统设置设置程序中，很多功能的打开和关闭，都是通过某个特定的属性值来控制。</li>
+<li>处理配置文件的命令（主要是init.rc文件）</li>
+<li>性能分析（使用bootchar工具）</li>
+<li>无限循环command，启动其它进程</li>
+</ul>
+<h3 id="执行流程"><a href="#执行流程" class="headerlink" title="执行流程"></a>执行流程</h3><h4 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h4><p><strong>第一步是在进入for循环之前，主要完成Android系统最初的准备，包括建立目录、解析初始化脚本、构建内建命令的工作。</strong></p>
+<ul>
+<li>进入main()函数后，首先检查启动程序的文件名。如果文件名是“uevented”，执行守护进程uevented的主函数uevented_main()，如果文件名是“watchdogd”，执行看门狗守护进程的主函数watchdogd_main()。都不是则继续执行。</li>
+<li>缺省情况下一个进程创建出的文件和文件夹的属性是022，使用umask()函数能设置文件属性的掩码。参数为0意味着进程创建的文件属性是0777。<br>*创建一些基本的目录，包括/dev、/proc、/sys等；同时把一些文件系统，如tmpfs、devpt、proc、sysfs等mount（Linux挂在目录）到相应的目录。<br>tmpfs是一种基于内存的文件系统，mount后就可以使用。tmpfs文件系统下的文件都存放在内存中，访问速度快，但关机后就会丢失，因此tmpfs文件系统比较适合存放一些临时性的文件。</li>
+<li>devpts是虚拟终端文件系统，它通常mount在目录/dev/pts下。<br>proc也是一种基于内存的在虚拟文件系统，它可以看作是内核内部数据结构的接口，通过它可以获得系统信息，同时能够在运行时修改特定的内核参数。<br>sysfs文件系统和proc文件系统类似……</li>
+<li>在/dev目录下创建一个空文件“.booting”表示初始化正在进行。</li>
+<li>调用open_devnull_stdio()函数把标准输入、标准输出和标准错误重定向到空设备文件“/dev/<em>null</em>”，这是创建守护进程常用的手段。</li>
+<li>调用klog_inti()函数创建节点/dev/<em>kmsg</em>，这样init进程可以使用kernel的log系统来输出log了。因为这时Android的log系统还没有启动，所以，init只能使用kernel的log系统。</li>
+<li>调用property_init()函数来初始化Android的属性系统。</li>
+<li>调用get_hardware_name()函数，通过分析/proc/cpuinfo文件，取得系统硬件的名称。</li>
+<li>调用process_kernel_cmdline()函数，解析kernel的启动参数，气动参数通常放在“/proc/cmsline”中。</li>
+<li>初始化SELinux，是Android4.3开始引入的安全内核。</li>
+<li>调用property_load_boot_defaults()函数，解析设备根目录下的default.prop文件，把文件中定义的属性值读出来设置到属性系统中。</li>
+<li>调用init_parse_config_file()函数解析init.rc文件，解析完成后的结果是将init文件中的Server项和Action项分别加入到内部Service列表“service_list”和Action列表“action_list”。</li>
+<li><p>调用action_for_each_trigger()函数用来将注定的actio加入到执行列表”action_queue”中。</p>
+<h4 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h4><p><strong>第二步是进入for循环之后的“单步执行工作”，这部分主要将逐条执行前面解析得到的命令。</strong></p>
+</li>
+<li><p>main()函数最后会进入一个无限for循环，每次循环开始都会调用execute_one_command()函数来执行命令列表中的一条命令，同时调用restart_proceses()函数来启动服务进程。</p>
+</li>
+</ul>
+<h4 id="第三步"><a href="#第三步" class="headerlink" title="第三步"></a>第三步</h4><p><strong>第三步是for循环中的真正循环，也就是在Android系统正常运行的状态中的例行工作，也是init作为守护进程处理的主要工作。由于这部分的存在，init可执行程序正常状态下不会退出for循环，也就是init进程不会结束。主要有两个方面的内容：重新启动服务和几个信号机制的处理。</strong></p>
+<ul>
+<li>Init进程初始化系统后，会化身为守护进程来处理子进程的死亡信号，修改属性的请求和组合键盘键事件。监听事件使用的是poll系统调用，使用poll前需要创建或获得用于监听这些事件的文件描述符，同时初始化poll调用需要的数据结构。</li>
+<li>Poll()调用可以设置等待超时间的时间，参数为-1表示无限等待，参数为0表示要立刻返回，参数为正数表示要等待的时间。</li>
+<li>调用poll()来监听事件的发生。如果监听到修改属性的事件，将会调用处理函数handle_property_set_fd()；如果监听到组合键盘消息，将会调用处理函数handle_keychord()；如果监听到信号，将会调用处理函数handle_signal()。</li>
+</ul>
+<h3 id="Init启动的守护进程"><a href="#Init启动的守护进程" class="headerlink" title="Init启动的守护进程"></a>Init启动的守护进程</h3><ul>
+<li><strong>uevented：</strong>负责响应uevent事件，创建设备节点文件。</li>
+<li><strong>console：</strong>包含常用的shell命令，如ls、cd。</li>
+<li><strong>adbd：</strong>adb的守护进程。</li>
+<li><strong>servicemanager：</strong>binder的服务总管，负责binder服务的注册和查找。</li>
+<li><strong>vold：</strong>负责完成系统USB存储卡等扩展存储自动挂载的守护进程。</li>
+<li><strong>netd：</strong>Android的网络守护进程。</li>
+<li><strong>debugged：</strong>负责异常退出的诊断。如果侦测到程序崩溃，debugged将把崩溃时的进程状态信息输出到文件和串口中，供开发人员分析和调试使用。</li>
+<li><strong>ril-deamon:</strong>手机底层通信系统的守护进程。</li>
+<li><strong>surfacedlinger：</strong>负责合成系统所有显示图层的服务进程。</li>
+<li><strong>media：</strong>系统多媒体部分的守护进程，包含了audio、mediaplayer以及camera等系统服务。</li>
+<li><strong>bootanim：</strong>播放开机动画的进程。</li>
+<li><strong>installd：</strong>Android的安装服务守护进程。<h2 id="第五步：启动zygote"><a href="#第五步：启动zygote" class="headerlink" title="第五步：启动zygote"></a>第五步：启动zygote</h2>在Android中，zygote是整个系统创建新进程的核心装置，是由init进程根据init.rc文件中的配置项创建的。所有的应用程序进程，以及用来运行系统关键服务的system进程都是由zygote进程负责创建的。</li>
+</ul>
+<p>zygote在内部会先启动Dalvik虚拟机，继而加载一些必要的系统资源和系统类。Zygote进程是通过复制自身的方式来创建system进程和应用程序进程的，于是这个新进程在初生之时，就先天具有了Dalvik虚拟机及系统资源。</p>
+<p>zygote与系统中其它进程的通信没有使用Binder，而是采用了AF_UNIX类型的socket。</p>
+<h3 id="zygote进程的作用"><a href="#zygote进程的作用" class="headerlink" title="zygote进程的作用"></a>zygote进程的作用</h3><p>1、建立虚拟机，建立java Runtime</p>
+<p>2、    建立socket接收ActivityManagerService的请求，用于fork应用程序</p>
+<p>3、    启动SystemServer</p>
+<h3 id="zygote进程的执行流程"><a href="#zygote进程的执行流程" class="headerlink" title="zygote进程的执行流程"></a>zygote进程的执行流程</h3><p>zygote进程的可执行文件是app_process，app_process模块的源文件位于目录<code>/frameworks/base/cmds/app_process</code>下，只有一个文件<code>app_main.cpp</code>。</p>
+<h4 id="第一步-1"><a href="#第一步-1" class="headerlink" title="第一步"></a>第一步</h4><p><strong>首先执行app_process的main函数</strong></p>
+<ul>
+<li>创建AppRuntime对象并保存参数，AppRuntime是在app_process中定义的类，继承了系统的AndroidRuntime类。AndroidRuntime类的主要作用是创建和初始化虚拟机。</li>
+<li>解析启动参数。</li>
+<li>准备执行ZygoteInit类或RuntimeInit类的参数</li>
+<li>将本进程的名称改为参数“—nice-name”指定的字符串，缺省情况下niceName的值为“zygote”。</li>
+<li><p>通过参数传进来的java类。</p>
+<h4 id="第二步-1"><a href="#第二步-1" class="headerlink" title="第二步"></a>第二步</h4><p><strong>在main()函数的结尾，调用AndroidRuntime类的start()函数来执行java类。下面看看start()函数的执行过程。</strong></p>
+</li>
+<li><p>打印启动Log。</p>
+</li>
+<li>获取系统目录，系统目录是在Init进程中创建出来的。</li>
+<li>调用startVm()，启动虚拟机，Android从5.0开始，启动的将是Art虚拟机。</li>
+<li>调用虚函数onVmCreated()。</li>
+<li>调用startReg(),注册系统的JNI函数。</li>
+<li>准备调用java类的main()函数的参数。</li>
+<li><p>调用ZygoteInit类的main()方法。</p>
+<h4 id="第三步-1"><a href="#第三步-1" class="headerlink" title="第三步"></a>第三步</h4><p><strong>ZygoteInit类的main（）方法的执行过程。</strong></p>
+</li>
+<li><p>解析调用的参数。</p>
+</li>
+<li>调用registerZygoteSocket()方法注册Zygote的socket监听端口，用来接收启动应用程序的消息。调用preload()方法装载系统资源，包括系统预加载类、Framework资源和openGL的资源。这样当应用程序被fork处理后，应用的进程内已经包含了这些系统资源，大大节省了应用的启动时间</li>
+<li>调用startSystemServer()方法启动SystemServer进程</li>
+<li>最后调用runSelectLoop()方法进入监听和接收消息的循环。<h3 id="zygote启动应用程序"><a href="#zygote启动应用程序" class="headerlink" title="zygote启动应用程序"></a>zygote启动应用程序</h3>上一张图吧，忘记了当时是在哪本书里看到的了：<br><img src="http://upload-images.jianshu.io/upload_images/2412005-d2d235ceece85b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></li>
+</ul>
+<h2 id="第六步：启动SystemServer进程"><a href="#第六步：启动SystemServer进程" class="headerlink" title="第六步：启动SystemServer进程"></a>第六步：启动SystemServer进程</h2><p>SystemServer是Android系统的核心之一，大部分Android提供的服务都运行在这个进程里,SystemServer中运行的服务总共有六十多种。为了防止应用进程对系统造成破坏，Android的应用进程没有权限直接访问设备的底层资源，只能通过SystemService中的服务代理访问。通过Binder，用户进程使用SystemServer中的服务并没有太多的不便之处。</p>
+<p>SystemServer的创建可以分成两部分，一部分是在zygote进程中fork并初始化SystemServer进程，另一部分是执行SystemServer类的main()方法来启动系统的服务。</p>
+<h3 id="执行流程-1"><a href="#执行流程-1" class="headerlink" title="执行流程"></a>执行流程</h3><h4 id="第一步-2"><a href="#第一步-2" class="headerlink" title="第一步"></a>第一步</h4><p><strong>在ZygoteInit类的main()方法调用startSystemServer()方法来启动SystemServer。在此方法中，主要做了三件事：</strong></p>
+<ul>
+<li>为SystemServer准备启动参数，从参数里可以看出：SystemServer的进程Id和组Id都被指定为1000。</li>
+<li>调用Zygote类的forkSystemServer()来fork出SystemServer子进程。如果SystemServer启动不成功，将导致系统从Zygote开始再启动一遍。</li>
+<li>在fork出的进程中调用handleSystemServerProcess（）来初始化SystemServer进程。<h4 id="第二步-2"><a href="#第二步-2" class="headerlink" title="第二步"></a>第二步</h4><strong>SystemServer初始化，它的入口main()方法的主要工作是：</strong></li>
+<li>设置属性……</li>
+<li>调整时间</li>
+<li>调整虚拟机堆的内存</li>
+<li>装载库libandroid.so</li>
+<li>调用nativeInit()方法初始化native层的Binder服务。</li>
+<li>创建并运行java服务</li>
+<li>调用Loop.loop()，进入处理消息的循环</li>
+</ul>
+<h2 id="第七步：启动Home"><a href="#第七步：启动Home" class="headerlink" title="第七步：启动Home"></a>第七步：启动Home</h2><p>一旦系统服务在内存中跑起来了，Android就完成了引导过程，这个时候“ACTION_BOOT_COMPLETED”开机启动广播就会发出，Home主页启动。</p>
+<h2 id="附图"><a href="#附图" class="headerlink" title="附图"></a>附图</h2><p><img src="http://upload-images.jianshu.io/upload_images/2412005-f805bf70a9d489b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/29/suanfa-1/" rel="next" title="什么是编程能力？">
+                <i class="fa fa-chevron-left"></i> 什么是编程能力？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#从按下电源键的那一刻开始"><span class="nav-number">1.</span> <span class="nav-text">从按下电源键的那一刻开始</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步：Boot-ROM"><span class="nav-number"></span> <span class="nav-text">第一步：Boot ROM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步：Boot-Loader（引导程序）"><span class="nav-number"></span> <span class="nav-text">第二步：Boot Loader（引导程序）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一阶段"><span class="nav-number"></span> <span class="nav-text">第一阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二阶段"><span class="nav-number"></span> <span class="nav-text">第二阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补充"><span class="nav-number"></span> <span class="nav-text">补充</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步：启动内核Kernel"><span class="nav-number"></span> <span class="nav-text">第三步：启动内核Kernel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第四步：启动init进程"><span class="nav-number"></span> <span class="nav-text">第四步：启动init进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#init进程的作用"><span class="nav-number"></span> <span class="nav-text">init进程的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行流程"><span class="nav-number"></span> <span class="nav-text">执行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一步"><span class="nav-number"></span> <span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步"><span class="nav-number"></span> <span class="nav-text">第二步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步"><span class="nav-number"></span> <span class="nav-text">第三步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Init启动的守护进程"><span class="nav-number"></span> <span class="nav-text">Init启动的守护进程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第五步：启动zygote"><span class="nav-number"></span> <span class="nav-text">第五步：启动zygote</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#zygote进程的作用"><span class="nav-number"></span> <span class="nav-text">zygote进程的作用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zygote进程的执行流程"><span class="nav-number"></span> <span class="nav-text">zygote进程的执行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一步-1"><span class="nav-number"></span> <span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步-1"><span class="nav-number"></span> <span class="nav-text">第二步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第三步-1"><span class="nav-number"></span> <span class="nav-text">第三步</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zygote启动应用程序"><span class="nav-number"></span> <span class="nav-text">zygote启动应用程序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第六步：启动SystemServer进程"><span class="nav-number"></span> <span class="nav-text">第六步：启动SystemServer进程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#执行流程-1"><span class="nav-number"></span> <span class="nav-text">执行流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一步-2"><span class="nav-number"></span> <span class="nav-text">第一步</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#第二步-2"><span class="nav-number"></span> <span class="nav-text">第二步</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第七步：启动Home"><span class="nav-number"></span> <span class="nav-text">第七步：启动Home</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附图"><span class="nav-number"></span> <span class="nav-text">附图</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
