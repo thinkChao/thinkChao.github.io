@@ -98,7 +98,7 @@
 <meta property="og:description" content="从按下电源键的那一刻开始 这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。 现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-d2d235ceece85b71.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-f805bf70a9d489b9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-06-30T04:18:52.945Z">
+<meta property="og:updated_time" content="2017-06-30T04:21:25.540Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从按下电源键的那一刻开始">
 <meta name="twitter:description" content="从按下电源键的那一刻开始 这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。 现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新">
@@ -367,9 +367,9 @@
       
         <h5 id="从按下电源键的那一刻开始"><a href="#从按下电源键的那一刻开始" class="headerlink" title="从按下电源键的那一刻开始"></a>从按下电源键的那一刻开始</h5><blockquote>
 <p>这是去年这个时候整理的一点东西，之前一直想搞明白，Android手机从按下电源键的那一刻，到底是怎么运行的。查找了好多博客和书籍，没发现讲解整个流程的，侧重点各不相同，不过集结起来基本上能搞清楚整个脉络。所以当时对一些书里的内容抽丝剥茧，梳理出这么个流程。</p>
-<p>现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新编辑一下，把它发布出来，肯定会有收获。</p>
-</blockquote>
+<p>现在回头看整理的这些内容确实有些粗糙，而且即便整理出来了，好像也没什么用处（当时的确特别想弄明白）。不过还是决定重新编辑一下，把它发布出来，肯定会有收获。<br><a id="more"></a></p>
 <h2 id="第一步：Boot-ROM"><a href="#第一步：Boot-ROM" class="headerlink" title="第一步：Boot ROM"></a>第一步：Boot ROM</h2><p>当电源键按下，引导芯片代码开始从预定义的地方（固化在ROM中）开始执行，加载引导程序到RAM，然后执行。此后，计算机的执行就完全交给程序设计者了。</p>
+</blockquote>
 <h2 id="第二步：Boot-Loader（引导程序）"><a href="#第二步：Boot-Loader（引导程序）" class="headerlink" title="第二步：Boot Loader（引导程序）"></a>第二步：Boot Loader（引导程序）</h2><p>引导程序是在Android操作系统开始运行前的一个小程序，是运行的第一个程序，它的终极目标是让OS运行起来。BootLoader要做硬件初始化类的工作，必然和硬件相关，所以它的代码并非通用，不同的硬件需要不同的BootLoader代码，各大厂商都有自己的，并加入开机画面之类的。当然有的也支持多个平台，常用的有UBoot、RedBoot等。</p>
 <p>以UBoot为例，U-Boot启动内核的过程可以分为两个阶段，两个阶段的功能如下（按执行顺序进行的整理）：</p>
 <h3 id="第一阶段"><a href="#第一阶段" class="headerlink" title="第一阶段"></a>第一阶段</h3><ul>
