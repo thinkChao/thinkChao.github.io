@@ -1,0 +1,861 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《数据结构》二叉树 —— 二叉树的建立和遍历">
+<meta property="og:url" content="http://yoursite.com/2017/07/04/suanfa-3/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
+<meta property="og:updated_time" content="2017-07-03T23:39:58.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《数据结构》二叉树 —— 二叉树的建立和遍历">
+<meta name="twitter:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/04/suanfa-3/"/>
+
+
+
+
+
+  <title>《数据结构》二叉树 —— 二叉树的建立和遍历 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/04/suanfa-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《数据结构》二叉树 —— 二叉树的建立和遍历</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-04T07:38:22+08:00">
+                2017-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/算法编程/" itemprop="url" rel="index">
+                    <span itemprop="name">算法编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/04/suanfa-3/" class="leancloud_visitors" data-flag-title="《数据结构》二叉树 —— 二叉树的建立和遍历">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具体编码的这个思考过程，就是思考如何编码实现，这个过程是逃不掉的，除非参考别人的现有代码，但一段时间过后一定会忘记（百分之百的，我就忘记了无数次了）。所以，尽量在编程实现前，自己有个清晰的思路，尝试着自己去实现，然后调试。<br><a id="more"></a><br><strong>代码</strong></p>
+</blockquote>
+<p>代码托管在<a href="https://github.com/thinkChao/Data-Structure/blob/master/%E4%BA%8C%E5%8F%89%E6%A0%91.cpp" target="_blank" rel="external">github</a> ，需要的可以下载或者直接复制代码运行，只有一个cpp文件。已经通过测试，完全没有问题。这里重点是实现算法思想，所以没有考虑代码的健壮性，没有异常处理。</p>
+<h2 id="定义二叉树的节点"><a href="#定义二叉树的节点" class="headerlink" title="定义二叉树的节点"></a>定义二叉树的节点</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">struct Node</div><div class="line">&#123;</div><div class="line">    int value;</div><div class="line">    struct Node *left_node;</div><div class="line">    struct Node *right_node;</div><div class="line">&#125;;</div><div class="line">typedef struct Node TNode;    //定义二叉树节点 (方式一)</div><div class="line">typedef TNode *BTree;    //定义二叉树链表（方式二）</div></pre></td></tr></table></figure>
+<p>二叉树的节点定义很简单，采用结构体，一个数据域和两个指针域。但有一个问题是让我不解的，就是为什么在typedef时要采用两种方式，而且我看过的所有课本中，无一例外的都采用了这两种方式（在链表的定义中也是如此）。我试验只采用第一种，完全没任何问题。我去网上搜索，也没人给出答案。看到这篇文章的同学，如果知道的话，希望在简书留言告诉我！</p>
+<h2 id="二叉树的建立"><a href="#二叉树的建立" class="headerlink" title="二叉树的建立"></a>二叉树的建立</h2><p><strong>思路：</strong>一般的题目中，都是直接告诉我们有一棵二叉树，直接让我们进行各种遍历，让我们从零创建一棵树的还真不多见。仔细想想，思路还真不是那么清晰。如果说给我们两种遍历的结果，让我们反推这棵树，那结果是唯一的。但直接给我们一个数组，让我们创建一棵二叉树，那创建的方式太多了，一时还真没啥思路。不过翻看了一本书，书中给了一种创建过程，他采用的原则是“小于父节点的值放在左子树，大于父节点的值放在右子树”。但是，让我困惑的是，他说“建立二叉树必须遵守这个原则”，我怎么从来没听说过这个原则？？？这个先不管了，不过这是创建二叉树的一种方式，总算有个可以依据的原则，接下来就创建吧。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">void Add_Node(int value)</div><div class="line">&#123;</div><div class="line">    /*定义需要用到的变量*/</div><div class="line">    TNode *newNode;        //待插入的新节点</div><div class="line">    BTree currentNode;        //临时的指针</div><div class="line">    int flag = 0;        //记录是否插入了新的节点</div><div class="line">    newNode = (TNode *)malloc(sizeof(TNode));        //为新节点分配空间并输入内容</div><div class="line">    newNode-&gt;value = value;</div><div class="line">    newNode-&gt;left_node = NULL;</div><div class="line">    newNode-&gt;right_node = NULL;</div><div class="line">    /*将新节点插入二叉树*/</div><div class="line">    if(bTree == NULL)</div><div class="line">        bTree = newNode;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        currentNode = bTree;</div><div class="line">        while(!flag)        //循环结束的时刻是：flag=1，即节点已被插入</div><div class="line">        &#123;</div><div class="line">            if(value&lt;currentNode-&gt;value)</div><div class="line">            &#123;</div><div class="line">                if(currentNode-&gt;left_node==NULL)</div><div class="line">                &#123;</div><div class="line">                    currentNode-&gt;left_node=newNode;</div><div class="line">                    flag=1;</div><div class="line">                &#125;</div><div class="line">                else</div><div class="line">                    currentNode=currentNode-&gt;left_node;</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                if(currentNode-&gt;right_node==NULL)</div><div class="line">                &#123;</div><div class="line">                    currentNode-&gt;right_node=newNode;</div><div class="line">                    flag=1;</div><div class="line">                &#125;</div><div class="line">                else</div><div class="line">                    currentNode=currentNode-&gt;right_node;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    int content[ArraySize];</div><div class="line">    cout&lt;&lt;&quot;请输入6个整数：&quot;&lt;&lt;endl;    //输入数据</div><div class="line">    for(int i=0;i&lt;ArraySize;i++)</div><div class="line">        cin&gt;&gt;content[i];</div><div class="line">    for(i=0;i&lt;ArraySize;i++)    //建树</div><div class="line">        Add_Node(content[i]);</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="三种遍历方式-递归-amp-非递归"><a href="#三种遍历方式-递归-amp-非递归" class="headerlink" title="三种遍历方式(递归&amp;非递归)"></a>三种遍历方式(递归&amp;非递归)</h2><p>直接上代码吧，注释还比较详细。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div></pre></td><td class="code"><pre><div class="line">void Preorder(BTree bTree)        //递归前序遍历</div><div class="line">&#123;</div><div class="line">    if(bTree!=NULL)</div><div class="line">    &#123;</div><div class="line">        cout&lt;&lt;bTree-&gt;value&lt;&lt;&quot; &quot;;</div><div class="line">        Preorder(bTree-&gt;left_node);</div><div class="line">        Preorder(bTree-&gt;right_node);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Preorder2(BTree bTree)        //非递归前序遍历</div><div class="line">&#123;</div><div class="line">    /*定义需要用到的变量*/</div><div class="line">    BTree stack[ArraySize];        //用数组来充当栈</div><div class="line">    int top=0;        //top变量来充当栈顶指针，top为0说明栈空</div><div class="line">    BTree p=bTree;</div><div class="line">    while(p||top!=0)</div><div class="line">    &#123;</div><div class="line">        if(p)</div><div class="line">        &#123;</div><div class="line">            cout&lt;&lt;p-&gt;value&lt;&lt;&quot; &quot;;</div><div class="line">            stack[top++]=p;</div><div class="line">            p=p-&gt;left_node;</div><div class="line">        &#125;</div><div class="line">        else</div><div class="line">        &#123;</div><div class="line">            p=stack[--top];        //注意这里是“--top”</div><div class="line">            p=p-&gt;right_node;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Inorder(BTree bTree)        //递归中序遍历</div><div class="line">&#123;</div><div class="line">    if(bTree!=NULL)</div><div class="line">    &#123;</div><div class="line">        Inorder(bTree-&gt;left_node);</div><div class="line">        cout&lt;&lt;bTree-&gt;value&lt;&lt;&quot; &quot;;</div><div class="line">        Inorder(bTree-&gt;right_node);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Inorder2(BTree bTree)        //非递归中序遍历</div><div class="line">&#123;</div><div class="line">    /*定义需要用到的变量*/</div><div class="line">    BTree stack[ArraySize];        //用数组来充当栈</div><div class="line">    int top=0;        //top变量来充当栈顶指针，top为0说明栈空</div><div class="line">    BTree p=bTree;</div><div class="line">    while(p||top!=0)    //举例：建立一个只有三个节点的二叉树发现，当p的指向为空，且top=0的时候，所有的元素都已经遍历过了</div><div class="line">    &#123;</div><div class="line">        if(p)</div><div class="line">        &#123;</div><div class="line">            stack[top++]=p;</div><div class="line">            p=p-&gt;left_node;</div><div class="line">        &#125;</div><div class="line">        else    //举例发现，当p指向为空时，就要执行出战操作，然后输出元素</div><div class="line">        &#123;</div><div class="line">            p=stack[--top];        //注意这里是“--top”</div><div class="line">            cout&lt;&lt;p-&gt;value&lt;&lt;&quot; &quot;;</div><div class="line">            p=p-&gt;right_node;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void Postorder(BTree bTree)        //递归后序遍历</div><div class="line">&#123;</div><div class="line">    if(bTree!=NULL)</div><div class="line">    &#123;</div><div class="line">        Postorder(bTree-&gt;left_node);</div><div class="line">        Postorder(bTree-&gt;right_node);</div><div class="line">        cout&lt;&lt;bTree-&gt;value&lt;&lt;&quot; &quot;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line"></div><div class="line">void Postorder2(BTree bTree)        //非递归后序遍历</div><div class="line">&#123;</div><div class="line">    BTree stack1[ArraySize];</div><div class="line">    int stack2[ArraySize];</div><div class="line">    int top1=0,top2=0;</div><div class="line">    int flag;</div><div class="line">    BTree p=bTree;</div><div class="line">    while(p||top1!=0)</div><div class="line">    &#123;</div><div class="line">        if(p)</div><div class="line">        &#123;</div><div class="line">            stack1[top1++]=p;</div><div class="line">            stack2[top2++]=0;</div><div class="line">            p=p-&gt;left_node;</div><div class="line">        &#125;</div><div class="line">        else</div><div class="line">        &#123;</div><div class="line">            p=stack1[top1-1];       </div><div class="line">            flag=stack2[top2-1];</div><div class="line">            if(flag==0)</div><div class="line">            &#123;</div><div class="line">                stack2[top2-1]=1;</div><div class="line">                p=p-&gt;right_node;</div><div class="line">            &#125;</div><div class="line">            else</div><div class="line">            &#123;</div><div class="line">                p=stack1[--top1];</div><div class="line">                --top2;</div><div class="line">                cout&lt;&lt;p-&gt;value&lt;&lt;&quot; &quot;;</div><div class="line">                p=NULL;        //这一句很关键，调试了一上午，问题就是没有加上这一句。</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/03/read-3/" rel="next" title="《钝感力》">
+                <i class="fa fa-chevron-left"></i> 《钝感力》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#定义二叉树的节点"><span class="nav-number">1.</span> <span class="nav-text">定义二叉树的节点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二叉树的建立"><span class="nav-number">2.</span> <span class="nav-text">二叉树的建立</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三种遍历方式-递归-amp-非递归"><span class="nav-number">3.</span> <span class="nav-text">三种遍历方式(递归&非递归)</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
