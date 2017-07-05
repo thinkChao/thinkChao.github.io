@@ -90,16 +90,16 @@
 
 
 
-<meta name="description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。  如何新建项目，并向github提交代码">
+<meta name="description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git操作整理">
-<meta property="og:url" content="http://yoursite.com/2017/06/22/self-2/index.html">
+<meta property="og:title" content="《数据结构》排序 —— 插入+冒泡+选择">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/suanfa-4/index.html">
 <meta property="og:site_name" content="thinkChao">
-<meta property="og:description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。  如何新建项目，并向github提交代码">
-<meta property="og:updated_time" content="2017-06-25T08:17:16.753Z">
+<meta property="og:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
+<meta property="og:updated_time" content="2017-07-05T00:07:16.813Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Git操作整理">
-<meta name="twitter:description" content="网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。  如何新建项目，并向github提交代码">
+<meta name="twitter:title" content="《数据结构》排序 —— 插入+冒泡+选择">
+<meta name="twitter:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
 
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/22/self-2/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/suanfa-4/"/>
 
 
 
 
 
-  <title>Git操作整理 | thinkChao</title>
+  <title>《数据结构》排序 —— 插入+冒泡+选择 | thinkChao</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -263,7 +263,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/22/self-2/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/suanfa-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="thinkChao">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Git操作整理</h1>
+          <h1 class="post-title" itemprop="name headline">《数据结构》排序 —— 插入+冒泡+选择</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-22T16:43:37+08:00">
-                2017-06-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T16:22:30+08:00">
+                2017-06-29
               </time>
             
 
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/个人整理/" itemprop="url" rel="index">
-                    <span itemprop="name">个人整理</span>
+                  <a href="/categories/算法编程/" itemprop="url" rel="index">
+                    <span itemprop="name">算法编程</span>
                   </a>
                 </span>
 
@@ -332,7 +332,7 @@
 
           
           
-             <span id="/2017/06/22/self-2/" class="leancloud_visitors" data-flag-title="Git操作整理">
+             <span id="/2017/06/29/suanfa-4/" class="leancloud_visitors" data-flag-title="《数据结构》排序 —— 插入+冒泡+选择">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -363,46 +363,20 @@
 
       
         <blockquote>
-<p>网上有许多讲解关于git操作的文章，但是很多都是单独讲解某个命令的使用的，没有整体流程。所以我这里根据使用场景进行整理，有一个完整的操作流程，需要的时候直接进行查找。<br><strong>以下所有操作都是在项目本地根目录下进行操作，除了git clone 操作，因为此时本地还没有项目。</strong></p>
+<p>前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具体编码的这个思考过程，就是思考如何编码实现，这个过程是逃不掉的，除非参考别人的现有代码，但一段时间过后一定会忘记（百分之百的，我就忘记了无数次了）。所以，尽量在编程实现前，自己有个清晰的思路，尝试着自己去实现，然后调试。</p>
 </blockquote>
-<h1 id="如何新建项目，并向github提交代码"><a href="#如何新建项目，并向github提交代码" class="headerlink" title="如何新建项目，并向github提交代码"></a>如何新建项目，并向github提交代码</h1><a id="more"></a>
-<p>1、在github网站建立一个新的repository，过程很简单就不说了。当然也可以使用命令行先在本地进行创建，然后在上传到远程服务器并进行关联，不过这种方式更简单。</p>
-<p>2、 <code>git clone &lt;git-url&gt;    //将项目下载到本地，自动就进行关联了</code></p>
-<p>3、<code>git add .</code></p>
-<p>4、<code>git commit -m &#39;info&#39;  //提交，并可以添加提交说明</code></p>
-<p>5、<code>git push origin  &lt;分支名&gt;  //push到服务器，刷新项目主页就可以看到了</code></p>
-<h1 id="关于分支"><a href="#关于分支" class="headerlink" title="关于分支"></a>关于分支</h1><h2 id="新建分支"><a href="#新建分支" class="headerlink" title="新建分支"></a>新建分支</h2><p>1、<code>git branch &lt;分支名&gt;  //在本地新建分支</code></p>
-<p>2、<code>git push origin &lt;分支名&gt;   //将分支提交到远程服务器</code></p>
-<p>新建分之后，新的分支里的初始内容就是当前master中的内容。</p>
-<h2 id="进入分支-获取分支代码"><a href="#进入分支-获取分支代码" class="headerlink" title="进入分支/获取分支代码"></a>进入分支/获取分支代码</h2><p><code>git checkout &lt;分支名&gt;</code></p>
-<p>当进入某一分支后，也就是执行上述操作，本地代码就会切换成相应的分支的代码，如果你开着Studio或者其它IDE，你会发现IDE中的代码也改变了，第一次操作的时候感觉好神奇、好强大。</p>
-<p>也可以打开github网页，打开该分支下的网页，选择“Download ZIp”就会下载相应的代码，而使用git clone下载的是master中的代码。</p>
-<h2 id="删除分支"><a href="#删除分支" class="headerlink" title="删除分支"></a>删除分支</h2><p>1、<code>git branch -d &lt;分支名&gt;  //删除本地分支</code></p>
-<p>2、<code>git push origin --delete &lt;分支名&gt;  //删除远程分支</code></p>
-<h1 id="关于标签"><a href="#关于标签" class="headerlink" title="关于标签"></a>关于标签</h1><p>标签可以用来作版本控制。</p>
-<p>一开始我以为标签有点像分支的下级目录，先建立一个标签，然后将相应的代码push到这个标签下，后来发现理解错了。标签其实是后来打上去的，就是先commit代码，然后新建一个标签，该标签下的内容就是最新commit中的内容。</p>
-<h2 id="新建标签"><a href="#新建标签" class="headerlink" title="新建标签"></a>新建标签</h2><p>1、先切换到相应分支下</p>
-<p>2、<code>git tag &lt;标签名&gt;  //在本地新建标签</code></p>
-<p>3、<code>git push origin &lt;标签名&gt;   //将新建的标签提交到远程服务器</code></p>
-<p>新建标签后，新的标签里的初始内容就是最新一次commit中的内容。</p>
-<h2 id="进入标签-获取某标签代码"><a href="#进入标签-获取某标签代码" class="headerlink" title="进入标签/获取某标签代码"></a>进入标签/获取某标签代码</h2><p>1、先切换到相应分支下</p>
-<p>2、<code>git checkout &lt;标签名&gt;</code></p>
-<p>同分支一样，当进入某一标签后，也就是执行上述操作，本地代码就会切换成相应的标签下的代码。</p>
-<p>同样，也可以打开github网页，打开该标签下的网页，选择“Download ZIp”就会下载相应的代码。</p>
-<h2 id="删除标签"><a href="#删除标签" class="headerlink" title="删除标签"></a>删除标签</h2><p>1、先切换到相应分支下</p>
-<p>2、<code>git tag-d &lt;标签名&gt;  //删除本地标签</code></p>
-<p>3、<code>git push origin --delete &lt;标签名&gt;  //删除远程标签</code></p>
-<h1 id="如何撤销commit"><a href="#如何撤销commit" class="headerlink" title="如何撤销commit"></a>如何撤销commit</h1><p>1、切换到相应分支下</p>
-<p>2、<code>git log  //查找相应的commit的ID</code></p>
-<p>3、<code>git reset --hard &lt;commit_id&gt;  //彻底回退到某个版本</code></p>
-<p>注意，这里的commit_id是你要回退到那个版本，而不是想删除的版本，这里一定要注意。</p>
-<p>4、<code>git push origin HEAD --force  //提交到远程服务器</code></p>
-<h1 id="错误的删除了commit，如何补救"><a href="#错误的删除了commit，如何补救" class="headerlink" title="错误的删除了commit，如何补救"></a>错误的删除了commit，如何补救</h1><p>1、<code>git reflog  //查看之前的操作,查找想恢复的commit的id</code></p>
-<p>2、<code>git reset --hard &lt;commit_id&gt;  //恢复</code></p>
-<p>3、<code>git push -f origin &lt;分支名&gt;  //提交到远程</code></p>
-<h1 id="如何将分支合并到master"><a href="#如何将分支合并到master" class="headerlink" title="如何将分支合并到master"></a>如何将分支合并到master</h1><p>1、切换到master分支</p>
-<p>2、<code>git merge &lt;要合并的分支名&gt;</code></p>
-<h1 id="其它git命令"><a href="#其它git命令" class="headerlink" title="其它git命令"></a>其它git命令</h1>
+<a id="more"></a>
+<p><strong>代码</strong></p>
+<p>本文全部代码放在<a href="https://github.com/thinkChao/Data-Structure/blob/master/%E6%8E%92%E5%BA%8F(%E6%8F%92%E5%85%A5%2B%E5%86%92%E6%B3%A1%2B%E9%80%89%E6%8B%A9" target="_blank" rel="external">github</a>，需要的可以下载或者直接复制代码运行，只有一个cpp文件。已经通过测试，完全没有问题。这里重点是实现算法思想，所以没有考虑代码的健壮性，没有异常处理。</p>
+<p><strong>一点说明</strong><br>之所以将这三个排序放在一起，是因为这三种排序方法相对来说还是非常简单的，首先就是算法思想很简单，大部分人应该都能够想到这三种算法，没有什么复杂的逻辑，其次编程实现起来也没什么坑，所以就将其归为一类了。</p>
+<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>关于插入排序的算法思想就不再赘述，但是有一点在编程实现时需要一点点思考：就是我们在描述插入时是说——”将待排数据插入到已排序列当中“，这句话把思想描述的非常清晰，我们都理解这句话的意思，但是对计算机来说就相当模糊了。编程的重点，就是将这类模糊的自然语言描述，用编程语言转化成具体的计算机命令，当然这个算是非常简单的了，不过我还是想啰嗦两句。<br>这里的插入，对计算机来说分为三步：比较——移动——插入。</p>
+<p><strong>比较：</strong>比较有两种方法：从前往后&amp;从后往前。这里我们采用的是从后往前，因为从前往后进行比较的话，一会儿移动起来会比较麻烦，原因大家可以自己思考，很简单。</p>
+<p><strong>移动：</strong>移动又分为两种：比较一个移动一个&amp;先比较后移动。这里我们采用的前者，因为后者也是会比较麻烦，也是我们为什么在进行比较时，会采用从后往前比较的原因。</p>
+<p><strong>插入：</strong>这个就没什么可说的了，移动完了在空出的位置插入即可。</p>
+<p>由此可见，一句简单的”插入“，对于计算机来说，可并不简单。所以我们在进行编程时，大脑一定要清晰，逻辑不要混乱,想清楚每一步该怎么走。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">void inser(int data[])		//插入排序</div><div class="line">&#123;</div><div class="line">	/*定义需要用到的变量*/</div><div class="line">	int contemp;	//临时存放待插入的元素</div><div class="line">	int i;	//存放待插入元素的位置</div><div class="line">	int j;	//用来指向已被排序好的部分的元素的位置</div><div class="line">	for(i=1;i&lt;ArraySize;i++)</div><div class="line">	&#123;</div><div class="line">		j=i-1;	</div><div class="line">		contemp = data[i];</div><div class="line">		while(j&gt;=0&amp;&amp;data[j]&gt;contemp)</div><div class="line">		&#123;</div><div class="line">			data[j+1]=data[j];</div><div class="line">			j--;</div><div class="line">		&#125;</div><div class="line">		data[j+1]=contemp;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>这个应该是排序里的经典了吧，两个for循环就搞定。不过我更倾向于认为它是”沉底排序“，而不是”冒泡“。因为以一般人的习惯，都是对待排数组从前往后遍历，然后把最大的放到最后，这不就是”沉底“嘛………<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">void maopao(int data[])		//冒泡排序</div><div class="line">&#123;</div><div class="line">	int contemp;	//临时存放</div><div class="line">	for(int i=ArraySize-1;i&gt;0;i--)	//一共需要“ArraySize-1”次循环才能完成</div><div class="line">		for(int j=0;j&lt;i;j++)	//每一次循环需要比较的次数是递减的</div><div class="line">		&#123;</div><div class="line">			if(data[j]&gt;data[j+1])</div><div class="line">			&#123;</div><div class="line">				contemp=data[j];</div><div class="line">				data[j]=data[j+1];</div><div class="line">				data[j+1]=contemp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>选择排序就是每一次都选择最大（最小）的放到最后（最前），和冒泡的思路差不多，也需要两次for循环，但是要注意它们两个for循环的逻辑是不一样的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">void select(int data[])		//选择排序</div><div class="line">&#123;</div><div class="line">	int contemp;	//临时存放</div><div class="line">	for(int i=0;i&lt;ArraySize-1;i++)		//需要“ArraySize-1”次循环</div><div class="line">		for(int j=i+1;j&lt;ArraySize;j++)</div><div class="line">		&#123;</div><div class="line">			if(data[i]&gt;data[j])</div><div class="line">			&#123;</div><div class="line">				contemp=data[j];</div><div class="line">				data[j]=data[i];</div><div class="line">				data[i]=contemp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
       
     </div>
 
@@ -438,8 +412,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/22/suibi-1/" rel="next" title="积累使人进步">
-                <i class="fa fa-chevron-left"></i> 积累使人进步
+              <a href="/2017/06/29/suanfa-2/" rel="next" title="奇技淫巧 —— 如何记忆数据结构中排序算法的时间复杂度和稳定性">
+                <i class="fa fa-chevron-left"></i> 奇技淫巧 —— 如何记忆数据结构中排序算法的时间复杂度和稳定性
               </a>
             
           </div>
@@ -448,8 +422,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/25/android-1/" rel="prev" title="Android线程间通信机制">
-                Android线程间通信机制 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/30/android-9/" rel="prev" title="从按下电源键的那一刻开始">
+                从按下电源键的那一刻开始 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -588,7 +562,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#如何新建项目，并向github提交代码"><span class="nav-number">1.</span> <span class="nav-text">如何新建项目，并向github提交代码</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于分支"><span class="nav-number">2.</span> <span class="nav-text">关于分支</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建分支"><span class="nav-number">2.1.</span> <span class="nav-text">新建分支</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进入分支-获取分支代码"><span class="nav-number">2.2.</span> <span class="nav-text">进入分支/获取分支代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除分支"><span class="nav-number">2.3.</span> <span class="nav-text">删除分支</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于标签"><span class="nav-number">3.</span> <span class="nav-text">关于标签</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新建标签"><span class="nav-number">3.1.</span> <span class="nav-text">新建标签</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进入标签-获取某标签代码"><span class="nav-number">3.2.</span> <span class="nav-text">进入标签/获取某标签代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#删除标签"><span class="nav-number">3.3.</span> <span class="nav-text">删除标签</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何撤销commit"><span class="nav-number">4.</span> <span class="nav-text">如何撤销commit</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#错误的删除了commit，如何补救"><span class="nav-number">5.</span> <span class="nav-text">错误的删除了commit，如何补救</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何将分支合并到master"><span class="nav-number">6.</span> <span class="nav-text">如何将分支合并到master</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其它git命令"><span class="nav-number">7.</span> <span class="nav-text">其它git命令</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#插入排序"><span class="nav-number">1.</span> <span class="nav-text">插入排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#冒泡排序"><span class="nav-number">2.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择排序"><span class="nav-number">3.</span> <span class="nav-text">选择排序</span></a></li></ol></div>
             
 
           </div>
