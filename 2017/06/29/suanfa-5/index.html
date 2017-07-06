@@ -92,13 +92,13 @@
 
 <meta name="description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="《数据结构》排序 —— 插入+冒泡+选择">
-<meta property="og:url" content="http://yoursite.com/2017/06/29/suanfa-4/index.html">
+<meta property="og:title" content="《数据结构》排序 —— 快速+归并">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/suanfa-5/index.html">
 <meta property="og:site_name" content="thinkChao">
 <meta property="og:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
-<meta property="og:updated_time" content="2017-07-05T00:15:55.632Z">
+<meta property="og:updated_time" content="2017-07-06T07:54:54.540Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="《数据结构》排序 —— 插入+冒泡+选择">
+<meta name="twitter:title" content="《数据结构》排序 —— 快速+归并">
 <meta name="twitter:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/29/suanfa-4/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/suanfa-5/"/>
 
 
 
 
 
-  <title>《数据结构》排序 —— 插入+冒泡+选择 | thinkChao</title>
+  <title>《数据结构》排序 —— 快速+归并 | thinkChao</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -263,7 +263,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/suanfa-4/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/suanfa-5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="thinkChao">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">《数据结构》排序 —— 插入+冒泡+选择</h1>
+          <h1 class="post-title" itemprop="name headline">《数据结构》排序 —— 快速+归并</h1>
         
 
         <div class="post-meta">
@@ -292,7 +292,7 @@
               
                 
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T16:22:30+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T16:22:55+08:00">
                 2017-06-29
               </time>
             
@@ -332,7 +332,7 @@
 
           
           
-             <span id="/2017/06/29/suanfa-4/" class="leancloud_visitors" data-flag-title="《数据结构》排序 —— 插入+冒泡+选择">
+             <span id="/2017/06/29/suanfa-5/" class="leancloud_visitors" data-flag-title="《数据结构》排序 —— 快速+归并">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -368,14 +368,16 @@
 <a id="more"></a>
 <p><strong>代码</strong></p>
 <p>本文全部代码放在<a href="https://github.com/thinkChao/Data-Structure" target="_blank" rel="external">github</a>，需要的可以下载或者直接复制代码运行，只有一个cpp文件。已经通过测试，完全没有问题。这里重点是实现算法思想，所以没有考虑代码的健壮性，没有异常处理。</p>
-<p><strong>一点说明</strong><br>之所以将这三个排序放在一起，是因为这三种排序方法相对来说还是非常简单的，首先就是算法思想很简单，大部分人应该都能够想到这三种算法，没有什么复杂的逻辑，其次编程实现起来也没什么坑，所以就将其归为一类了。</p>
-<h2 id="插入排序"><a href="#插入排序" class="headerlink" title="插入排序"></a>插入排序</h2><p>关于插入排序的算法思想就不再赘述，但是有一点在编程实现时需要一点点思考：就是我们在描述插入时是说——”将待排数据插入到已排序列当中“，这句话把思想描述的非常清晰，我们都理解这句话的意思，但是对计算机来说就相当模糊了。编程的重点，就是将这类模糊的自然语言描述，用编程语言转化成具体的计算机命令，当然这个算是非常简单的了，不过我还是想啰嗦两句。<br>这里的插入，对计算机来说分为三步：比较——移动——插入。</p>
-<p><strong>比较：</strong>比较有两种方法：从前往后&amp;从后往前。这里我们采用的是从后往前，因为从前往后进行比较的话，一会儿移动起来会比较麻烦，原因大家可以自己思考，很简单。</p>
-<p><strong>移动：</strong>移动又分为两种：比较一个移动一个&amp;先比较后移动。这里我们采用的前者，因为后者也是会比较麻烦，也是我们为什么在进行比较时，会采用从后往前比较的原因。</p>
-<p><strong>插入：</strong>这个就没什么可说的了，移动完了在空出的位置插入即可。</p>
-<p>由此可见，一句简单的”插入“，对于计算机来说，可并不简单。所以我们在进行编程时，大脑一定要清晰，逻辑不要混乱,想清楚每一步该怎么走。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">void inser(int data[])		//插入排序</div><div class="line">&#123;</div><div class="line">	/*定义需要用到的变量*/</div><div class="line">	int contemp;	//临时存放待插入的元素</div><div class="line">	int i;	//存放待插入元素的位置</div><div class="line">	int j;	//用来指向已被排序好的部分的元素的位置</div><div class="line">	for(i=1;i&lt;ArraySize;i++)</div><div class="line">	&#123;</div><div class="line">		j=i-1;	</div><div class="line">		contemp = data[i];</div><div class="line">		while(j&gt;=0&amp;&amp;data[j]&gt;contemp)</div><div class="line">		&#123;</div><div class="line">			data[j+1]=data[j];</div><div class="line">			j--;</div><div class="line">		&#125;</div><div class="line">		data[j+1]=contemp;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="冒泡排序"><a href="#冒泡排序" class="headerlink" title="冒泡排序"></a>冒泡排序</h2><p>这个应该是排序里的经典了吧，两个for循环就搞定。不过我更倾向于认为它是”沉底排序“，而不是”冒泡“。因为以一般人的习惯，都是对待排数组从前往后遍历，然后把最大的放到最后，这不就是”沉底“嘛………<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">void maopao(int data[])		//冒泡排序</div><div class="line">&#123;</div><div class="line">	int contemp;	//临时存放</div><div class="line">	for(int i=ArraySize-1;i&gt;0;i--)	//一共需要“ArraySize-1”次循环才能完成</div><div class="line">		for(int j=0;j&lt;i;j++)	//每一次循环需要比较的次数是递减的</div><div class="line">		&#123;</div><div class="line">			if(data[j]&gt;data[j+1])</div><div class="line">			&#123;</div><div class="line">				contemp=data[j];</div><div class="line">				data[j]=data[j+1];</div><div class="line">				data[j+1]=contemp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h2 id="选择排序"><a href="#选择排序" class="headerlink" title="选择排序"></a>选择排序</h2><p>选择排序就是每一次都选择最大（最小）的放到最后（最前），和冒泡的思路差不多，也需要两次for循环，但是要注意它们两个for循环的逻辑是不一样的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">void select(int data[])		//选择排序</div><div class="line">&#123;</div><div class="line">	int contemp;	//临时存放</div><div class="line">	for(int i=0;i&lt;ArraySize-1;i++)		//需要“ArraySize-1”次循环</div><div class="line">		for(int j=i+1;j&lt;ArraySize;j++)</div><div class="line">		&#123;</div><div class="line">			if(data[i]&gt;data[j])</div><div class="line">			&#123;</div><div class="line">				contemp=data[j];</div><div class="line">				data[j]=data[i];</div><div class="line">				data[i]=contemp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><strong>一点说明*</strong><br>之所以将这两个排序放在一起，是因为它们都使用了“分治策略”的思想，那既然都是分治，这两个算法的区别是什么呢？简单的说，快速是“从大到小”，归并是“从小到达”。具体来讲：快速是将一个数组根据一个数值先分成两边，左边的全部小于右边的，然后再对两边分别进行此操作，直到具体到每一个数；而归并是先两两合并，使得每两个是有序的，然后再两两合并，直到合成一个数组。</p>
+<h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><p>1）快速排序首先需要找个中间哨兵，用来进行分割。为了方便起见，选择将第一个值作为中间哨兵。</p>
+<p>2）我们语言描述说“将大于哨兵值的放在其右，小于哨兵值的放在其左”，那编程怎么实现这个思想？这个就是考察一个人的编程能力，虽然这个实现起来还算比较简单。解决方案是：设置两个指针，一个从左往右，遇到比哨兵大或相等的就停止，然后另一个从右往左，遇到比哨兵小或相等的就停止，然后两个交换，接着继续，直到<strong>两个指针相遇的时候停止</strong>，注意这里有个坑。我们在描述思想的时候，一般不深入思考，通常是说在两个指针相遇的时候停止一次排序，可如果我们这样编程序“if(l_point==r_point)”，那就错了。因为只要我们在纸上画个图，自己移动指针走走看，会发现：除非正好这个值等于哨兵，否则两个指针是不可能重合相遇的，只会正好擦肩而过。所以条件应该是“if(l_point&lt;r_point)”，这个地方要注意。</p>
+<p>3）我们这里使用了递归，递归的特点是“好用不好想”，就是代码写起来很简短，但理解起来要有些困难，不过使用递归实现快速排序我个人觉得还挺好理解的，所以这里就使用了递归。不过归并排序并没有使用递归，因为我自己肯定实现不了，而且看别人的代码也不是特别理解，所以归并排序就没有使用递归。<br>一旦使用递归，就<strong>肯定会有一个终止条件</strong>的，就是指导程序在什么时候停止递归，否则岂不陷入了死循环，因此程序的最外围一定有个“if()语句”。所以我在写程序时，即使还没有清晰的思路，我仍是先把if()摆在那里，这个肯定错不了，然后就是思考括号里面的内容。这里插一句，对于我们的大部分算法程序，基本上都会用到“循环”，有循环就会有终止条件，一般也就是我们整个算法思想的终止条件了。因此，在写程序时，要好好想想算法终止的条件是什么，然后建立一个整体的框架，在这个框架里面填写内容。当然，大部分情况下，框架里面也会有循环，我们就以此类推吧，直到填充好整个程序。</p>
+<p>对于快速排序，这里的算法终止条件是什么？大家可以想一想。答案：if(lf<rg)。 <figure="" class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div></pre></td><td class="code"><pre><div class="line">/*快速排序*/</div><div class="line">void quick(int data[],int lf,int rg)</div><div class="line">&#123;</div><div class="line">	int tmp;</div><div class="line">	//int mid=data[lf_idx];</div><div class="line">	int lf_idx=lf+1;</div><div class="line">	int rg_idx=rg;</div><div class="line">	if(lf&lt;rg)</div><div class="line">	&#123;</div><div class="line">		while(1)</div><div class="line">		&#123;</div><div class="line">			for(int i=lf_idx;i&lt;=rg;i++)          //一开始用的i&lt;=rg_idx,这是不可以的</div><div class="line">			&#123;</div><div class="line">				if(data[i]&gt;=data[lf])</div><div class="line">				&#123;</div><div class="line">					lf_idx=i;</div><div class="line">					break;</div><div class="line">				&#125;</div><div class="line">				lf_idx=i;</div><div class="line">			&#125;</div><div class="line">			for(int j=rg_idx;j&gt;=lf;j--)</div><div class="line">			&#123;</div><div class="line">				if(data[j]&lt;=data[lf])</div><div class="line">				&#123;</div><div class="line">					rg_idx=j;</div><div class="line">					break;</div><div class="line">				&#125;</div><div class="line">				rg_idx=j;</div><div class="line">			&#125;</div><div class="line">			if(lf_idx&lt;rg_idx)</div><div class="line">			&#123;</div><div class="line">				tmp=data[lf_idx];</div><div class="line">				data[lf_idx]=data[rg_idx];</div><div class="line">				data[rg_idx]=tmp;</div><div class="line">			&#125;</div><div class="line">			else</div><div class="line">				break;</div><div class="line">		&#125;</div><div class="line">		tmp=data[lf];</div><div class="line">		data[lf]=data[rg_idx];</div><div class="line">		data[rg_idx]=tmp;</div><div class="line">		quick(data,lf,rg_idx-1);</div><div class="line">		quick(data,rg_idx+1,rg);</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></rg)。></p>
+<h2 id="归并排序"><a href="#归并排序" class="headerlink" title="归并排序"></a>归并排序</h2><p>1）归并是两两归并，即相邻的两个序列进行归并。我们在描述时有种错觉就是，感觉所有的两两归并都是同时进行的，不知道大家有没有这种感觉。这就是一种模糊的感觉，这种感觉会给需要具体步骤的编程带来困扰，当然，只要我们意识到，然后理清思路就好了。</p>
+<p>在这里，每一次的归并，都是从左往右，依次两两进行归并的。这里我们在单独进行两个序列的合并时要用到三个指针（left,mid,right），分别指向待合并两个序列的开端和结尾，那这不是需要四个吗？逻辑上是四个，但因为我们合并的是相邻序列，所以中间的那个可以顶俩，只需进行加一或减一操作即可。</p>
+<p>2）前面我们提到，大部分算法都会涉及循环和其终止条件，归并也不例外。不过，归并的终止条件比快排的要稍微难想一点。但这是编程思路的重要一点，意识到要思考这一步，总比毫无头绪要强，所以我们要解决这个问题。那对于归并排序，什么时候终止呢？</p>
+<p>直观的看，<strong>当合并到只有一个序列的时候，程序执行完成</strong>。那怎么用程序表示只有一个序列了呢？上一点我们说，用三个指针（left,mid,right），分别指向待合并两个序列的开端和结尾，这三个指针中，除了left的值从0开始，这个我们知道，而mid和right都是依据left来进行计算的，计算的方式是取一个值i，mid=f(i)，right=f2(i)，这样就算出了它们的值，这个其实是一个数学问题，不太容易想，可以通过找规律的方式解决。所以，我们这里就可以用i来作为我们的判断条件，至于什么条件我就不细讲了，都在程序中体现出来了，我只是想说说这个编程的大体思路，应该想哪些问题，至于解决问题，还是自己去想想吧，想不出来就看答案好了。</p>
+<p>3）归并排序写了两个函数，其中merge()函数是专门用来进行两个序列合并的，所以单独写成一个函数，让程序思路看起来更清晰。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div></pre></td><td class="code"><pre><div class="line">/*合并两个数组序列*/</div><div class="line">void merge(int data[],int left,int mid,int right)</div><div class="line">&#123;</div><div class="line">	int *temp_data = new int[right-left+1];</div><div class="line">	int i=left,j=mid+1;</div><div class="line">	int k=0;</div><div class="line">	while(i&lt;=mid&amp;&amp;j&lt;=right)</div><div class="line">	&#123;</div><div class="line">		if(data[i]&gt;data[j])</div><div class="line">		&#123;</div><div class="line">			temp_data[k]=data[j];</div><div class="line">			k++;</div><div class="line">			j++;</div><div class="line">		&#125;</div><div class="line">		else</div><div class="line">		&#123;</div><div class="line">			temp_data[k]=data[i];</div><div class="line">			k++;</div><div class="line">			i++;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	while(i&lt;=mid)</div><div class="line">		temp_data[k++]=data[i++];</div><div class="line">	while(j&lt;=right)</div><div class="line">		temp_data[k++]=data[j++];</div><div class="line">	for(i=left,j=0;i&lt;=right;i++)                  </div><div class="line">        data[i]=temp_data[j++];</div><div class="line">&#125;</div><div class="line"></div><div class="line">/*归并排序*/</div><div class="line">void merge_sort(int data[],int array_size)</div><div class="line">&#123;</div><div class="line">	int left;</div><div class="line">	int right;</div><div class="line">	int mid;</div><div class="line">	for(int i=1;i&lt;array_size;i=i*2)</div><div class="line">	&#123;</div><div class="line">		left=0;</div><div class="line">		while(left&lt;array_size)</div><div class="line">		&#123;</div><div class="line">			mid=left+(i-1);</div><div class="line">			right=left+2*(i-1)+1;</div><div class="line">			if(mid&gt;=array_size)</div><div class="line">				mid=array_size-1;</div><div class="line">			if(right&gt;=array_size)</div><div class="line">				right=array_size-1;</div><div class="line">			merge(data,left,mid,right);</div><div class="line">			left=right+1;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 
       
     </div>
@@ -412,8 +414,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/29/suanfa-2/" rel="next" title="奇技淫巧 —— 如何记忆数据结构中排序算法的时间复杂度和稳定性">
-                <i class="fa fa-chevron-left"></i> 奇技淫巧 —— 如何记忆数据结构中排序算法的时间复杂度和稳定性
+              <a href="/2017/06/29/suanfa-4/" rel="next" title="《数据结构》排序 —— 插入+冒泡+选择">
+                <i class="fa fa-chevron-left"></i> 《数据结构》排序 —— 插入+冒泡+选择
               </a>
             
           </div>
@@ -422,8 +424,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/29/suanfa-5/" rel="prev" title="《数据结构》排序 —— 快速+归并">
-                《数据结构》排序 —— 快速+归并 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/30/android-9/" rel="prev" title="从按下电源键的那一刻开始">
+                从按下电源键的那一刻开始 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -562,7 +564,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#插入排序"><span class="nav-number">1.</span> <span class="nav-text">插入排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#冒泡排序"><span class="nav-number">2.</span> <span class="nav-text">冒泡排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择排序"><span class="nav-number">3.</span> <span class="nav-text">选择排序</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速排序"><span class="nav-number">1.</span> <span class="nav-text">快速排序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#归并排序"><span class="nav-number">2.</span> <span class="nav-text">归并排序</span></a></li></ol></div>
             
 
           </div>
