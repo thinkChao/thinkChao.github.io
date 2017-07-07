@@ -90,16 +90,16 @@
 
 
 
-<meta name="description" content="从小到大，你肯定经历过不少次重要考试、当众演讲或者面试。绝大多数人第一次站到讲台上，面对台下无数双眼睛，就会心跳加速，手心出汗，一心想要不紧张却偏偏紧张的要死。一到临场，词儿还没说到一半，下面的却怎么都想不起来了，就开始“自由发挥”了。 按照我们以前的理解，会认为自己是太紧张了，下次一定要放松。不过这种解释也就拿来安慰小学生，完全是没用的废话，只不过是把“大脑一片空白”这个现象抽象为“紧张”这个概">
+<meta name="description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关键时刻，大脑为什么会一片空白？">
-<meta property="og:url" content="http://yoursite.com/2017/06/29/suibi-2/index.html">
+<meta property="og:title" content="《数据结构》排序 —— 堆排序">
+<meta property="og:url" content="http://yoursite.com/2017/06/29/suanfa-6/index.html">
 <meta property="og:site_name" content="thinkChao">
-<meta property="og:description" content="从小到大，你肯定经历过不少次重要考试、当众演讲或者面试。绝大多数人第一次站到讲台上，面对台下无数双眼睛，就会心跳加速，手心出汗，一心想要不紧张却偏偏紧张的要死。一到临场，词儿还没说到一半，下面的却怎么都想不起来了，就开始“自由发挥”了。 按照我们以前的理解，会认为自己是太紧张了，下次一定要放松。不过这种解释也就拿来安慰小学生，完全是没用的废话，只不过是把“大脑一片空白”这个现象抽象为“紧张”这个概">
-<meta property="og:updated_time" content="2017-06-29T07:29:57.015Z">
+<meta property="og:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
+<meta property="og:updated_time" content="2017-07-07T23:38:44.620Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关键时刻，大脑为什么会一片空白？">
-<meta name="twitter:description" content="从小到大，你肯定经历过不少次重要考试、当众演讲或者面试。绝大多数人第一次站到讲台上，面对台下无数双眼睛，就会心跳加速，手心出汗，一心想要不紧张却偏偏紧张的要死。一到临场，词儿还没说到一半，下面的却怎么都想不起来了，就开始“自由发挥”了。 按照我们以前的理解，会认为自己是太紧张了，下次一定要放松。不过这种解释也就拿来安慰小学生，完全是没用的废话，只不过是把“大脑一片空白”这个现象抽象为“紧张”这个概">
+<meta name="twitter:title" content="《数据结构》排序 —— 堆排序">
+<meta name="twitter:description" content="前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具">
 
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/29/suibi-2/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/29/suanfa-6/"/>
 
 
 
 
 
-  <title>关键时刻，大脑为什么会一片空白？ | thinkChao</title>
+  <title>《数据结构》排序 —— 堆排序 | thinkChao</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -263,7 +263,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/suibi-2/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/29/suanfa-6/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="thinkChao">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">关键时刻，大脑为什么会一片空白？</h1>
+          <h1 class="post-title" itemprop="name headline">《数据结构》排序 —— 堆排序</h1>
         
 
         <div class="post-meta">
@@ -292,7 +292,7 @@
               
                 
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T15:24:42+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-29T16:22:56+08:00">
                 2017-06-29
               </time>
             
@@ -315,8 +315,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/随变写写/" itemprop="url" rel="index">
-                    <span itemprop="name">随变写写</span>
+                  <a href="/categories/算法编程/" itemprop="url" rel="index">
+                    <span itemprop="name">算法编程</span>
                   </a>
                 </span>
 
@@ -332,7 +332,7 @@
 
           
           
-             <span id="/2017/06/29/suibi-2/" class="leancloud_visitors" data-flag-title="关键时刻，大脑为什么会一片空白？">
+             <span id="/2017/06/29/suanfa-6/" class="leancloud_visitors" data-flag-title="《数据结构》排序 —— 堆排序">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -362,19 +362,17 @@
       
 
       
-        <p>从小到大，你肯定经历过不少次重要考试、当众演讲或者面试。绝大多数人第一次站到讲台上，面对台下无数双眼睛，就会心跳加速，手心出汗，一心想要不紧张却偏偏紧张的要死。一到临场，词儿还没说到一半，下面的却怎么都想不起来了，就开始“自由发挥”了。</p>
-<p>按照我们以前的理解，会认为自己是太紧张了，下次一定要放松。不过这种解释也就拿来安慰小学生，完全是没用的废话，只不过是把“大脑一片空白”这个现象抽象为“紧张”这个概念。就像当年科学家在发现氧气之前，将物体可以在空气中燃烧的原因，归结为空气中有“燃素”这样一种化学物质，可谁又能解释燃素是什么东西？<a id="more"></a>所以任何问题出现的原因最好能够在物理层面找到答案。要想弄明白大脑当时在想什么，只有在大脑内部寻找答案。</p>
-<p>在这里，我们为什么在某些场合会变得紧张和紧张时我们的大脑为什么会一片空白，其实是两个问题，这篇文章谈的是后者。</p>
-<p>之前的文章有提到过，大脑和计算机的工作原理完全不同，我们不能简单的将人脑类比成电脑。不过，在某些层面，它们的确又有着相似之处。我们知道，计算机的工作离不开内存，所有要运行的程序和数据都要事先提取到内存当中，其实大脑也是一样。人的记忆分为长时记忆和短时记忆，短时记忆又包括工作记忆。工作记忆就像是计算机的内存，我们做任何事所需要的信息和知识，都需要先从长时记忆提取到工作记忆中，才能为我们所用。我想这也是我们很难三心二意的原因，比如当你在背一首唐诗时，很难进行复杂的数学运算。</p>
-<p>所以，当我们站在讲台上，如果一个人太担心结果，那这种担心就会占用工作记忆，而且长据不走，结果就是你需要的信息没地可放了。</p>
-<p>法国哲学家帕斯卡尔举过一个例子，他说当一块木板放在地面上，一个人从一头走到另一头，轻轻松松。但如果把这块木板放在两撞大楼之间，同样让这个人去走，他会寸步难行。</p>
-<p>此时并不是他的腿出了问题，而是脑子出了问题。他的大脑已经被恐惧的情绪填满，脑袋里头有大量的杂念，他的大脑连同他的腿就开始僵化，就停滞不前了。</p>
-<p>我们经常说这个人脑子反应快，那个人脑子反应慢，在不考虑智商差距太大的情况下（本就是小概率事件），脑子反应慢的那个人的工作记忆此时一定是参杂了大量的杂念，或是被各种各样的观念所堵塞，换种说法就是”想太多“，导致不能够专心思考真正的问题。</p>
-<p>既然原因已经找到，我们总要想想解决办法。我们要达到的目的，就是每当到了重要时刻，我们的工作记忆里只允许存放我们需要的东西，其它的杂念一律不准进来。听起来简单，但 到了身临其境的时候，我们能掌控的就很少了。解决方法一定是有的，但是我目前还没这方面的经验可以分享。</p>
-<p>不过太阳底下无新事，我们现在的困惑，其实古人也同样经历过，甚至总结成了方法论。王阳明提出“心外无物，心外无理”，当年有人就问王阳明，如何才能生活在纷扰的世界中而又可以做到”不动心“？他给出的答案很简单，我们每个人都知道，就是“多经历”，经历的多了，心中的体会也会慢慢发生变化。我想这个方法在我们这里也同样适用，要想在某些场合克制住我们心中的杂念，多经历还是比较靠谱的办法。</p>
-<p>就像走钢丝的杂技演员，所有人第一次站上去都会心惊胆寒，但长期的训练会让他们逐渐屏蔽掉过度的风险意识，让这些风险意识不占用他们的大脑，专心于如何平稳的从钢丝的这头走到那头。</p>
-<p><strong>参考：</strong>《我知道你不知道的自己在想什么》</p>
-
+        <blockquote>
+<p>前言：《数据结构》作为计算机专业的一门重点学科，无论是将来考研、就业，对其的考察都是重中之重，之前的文章已经对此进行过论述。作为考察程序员“编程能力”的一种方式，考验的是我们如何将数据结构的思想用编程语言精确的编码出来。所有的《数据结构》课本都详细的讲解了每一种数据结构和算法的思想，然后给出具体的编程语言代码或者伪代码。算法思想只要认真看书，还是比较容易掌握的 ，真正考验我们的，是从算法思想到具体编码的这个思考过程，就是思考如何编码实现，这个过程是逃不掉的，除非参考别人的现有代码，但一段时间过后一定会忘记（百分之百的，我就忘记了无数次了）。所以，尽量在编程实现前，自己有个清晰的思路，尝试着自己去实现.</p>
+</blockquote>
+<a id="more"></a>
+<p><strong>代码：</strong><br>本文全部代码放在 <a href="https://github.com/thinkChao/Data-Structure/blob/master/%E5%A0%86%E6%8E%92%E5%BA%8F.cpp" target="_blank" rel="external">github</a>，需要的可以下载或者直接复制代码运行，只有一个cpp文件。已经通过测试，完全没有问题。这里重点是实现算法思想，所以没有考虑代码的健壮性，没有异常处理。</p>
+<h2 id="关四点说明"><a href="#关四点说明" class="headerlink" title="关四点说明"></a>关四点说明</h2><p><strong>注意：本文我所说的堆，都指大顶堆。</strong></p>
+<p>1）堆的特点是父节点的值大于或等于两个孩子节点的值，一个堆就是一个完全二叉树，所以我们采用数组来存储二叉树，会非常方便。因此，整个数组的序列，也就是一颗二叉树的层次遍历结果（从上到下，从左至右），这一点要知道。</p>
+<p>2）建堆的过程：就是从最后一个非终端结点开始，比较其与其孩子节点的大小，如果孩子有比他大的，就交换。如果两个都比他大呢？那就与最大的那个交换。</p>
+<p>3）几个需要计算的节点：因为我们是从最后一个非终端结点开始开始遍历，所以要知道它在数组中的位置，知道了它的位置，剩下的只需要依次递减，直到第一个，也就是根节点了。此外，我们还需要知道一个节点的左孩子和右孩子的位置。因为堆是完全二叉树，而且采用数组存储，所以计算还是有规律的。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">设数组大小为size，一个节点的位置为i（i从1开始）。</div><div class="line">最后一个非终端节点的位置：size/2</div><div class="line">节点的左孩子位置：2*i</div><div class="line">节点的右孩子位置：2*i+1</div></pre></td></tr></table></figure></p>
+<p>4）堆排序的流程：给定一个数组，然后建堆——&gt;输出堆的根节点（也就是数组的第一个元素）——&gt;将根节点置为0——&gt;重新建堆——&gt;输出堆的根节点——&gt;……………</p>
+<h2 id="附上代码"><a href="#附上代码" class="headerlink" title="附上代码"></a>附上代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">using namespace std;</div><div class="line">#define ArraySize 8</div><div class="line"></div><div class="line"></div><div class="line">void create_heap(int data[],int size)</div><div class="line">&#123;</div><div class="line">	for(int i=(size/2);i&gt;0;i--)	//从最后一个非终端节点开始遍历，直到根节点</div><div class="line">	&#123;</div><div class="line">		int l_kid=2*i;	//节点的左孩子</div><div class="line">		int r_kid=2*i+1;	//节点的右孩子</div><div class="line">		int tmp;	//暂存左孩子还右孩子之间最大的那个节点的数组下标</div><div class="line">		int k;	//临时变量</div><div class="line">		int j=i;</div><div class="line">		while(l_kid&lt;=size)	//要遍历到以该节点为根节点的叶子节点</div><div class="line">		&#123;</div><div class="line">			</div><div class="line">			tmp=l_kid;</div><div class="line">			if(l_kid&lt;size)	//l_kid&lt;size,说明存在右孩子</div><div class="line">			&#123;</div><div class="line">				if(data[l_kid-1]&lt;data[r_kid-1])</div><div class="line">					tmp=r_kid;</div><div class="line">			&#125;</div><div class="line">			if(data[j-1]&gt;data[tmp-1])</div><div class="line">				break;</div><div class="line">			else</div><div class="line">			&#123;</div><div class="line">				k=data[j-1];</div><div class="line">				data[j-1]=data[tmp-1];</div><div class="line">				data[tmp-1]=k;</div><div class="line">				l_kid=tmp*2;</div><div class="line">				j=tmp;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void heap(int data[],int size)</div><div class="line">&#123;</div><div class="line">	create_heap(data,size);//先建堆</div><div class="line">	cout&lt;&lt;&quot;建堆完成：&quot;;</div><div class="line">	for(int i=0;i&lt;ArraySize;i++)</div><div class="line">		cout&lt;&lt;data[i]&lt;&lt;&quot; &quot;;</div><div class="line">	cout&lt;&lt;endl;</div><div class="line">	int data1[ArraySize];	//存放排序后的结果</div><div class="line">	for(i=0;i&lt;size;i++)</div><div class="line">	&#123;</div><div class="line">		data1[i]=data[0];</div><div class="line">		data[0]=0;</div><div class="line">		create_heap(data,size);</div><div class="line">	&#125;</div><div class="line">	for(i=0;i&lt;ArraySize;i++)</div><div class="line">		cout&lt;&lt;data1[i]&lt;&lt;&quot; &quot;;</div><div class="line">	</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">	int data[ArraySize];</div><div class="line">	/*输入数组数据*/</div><div class="line">	cout&lt;&lt;&quot;请输入8个数：&quot;&lt;&lt;endl;</div><div class="line">	for(int i=0;i&lt;ArraySize;i++)</div><div class="line">		cin&gt;&gt;data[i];</div><div class="line">	/*执行排序*/</div><div class="line">	heap(data,8);</div><div class="line">	/*输出排序结果*/</div><div class="line">	cout&lt;&lt;&quot;&quot;&lt;&lt;endl;</div><div class="line">	</div><div class="line">	return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
 
@@ -410,8 +408,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/29/android-8/" rel="next" title="框架搭建必备 —— 反射与注解">
-                <i class="fa fa-chevron-left"></i> 框架搭建必备 —— 反射与注解
+              <a href="/2017/06/29/suanfa-5/" rel="next" title="《数据结构》排序 —— 快速+归并">
+                <i class="fa fa-chevron-left"></i> 《数据结构》排序 —— 快速+归并
               </a>
             
           </div>
@@ -420,8 +418,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/06/29/suanfa-1/" rel="prev" title="什么是编程能力？">
-                什么是编程能力？ <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/30/android-9/" rel="prev" title="从按下电源键的那一刻开始">
+                从按下电源键的那一刻开始 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -469,8 +467,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.jpg"
@@ -541,6 +548,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关四点说明"><span class="nav-number">1.</span> <span class="nav-text">关四点说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附上代码"><span class="nav-number">2.</span> <span class="nav-text">附上代码</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
