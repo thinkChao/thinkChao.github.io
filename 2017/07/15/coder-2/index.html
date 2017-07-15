@@ -1,0 +1,929 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="网络是一个巨大而且非常复杂的系统，我想很多人会和我一样好奇：从在浏览器中输入网址，到屏幕上显示出网页的内容，短短一两秒的过程中，那么多的硬件和软件到底是如何相互配合，完成工作的。 如果只看网络相关的教科书或者阅读某一篇博客，是很难达到这个目的的，因为总有一些含混不清的地方令你费解。翻开这本书的推荐序，就有一种相见恨晚的感觉，它正是我要找的那种纵览网络全貌的一本书，作者是日本人，但翻译的非常非常到位">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《网络是怎么链接的》">
+<meta property="og:url" content="http://yoursite.com/2017/07/15/coder-2/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="网络是一个巨大而且非常复杂的系统，我想很多人会和我一样好奇：从在浏览器中输入网址，到屏幕上显示出网页的内容，短短一两秒的过程中，那么多的硬件和软件到底是如何相互配合，完成工作的。 如果只看网络相关的教科书或者阅读某一篇博客，是很难达到这个目的的，因为总有一些含混不清的地方令你费解。翻开这本书的推荐序，就有一种相见恨晚的感觉，它正是我要找的那种纵览网络全貌的一本书，作者是日本人，但翻译的非常非常到位">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-4811647401ccc421.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-e59b1769461debb1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-541d7d48a9530f54.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-cd77a39178485184.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-afdef8e2fb83ce75.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-07-15T15:20:10.170Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="《网络是怎么链接的》">
+<meta name="twitter:description" content="网络是一个巨大而且非常复杂的系统，我想很多人会和我一样好奇：从在浏览器中输入网址，到屏幕上显示出网页的内容，短短一两秒的过程中，那么多的硬件和软件到底是如何相互配合，完成工作的。 如果只看网络相关的教科书或者阅读某一篇博客，是很难达到这个目的的，因为总有一些含混不清的地方令你费解。翻开这本书的推荐序，就有一种相见恨晚的感觉，它正是我要找的那种纵览网络全貌的一本书，作者是日本人，但翻译的非常非常到位">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-4811647401ccc421.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/15/coder-2/"/>
+
+
+
+
+
+  <title>《网络是怎么链接的》 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/15/coder-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">《网络是怎么链接的》</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-15T23:20:22+08:00">
+                2017-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/程序员/" itemprop="url" rel="index">
+                    <span itemprop="name">程序员</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/15/coder-2/" class="leancloud_visitors" data-flag-title="《网络是怎么链接的》">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>网络是一个巨大而且非常复杂的系统，我想很多人会和我一样好奇：从在浏览器中输入网址，到屏幕上显示出网页的内容，短短一两秒的过程中，那么多的硬件和软件到底是如何相互配合，完成工作的。</p>
+<p>如果只看网络相关的教科书或者阅读某一篇博客，是很难达到这个目的的，因为总有一些含混不清的地方令你费解。翻开这本书的推荐序，就有一种相见恨晚的感觉，它正是我要找的那种纵览网络全貌的一本书，作者是日本人，但翻译的非常非常到位。还是想再强调一下，程序员也要多读书，并不是所有的专业书都长得跟教科书一个样子……</p>
+<p>大家如果也有读过认为非常好的计算机相关的书籍，不限领域，操作系统、网络、编程语言等都可以，欢迎在简书下给我留言，凡是我读过的感觉不错的书也都会发篇博客出来。这篇文章就对整个网络的工作流程做个梳理，并对之前认识模糊不清的地方做个记录，其中每一个大标题就是其中一个过程，每个过程里面会有相应的介绍或者知识点整理。</p>
+<a id="more"></a>
+<h2 id="生成HTTP请求消息"><a href="#生成HTTP请求消息" class="headerlink" title="生成HTTP请求消息"></a>生成HTTP请求消息</h2><p>我们的探索之旅要从在浏览器中输入网址开始，网址用专业术语来说就是URL，当我们输入URL后，浏览器要做的第一步就是对URL进行解析，从而生成发送给Web服务器的请求消息。</p>
+<p><strong>请求消息中包含的内容主要是“对什么”和“进行怎么样的操作”两个部分。</strong></p>
+<p>其中，相当于“对什么”的部分称为<strong>URI</strong>，一般来说URI的内容是一个存放网页数据的文件名。</p>
+<p>然后，相当于“进行怎样的操作”的部分称为<strong>方法</strong>，也就是我们在进行网络编程时常用的GET、POST、HEAD、PUT、DELETE等等。</p>
+<p>上面是对请求消息做的一个简单介绍，那生成的请求消息是什么样的呢？请求消息的格式也是有严格规定的，如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-4811647401ccc421.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>这里只介绍整体流程，对细节内容不做详细介绍，书中都有讲解。这里，请求消息和响应消息包含三部分内容，可以简单记忆为：行、头、体。 </p>
+<p>这里可能会有一个小疑问，请求行中包括请求方法，是GET、POST还是其它，我们在浏览器中并没有进行输入，那浏览器是怎么知道用哪个方法的呢？</p>
+<p>如果有过网络编程经验的话，就会对此有所了解，浏览器并非只在“地址栏中输入地址”这一个<strong>使用场景</strong>下工作，还有其它的工作场景，比如：点击超链接，或者在表单中输入信息，然后点击“提交”按钮等等，这些场景都会触发浏览器的工作，而选用哪种方法，也是我们在编程时根据场景来确定的。</p>
+<h2 id="查询DNS服务器"><a href="#查询DNS服务器" class="headerlink" title="查询DNS服务器"></a>查询DNS服务器</h2><p>生成请求消息后，就要准备发送消息了，尽管<strong>浏览器来解析网址并生成HTTP消息</strong>，但它本身不具备将消息发送到网络中的功能，因此这一切要委托给操作系统来实现，而接下来的一步就是根据域名来查询IP地址了。 </p>
+<p>查询IP地址的方法非常简单，只要询问最近的DNS服务器“www.google.com”的IP地址是什么就可以了，DNS就会返回该IP地址，那具体是怎样一个流程呢？</p>
+<p>我们的计算机上有一个的DNS客户端，称为DNS解析器，它实际上是一段程序，包含在操作系统的Socket库中。Socket库中的程序都是标准组件，只要从应用程序中调用就可以了，调用解析器后，解析器会向DNS服务器发出查询消息，然后服务器会返回响应消息，消息中包含要查询的IP地址。</p>
+<p>还有，在向DNS服务器发送消息时，我们当然也需要知道DNS服务器的地址。只不过这个IP地址是作为TCP/IP的一个设置项目事先设置好的，不需要再去查询了。</p>
+<p>整个查询流程大体就是这样，这里再深入介绍一下。发送消息这个操作其实并不是由解析器自身来执行的，而是委托给操作系统内部的<strong>协议栈</strong>来执行，因为解析器本身也不具备使用网络收发数据的功能。那什么是协议栈呢？</p>
+<p>书中给出的定义是：协议栈是操作系统内部的网络控制软件，也叫协议驱动、TCP/IP驱动等，如图为协议栈的结构：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-e59b1769461debb1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h2 id="委托协议栈发送消息"><a href="#委托协议栈发送消息" class="headerlink" title="委托协议栈发送消息"></a>委托协议栈发送消息</h2><p>知道了IP地址后，就可以委托操作系统内部的协议栈向这个目标IP发送消息了。要发送的消息是一种数字信息，这一操作不仅限于浏览器，对于各种使用网络的应用程序来说都是共通的。因此这一操作不仅使用于Web，而是适用于任何网络应用程序。先上一张图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-541d7d48a9530f54.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>使用Socket库来收发数据的操作如图所示，收发数据的两太计算机之间连接了一条数据通道，数据沿着这条通道流动，最终到达目的地。我们可以把数据通道想象成一条管道，将数据从一端送入管道，数据就会到达管道的另一端然后被取出。不过，这并不是说现实中真的有这么一条管道，只是为了帮助理解。整个过程可以大致总结为以下四个：</p>
+<h3 id="创建套接字"><a href="#创建套接字" class="headerlink" title="创建套接字"></a>创建套接字</h3><p>首先要解释下，套接字到底是什么:</p>
+<p>在协议栈内部有一块用于存放控制信息的内存空间，这里记录了用于控制通信操作的控制信息，，例如通信的IP地址、端口号、通信操作的进行状态等。本来套接字只是一个概念而已，并不存在实体，如果一定要赋予一个实体，我们可以说这些控制信息就是套接字实体，或者说存放控制信息的内存空间就是套接字的实体。<strong>协议栈就是根据套接字中记录的控制信息来工作的</strong>。</p>
+<p>在创建套接字这个过程中，协议栈首先会分配用于存放一个套接字所需的内存空间，相当于为控制信息准备一个容器。套接字刚创建的时候，数据收发操作还没有开始，因此需要在套接字的内存空间中写入表示这一初始状态的控制信息。到这里，创建套接字的操作就算完成了。</p>
+<p>接下来，还需要将表示这个套接字的<strong>描述符</strong>告知应用程序，描述符就相当于用来区分协议栈中的多个套接字的号码牌。</p>
+<h3 id="将管道连接到服务器端的套接字上"><a href="#将管道连接到服务器端的套接字上" class="headerlink" title="将管道连接到服务器端的套接字上"></a>将管道连接到服务器端的套接字上</h3><p>创建套接字后，应用程序就会调用<code>connect</code>操作，与服务器的套接字进行连接。那连接到底是什么意思呢？</p>
+<p>1、套接字刚创建的时候，里面并没有任何数据，也不知道通信的对象是谁，在这个情况下，即便我们想发送数据，协议栈也不知道将数据发送给谁，因为在调用socket创建套接字的时候，并没有把这些信息传递给协议栈。因此，我们需要把服务器的IP地址和端口号等信息告知协议栈，这是连接操作的目的之一。</p>
+<p>2、在服务器那边，也会创建套接字，但和客户端一样，只创建套接字，并不知道要和谁通信，与客户端不同的是，连服务器端的应用程序也不知道要和谁通信，这样下去永远也不会开始通信。于是，需要客户端向服务器告知必要的信息，比如“我想和你通信，我的IP地址是XXXX，端口号是YYYY”。所以，客户端向服务器端传达通信请求，也就连接操作的目的之一。</p>
+<p>连接操作实际上涉及到TCP的三次握手，当服务器端收到客户端发来的确认信息，并且ACK置为1，连接操作才算全部完成，关于三次握手相比只要学过网络，大家都会有所了解。</p>
+<p>现在，套接字就已经进入随时可以收发数据的状态了，大家可以认为这时有一个管子把这两个套接字连接了起来。当然，实际并不存在这个管子，不过这样比较容易理解，而且网络界也习惯这样描述。</p>
+<p>多说一点，<strong>这里的“连接”是个名词，对应英文的connection，也有人把连接称为会话，对应英文的session，它们的意思大抵相同。</strong></p>
+<h3 id="收发数据"><a href="#收发数据" class="headerlink" title="收发数据"></a>收发数据</h3><p>当控制流程connect回到应用程序之后，就进入数据的收发阶段了。数据收发操作是从应用程序<code>write</code>开始的，协议栈受到数据后执行发送操作，这一操作包含如下要点：</p>
+<p>首先，协议栈并不关心应用程序传来的内容是什么，在它看来，要发送的数据就是一定长度的二进制字节序列而已。</p>
+<p>其次，协议栈并不是一收到数据马上就发送，而是会将数据存放在内部的发送缓冲区内，并等待应用程序的下一段数据，这样做的目的是提高网络传输的效率。当然，根据使用场景的不同，如果仅靠协议栈来判断发送的时机可能会带来一些问题，因此协议栈也会给应用程序保留了控制发送时机的余地。</p>
+<h3 id="断开管道并删除套接字"><a href="#断开管道并删除套接字" class="headerlink" title="断开管道并删除套接字"></a>断开管道并删除套接字</h3><p>数据发送完毕的一方会发起断开过程，但不同的应用程序会选择不同的断开时机。以Web为例，浏览器向web服务器发送请求消息，Web服务器再返回响应消息，这时收发数据的过程就结束了，服务器一方会发起断开过程。当然，可能也有一些程序是客户端发送完数据就结束了，不用等待服务器的响应，这时客户端先发起断开过程。</p>
+<h3 id="IP与以太网的包收发操作"><a href="#IP与以太网的包收发操作" class="headerlink" title="IP与以太网的包收发操作"></a>IP与以太网的包收发操作</h3><p>TCP模块在执行链接、收发、断开等各个阶段的操作时，都需要委托IP模块<strong>将数据封装成包</strong>发送给通信对象，先看一下包的结构：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-cd77a39178485184.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>首先，发送方的网络设备会先创建包，创建包的过程就是生成含有正确控制信息的头部，然后再附加上要发送的数据。加下来，包会被发往最近的网络转发设备。当到达最近的转发设备，转发设备也会根据头部中的信息判断接下来应该发往哪里。</p>
+<p>尽管我们说IP模块负责将包发送给对方，但实际上将包发从发送方传输到接收方的工作是由集线器、交换机、路由器这些网络设备来完成的，因此IP模块仅仅是整个包传输过程的入口而已。</p>
+<p>详细过程不再介绍。</p>
+<h2 id="数据包从计算机流出"><a href="#数据包从计算机流出" class="headerlink" title="数据包从计算机流出"></a>数据包从计算机流出</h2><p>信号从计算机中流出后，具体来说就是从网卡中流出，会在网线中经过集线器等设备前进，最终进入互联网。所以，这一过程主要就是集线器、交换机、路由器等网络设备的工作流程。</p>
+<p>信号是如何在这些网络设备进行传输的，这个主要是本科的网络课程中讲授的内容，具体过程不再描述，书中都有，这里主要是对之前一直令我非常困惑的集线器、交换机、路由器的功能做个梳理。</p>
+<p><strong>集线器：</strong>集线器的作用是将信号发送给所有连接在它上面的线路，只是原封不动的将信号<strong>广播</strong>出去，所以即便信号受到噪声的干扰发生了失真，也会原样发送到目的地。</p>
+<p><strong>交换机：</strong>交换机根据MAC地址表查找MAC地址，然后将信号发送到相应端口。</p>
+<p><strong>路由器：</strong>路由器和交换机类似，也是做转发工作的，区别在于路由器是基于IP设计的，交换机是基于以太网设计的。</p>
+<p>IP协议本身没有传输包的功能，因此包的实际传输要交给以太网来进行。<strong>路由器是基于IP设计的，而交换机是基于以太网设计的</strong>，因此IP与以太网的关系也就是路由器与交换机的关系。换句话说，路由器将包的传输工作委托给交换机进行，但这里讲的内容只适用于原原本本实现IP和以太网机制的纯粹的路由器和交换机，<strong>实际的路由器有内置交换机的功能。</strong>这样的设计有重要意义，即可以根据需要灵活运用各种通信技术，譬如也许我们不一定使用的以太网，也可能是其它的网络技术，正是有了这个特点，我们才能够构建出互联网这一规模巨大的网络。</p>
+<h2 id="进入互联网"><a href="#进入互联网" class="headerlink" title="进入互联网"></a>进入互联网</h2><p>上面我们讲的是计算机发送的网络包通过家庭和公司局域网中的集线器和路由器前往目的地的过程，之前一直以为，当网络包从计算机的网卡中流出来，就算是进了互联网了，其实并不是这样，家庭和公司的内网是通过接入网（接入网有很多类型，主要是ADSL、光纤、CATV、电话线）连接到网络运营商的。如图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-afdef8e2fb83ce75.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>互联网是一个遍布全世界的巨大而复杂的系统，但其基本工作方式却出奇的简单。和家庭、公司网络一样，互联网也是通过路由器来转发包的，而且路由器的基本结构和工作方式也并没有什么不同。因此，我们可以将互联网理解为家庭、公司网络的一个放大版。</p>
+<p>其中有个很大的区别就是，转发设备之间的举例，在家庭中、公司中，转发设备之间的距离不够几十米到几百米，这种情况下只要延长网线就到达相邻的转发设备了。然而互联网可不能这么搞，毕竟很多时候是要跨大洋的。</p>
+<p>除了距离之外，路由器在如何控制包的转发目标上也不一样。这两点，就是互联网与家庭、公司网络之间最主要的两个不同点。</p>
+<h2 id="到达服务器接入点"><a href="#到达服务器接入点" class="headerlink" title="到达服务器接入点"></a>到达服务器接入点</h2><p>在上一小节，数据包从家庭或公司内网进入了互联网，随后会通过通信线路和运营商网络到达服务器端的接入点，并通过服务器前面的防火墙、缓存服务器、负载均衡器等，最后一步才是访问Web服务器。</p>
+<p>这一小节不再介绍，在这个领域关注很少，直接进入最后一步……</p>
+<h2 id="访问Web服务器"><a href="#访问Web服务器" class="headerlink" title="访问Web服务器"></a>访问Web服务器</h2><p>1、接收操作的第一步是网卡接收到信号然后将其还原成数字信息。校验FCS并存入缓冲区。</p>
+<p>2、接下来，网卡需要通过中断将网络包到达的事件通知给CPU，CPU暂停当前的工作，并切换到网卡的任务。然后，网卡驱动就会运行，从网卡缓冲区中将接收到的包读取出来，根据MAC头部的以太类型字段判断协议的种类，并调用负责处理该协议的软件，比如调用TCP/IP协议栈。</p>
+<p>3、当网络包转交到协议栈后，IP模块会首先开始工作，会检查IP头部，然后将包转交给TCP模块。</p>
+<p>4、前面的步骤对于任何包都是一样的，但随后的TCP模块的操作则根据包的内容有所区别，因为包的类型不同，要看是发起链接的包、还是数据包。在接收数据时，TCP模块会从包中提取数据，并存放到缓冲区中，与上次收到的数据连接在一起。</p>
+<p>5、接下来，应用程序会调用Socket库中的read方法来获取缓冲区中的数据，控制流程就会转移到服务器程序。read方法获取的数据内容就是Http请求消息，服务器会根据收到的请求消息的内容进行相应的处理，并生成响应消息，再通过write返回给客户端。这时的工作过程和客户端向服务器发送请求消息时的过程相同。</p>
+<p>6、浏览器接收响应消息并显示内容。</p>
+<p>这里在提一句，当网络包到达Web服务器之后，服务器就会接收这个包并进行处理。因为服务器需要同时和多个客户端通信，但一个程序来处理多个客户端是很难的，因为服务器必须把握每一个客户端的操作状态。因此，一般的做法是，每有一个客户端连接进来，就启动一个新的服务器程序，确保服务器程序和客户端是一对一的状态。</p>
+<h2 id="解惑"><a href="#解惑" class="headerlink" title="解惑"></a>解惑</h2><h3 id="URL与URI"><a href="#URL与URI" class="headerlink" title="URL与URI"></a>URL与URI</h3><h4 id="URL"><a href="#URL" class="headerlink" title="URL"></a>URL</h4><p>URL就是以“<a href="http://”开头的那一串东西，除了“http:”，还有“ftp:”" target="_blank" rel="external">http://”开头的那一串东西，除了“http:”，还有“ftp:”</a> “file:” “mailto:”等。</p>
+<p>之所以有各种各样的URL，是因为不同的URL用来实现不同的功能。<strong>浏览器实际是一个具备多种客户端功能的综合性客户端软件</strong>，因此它需要一些东西来判断应该使用其中哪种功能，而各种不同的URL就是用来干这个的。</p>
+<p>比如访问Web服务器使用“http:”，访问FTP服务器使用“ftp:”，URL开头的部分就是协议类型，但是叫协议类型并不完全准确，因为像以“file：”开头的URL在访问时并不需要访问网络，也许理解为“访问方法”会更好一些。</p>
+<h4 id="URI"><a href="#URI" class="headerlink" title="URI"></a>URI</h4><p>URI包括URL，URL是一种具体的URI。</p>
+<p>当URI中，提供了某种具体的“访问方法”，即“http：”，“ftp：”等，那它就是URL。所以，判断一个URI是不是URL，就看它是否提供了某种访问方法。</p>
+<h3 id="MAC地址与IP地址"><a href="#MAC地址与IP地址" class="headerlink" title="MAC地址与IP地址"></a>MAC地址与IP地址</h3><p>生成了IP地址之后，接下来还要在IP头部加上MAC头部。IP头部中的接受方IP地址表示网络包的目的地，通过这个地址我们可以知道将包发送到哪里，但是在以太网的世界中，TCP/IP这个思路行不通。以太网在判断网络包目的地时和TCP/IP的方式不同，因此必须采用相匹配的方式才能在以太网中将包发往目的地，而MAC头部就是干这个用的。</p>
+<p><strong>MAC头部：</strong>以太网用的头部，包含MAC地址</p>
+<p><strong>IP头部：</strong>IP用的头部，包含IP地址。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/10/read-4/" rel="next" title="《愿你拥有被爱照亮的生命》">
+                <i class="fa fa-chevron-left"></i> 《愿你拥有被爱照亮的生命》
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#生成HTTP请求消息"><span class="nav-number">1.</span> <span class="nav-text">生成HTTP请求消息</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#查询DNS服务器"><span class="nav-number">2.</span> <span class="nav-text">查询DNS服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#委托协议栈发送消息"><span class="nav-number">3.</span> <span class="nav-text">委托协议栈发送消息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建套接字"><span class="nav-number">3.1.</span> <span class="nav-text">创建套接字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将管道连接到服务器端的套接字上"><span class="nav-number">3.2.</span> <span class="nav-text">将管道连接到服务器端的套接字上</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#收发数据"><span class="nav-number">3.3.</span> <span class="nav-text">收发数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#断开管道并删除套接字"><span class="nav-number">3.4.</span> <span class="nav-text">断开管道并删除套接字</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IP与以太网的包收发操作"><span class="nav-number">3.5.</span> <span class="nav-text">IP与以太网的包收发操作</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据包从计算机流出"><span class="nav-number">4.</span> <span class="nav-text">数据包从计算机流出</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#进入互联网"><span class="nav-number">5.</span> <span class="nav-text">进入互联网</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#到达服务器接入点"><span class="nav-number">6.</span> <span class="nav-text">到达服务器接入点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问Web服务器"><span class="nav-number">7.</span> <span class="nav-text">访问Web服务器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解惑"><span class="nav-number">8.</span> <span class="nav-text">解惑</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#URL与URI"><span class="nav-number">8.1.</span> <span class="nav-text">URL与URI</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#URL"><span class="nav-number">8.1.1.</span> <span class="nav-text">URL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#URI"><span class="nav-number">8.1.2.</span> <span class="nav-text">URI</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MAC地址与IP地址"><span class="nav-number">8.2.</span> <span class="nav-text">MAC地址与IP地址</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
