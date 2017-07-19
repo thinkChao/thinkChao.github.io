@@ -1,0 +1,1144 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="概述简介简单介绍：C++ STL（标准模板库）是一套功能强大的 C++ 模板类，提供了通用的模板类和函数，这些模板类和函数可以实现多种流行和常用的算法和数据结构，如向量、链表、队列、栈等。 STL的一个重要特点就是数据结构和算法的分离。例如，STL中sort()函数是完全通用的，你可以用它来操作几乎任何数据集合，包括链表，容器和数组。 STL另一个重要特性是它不是面向对象的，主要依赖于模版，而不是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C++ STL初识及整理">
+<meta property="og:url" content="http://yoursite.com/2017/07/19/coder-3/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="概述简介简单介绍：C++ STL（标准模板库）是一套功能强大的 C++ 模板类，提供了通用的模板类和函数，这些模板类和函数可以实现多种流行和常用的算法和数据结构，如向量、链表、队列、栈等。 STL的一个重要特点就是数据结构和算法的分离。例如，STL中sort()函数是完全通用的，你可以用它来操作几乎任何数据集合，包括链表，容器和数组。 STL另一个重要特性是它不是面向对象的，主要依赖于模版，而不是">
+<meta property="og:updated_time" content="2017-07-19T08:17:56.587Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="C++ STL初识及整理">
+<meta name="twitter:description" content="概述简介简单介绍：C++ STL（标准模板库）是一套功能强大的 C++ 模板类，提供了通用的模板类和函数，这些模板类和函数可以实现多种流行和常用的算法和数据结构，如向量、链表、队列、栈等。 STL的一个重要特点就是数据结构和算法的分离。例如，STL中sort()函数是完全通用的，你可以用它来操作几乎任何数据集合，包括链表，容器和数组。 STL另一个重要特性是它不是面向对象的，主要依赖于模版，而不是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/19/coder-3/"/>
+
+
+
+
+
+  <title>C++ STL初识及整理 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/19/coder-3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">C++ STL初识及整理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-19T16:18:07+08:00">
+                2017-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/程序员/" itemprop="url" rel="index">
+                    <span itemprop="name">程序员</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/19/coder-3/" class="leancloud_visitors" data-flag-title="C++ STL初识及整理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>简单介绍：C++ STL（标准模板库）是一套功能强大的 C++ 模板类，提供了通用的模板类和函数，这些模板类和函数可以实现多种流行和常用的算法和数据结构，如向量、链表、队列、栈等。</p>
+<p>STL的一个重要特点就是数据结构和算法的分离。例如，STL中sort()函数是完全通用的，你可以用它来操作几乎任何数据集合，包括链表，容器和数组。</p>
+<p>STL另一个重要特性是它不是面向对象的，主要依赖于模版，而不是封装和继承。</p>
+<a id="more"></a>
+<h2 id="常用基本组件"><a href="#常用基本组件" class="headerlink" title="常用基本组件"></a>常用基本组件</h2><p><strong>容器：</strong>容器是用来管理某一类对象的集合。C++ 提供了各种不同类型的容器，比如 deque、list、vector、map 等。</p>
+<p><strong>迭代器：</strong>迭代器提供了访问容器中对象的方法。例如，可以使用迭代器指定list或vector中的一定范围的对象。</p>
+<p><strong>算法：</strong>算法是用来操作容器中的数据的模板函数。它们提供了执行各种操作的方式，包括对容器内容执行初始化、排序、搜索和转换等操作。</p>
+<p>由此可见，算法和迭代器组件都是作用于容器的。</p>
+<p><strong>适配器；</strong></p>
+<p>还有其它两个个不常用的组件，分别是：仿函数(function object)、空间配制器(allocator)。</p>
+<h1 id="容器"><a href="#容器" class="headerlink" title="容器"></a>容器</h1><p>之前在使用数组解决问题时，我们必须要知道或者估算出大约要存储多少个对象，这样我们会创建能够容纳这些对象的内存空间大小。当我们要处理一些完全不知道要存储多少对象的问题时，数组显的力不从心。</p>
+<p>那么我们便我们可以使用容器来解决这个问题。容器具有很高的可扩展性，我们不需要预先告诉它要存储多少对象，只要创建一个容器，并合理的调用它所提供的方法，所有的处理细节由容器自身完成。</p>
+<h2 id="顺序容器"><a href="#顺序容器" class="headerlink" title="顺序容器"></a>顺序容器</h2><p>顺序容器不会根据元素的特点排序而是直接保存了元素操作时的逻辑顺序，比如我们一次性对一个顺序容器追加三个元素，这三个元素在容器中的相对位置和追加时的逻辑次序是一致的。</p>
+<h3 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h3><p>可变大小数组，支持<strong>快速随机访问</strong>，在尾部之外的位置插入或者删除元素可能很慢。</p>
+<p>适用于大量读写，而插入、删除比较少的操作。</p>
+<h4 id="用法总结"><a href="#用法总结" class="headerlink" title="用法总结"></a>用法总结</h4><ol>
+<li><p>头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;vector&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt; vec;        //声明一个int型向量</div><div class="line">vector&lt;int&gt; vec(5);     //声明一个初始大小为5的int向量</div><div class="line">vector&lt;int&gt; vec(10, 1); //声明一个初始大小为10且值都是1的向量</div><div class="line">vector&lt;int&gt; vec(tmp);   //声明并用tmp向量初始化vec向量</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">vec.size();           //大小</div><div class="line">vec.capacity();        //真实大小</div><div class="line">vec.max_size();        //最大容量</div><div class="line">vec.resize();          //更改大小</div><div class="line">vec.empty();           //判空</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">vec.push_back();      //末尾添加元素</div><div class="line">vec.insert();           //任意位置插入元素</div><div class="line"></div><div class="line">vec.pop_back();      //末尾删除元素</div><div class="line">vec.erase();           //任意位置删除元素 </div><div class="line"></div><div class="line">vec.swap();           //交换两个元素</div><div class="line">vec.clear();           //清空元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>元素的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">vec[1];       //下标访问,并不会检查是否越界</div><div class="line">vec.at(1);     //at方法访问,以上两者的区别就是at会检查是否越界</div><div class="line"></div><div class="line">vec.front();     //访问第一个元素</div><div class="line">vec.back();      //访问最后一个元素 </div><div class="line"></div><div class="line">int* p = vec.data();    //返回一个指针,可行的原因在于vector在内存中就是一个连续存储的数组，所以可以返回一个指针指向这个数组。这是是C++11的特性。</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">vector&lt;int&gt;::iterator it;</div><div class="line">for (it = vec.begin(); it != vec.end(); it++)</div><div class="line">    cout &lt;&lt; *it &lt;&lt; endl;</div><div class="line">//或者</div><div class="line">for (size_t i = 0; i &lt; vec.size(); i++) &#123;</div><div class="line">    cout &lt;&lt; vec.at(i) &lt;&lt; endl;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">sort(vec.begin(), vec.end()); //采用的是从小到大的排序</div><div class="line">//如果想从大到小排序，可以采用下面的反转函数，也可以采用下面方法:</div><div class="line">bool Comp(const int&amp; a, const int&amp; b) &#123;</div><div class="line">    return a &gt; b;</div><div class="line">&#125;</div><div class="line">sort(vec.begin(), vec.end(), Comp);</div></pre></td></tr></table></figure>
+</li>
+<li><p>翻转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#include &lt;algorithm&gt;</div><div class="line">reverse(vec.begin(), vec.end());</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>双向链表。只支持<strong>双向顺序访问</strong>。在list中任何位置进行插入、删除操作速度都很快。</p>
+<p>适用于少量读写，大量插入，删除的情况。</p>
+<h4 id="用法总结-1"><a href="#用法总结-1" class="headerlink" title="用法总结"></a>用法总结</h4><ol>
+<li><p>头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;list&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">list&lt;int&gt; l;</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">l.empty();			//判空</div></pre></td></tr></table></figure>
+</li>
+<li><p>元素的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">l.front();                       // 取队头元素</div><div class="line">l.back();                        // 取队尾元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">l.push_back();                        // 尾后压入元素</div><div class="line">l.push_front();                       // 队头压入元素</div><div class="line"></div><div class="line">l.pop_back();                         // 尾后弹出一个元素</div><div class="line">l.pop_front();                        // 队头弹出一个元素</div><div class="line"></div><div class="line">l.insert(l.begin(), 88);              // 某个位置插入元素(性能好)</div><div class="line"></div><div class="line">l.remove(2);                          // 删除某个元素(和所给值相同的都删除)</div><div class="line">l.erase(--l.end());                   // 删除某个位置的元素(性能好)</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">list&lt;int&gt;::iterator it;  </div><div class="line"></div><div class="line">for(it = l.begin(); it!=l.end(); it++)   </div><div class="line">	&#123;</div><div class="line">		cout&lt;&lt;*it&lt;&lt;endl;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">l.sort();			//注意与vector的排序使用方法不一样</div></pre></td></tr></table></figure>
+</li>
+<li><p>翻转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">l.reverse();                                // 倒置所有元素</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="forward-list"><a href="#forward-list" class="headerlink" title="forward_list"></a>forward_list</h3><p>单向链表。只支持单向顺序访问。在链表的任何位置进行插入、删除操作都很快。</p>
+<h4 id="用法总结-2"><a href="#用法总结-2" class="headerlink" title="用法总结"></a>用法总结</h4><blockquote>
+<p>与list用法基本一致，用的也不多，先稍微总结下，没有认真总结。</p>
+</blockquote>
+<ol>
+<li>头文件</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">forward_list&lt;int&gt; fl = &#123;1, 2, 3, 4, 5, 6, 7, 8, 9&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+</li>
+<li><p>元素的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">auto prev = fl.before_begin();    // 表示fl的&quot;首前元素&quot;</div><div class="line">auto curr = fl.begin();            // 表示fl的第一个元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fl.push_front(0);                // 压入元素，该容器没有push_back方法</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li>遍历</li>
+<li><p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">fl.sort();</div></pre></td></tr></table></figure>
+</li>
+<li><p>翻转</p>
+</li>
+</ul>
+<h3 id="deque"><a href="#deque" class="headerlink" title="deque"></a>deque</h3><p>双端队列。支持快速随机访问。在头尾位置插入、删除速度很快。</p>
+<p>deque折中了vector和list， 如果你需要随机存取又关心数据的插入和删除，那么可以选择deque。</p>
+<h4 id="用法总结-3"><a href="#用法总结-3" class="headerlink" title="用法总结"></a>用法总结</h4><ol>
+<li><p>头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;deque&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">deque&lt;int&gt; d1;</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">dl.empty()        //判空</div></pre></td></tr></table></figure>
+</li>
+<li><p>元素的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">d1.front();                           // 取队头元素</div><div class="line">d1.back();                            // 取队尾元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">d1.push_back();                       // 尾后压入元素</div><div class="line">d1.push_front(4);                     // 队头压入元素</div><div class="line"></div><div class="line">d1.pop_back();                        // 尾后弹出一个元素</div><div class="line">d1.pop_front();                       // 队头弹出一个元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">for(it = dl.begin(); it!=dl.end(); it++)   //迭代输出</div><div class="line">	&#123;</div><div class="line">		cout&lt;&lt;*it&lt;&lt;endl;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">sort(dl.begin(), dl.end());</div></pre></td></tr></table></figure>
+</li>
+<li><p>翻转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reverse(dl.begin(), dl.end());</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="array"><a href="#array" class="headerlink" title="array"></a>array</h3><p>固定大小数组。支持快速随机访问。不能添加或者删除元素。</p>
+<p>array一般用来代替原生的数组。</p>
+<h4 id="用法总结-4"><a href="#用法总结-4" class="headerlink" title="用法总结"></a>用法总结</h4><ol>
+<li>头文件</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"> array&lt;int, 5&gt; myArray1 = &#123; 1, 2, 3, 4, 5 &#125;;    // 定义一个一维数组</div><div class="line">array&lt;array&lt;int, 2&gt;, 3&gt; myArray2 = &#123;1, 2, 3, 4, 5, 6&#125;;    // 定义一个二维数组</div><div class="line"> array&lt;int, 5&gt; myArray4;                // 此数组并未初始化</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">// array.resize();        // array 不能有改变容器大小的操作，它的效率比vector高</div></pre></td></tr></table></figure>
+</li>
+<li><p>元素的访问</p>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">myArray1.swap(myArray3);// 交换两个数组的的元素</div><div class="line">myArray4 = myArray1;    // 支持直接这样赋值，原生的数组不可以这样。它把值全部复制过去，而不是引用</div><div class="line">myArray1.assign(0);        // 把myArray1的元素全部置为0</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">// 遍历数组元素</div><div class="line">    for (int i = 0; i &lt; myArray1.size(); ++i)</div><div class="line">    &#123;</div><div class="line">        cout &lt;&lt; myArray1[i] &lt;&lt; endl;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+</li>
+<li>翻转</li>
+</ul>
+<h3 id="string"><a href="#string" class="headerlink" title="string"></a>string</h3><p>与vector相似的容器，但专门用于保存字符。随机访问快，在尾部插入删除快。</p>
+<p>string用于和字符串操作有关的一些情况，也是实际开发中应用最多的。</p>
+<h4 id="用法总结-5"><a href="#用法总结-5" class="headerlink" title="用法总结"></a>用法总结</h4><ol>
+<li><p>头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;string&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">string str1 = &quot;Hello Ace&quot;;            // string的几种构造方法</div><div class="line">string str2(&quot;Hello World&quot;);        </div><div class="line">string str3(str1, 6);                // 从str1下标6开始构造， str3 -&gt; Ace</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+</li>
+<li>元素的访问</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">string str4 = str2.substr(0, 5);    // 求子串： str4 -&gt; Hello</div><div class="line">string str5 = str2.substr(6);        // 求子串： str5 -&gt; World</div><div class="line">string str6 = str2.substr(6, 11);    // 求子串： str6 -&gt; World</div><div class="line"></div><div class="line">string str8 = str2.replace(6, 5, &quot;Game&quot;);    // 替换：str8 -&gt; Hello Game 从位置6开始，删除5个字符，并替换成&quot;Game&quot;</div><div class="line"></div><div class="line">string str9 = str2.append(&quot;, Hello Beauty&quot;);// 追加字符串： str9 -&gt; Hello World, Hello Beauty</div><div class="line"></div><div class="line"> auto pos1 = str1.find(&quot;Ace&quot;);    // 查找字符串:pos1 -&gt; 6 ,返回第一次出现字符串的位置，如果没找着，则返回npos</div><div class="line"></div><div class="line"> int res = str1.compare(&quot;Hello, Ace&quot;);        // 比较字符串： res -&gt; -1, 根据str1是等于、大于还是小于参数指定的字符串， 返回0、整数或者负数</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li>遍历</li>
+<li>排序</li>
+<li>翻转</li>
+</ul>
+<h2 id="关联容器"><a href="#关联容器" class="headerlink" title="关联容器"></a>关联容器</h2><p>关联容器支持高效的关键字查询和访问。标准库一共定义了8个关联容器，最主要的类型是map和set。8个容器中，每个容器：</p>
+<ul>
+<li>是一个map或者是一个set。map保存关键字-值对；set只保存关键字。</li>
+<li>要求关键字唯一或者不要求。</li>
+<li>保持关键字有序或者不保证有序。</li>
+</ul>
+<p>以下是八个常用的容器类：</p>
+<ul>
+<li><p><strong>set / unordered_set</strong></p>
+</li>
+<li><p><strong>map / unordered_map</strong></p>
+</li>
+</ul>
+<ul>
+<li><strong>multiset / unordered_multiset</strong></li>
+</ul>
+<ul>
+<li><strong>multimap / unordered_multimap</strong></li>
+</ul>
+<p>从名字中就可以看出是否唯一、是否有序，允许重复关键字的容器名字都包含“multi”，不是有序容器的集合都包含“unordered”。</p>
+<p><strong>所以<code>set</code>    和<code>map</code>都是有序且无重复元素的。</strong></p>
+<h3 id="用法总结-6"><a href="#用法总结-6" class="headerlink" title="用法总结"></a>用法总结</h3><h4 id="set用法"><a href="#set用法" class="headerlink" title="set用法"></a>set用法</h4><ol>
+<li><p>头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;set&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set&lt;int&gt; s;</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">empty() 　　　 //判断set容器是否为空</div><div class="line">size() 　　　　//返回当前set容器中的元素个数</div><div class="line">max_size() 　 //返回set容器可能包含的元素最大个数</div></pre></td></tr></table></figure>
+</li>
+<li><p>元素的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">begin()     　　 //返回set容器的第一个元素</div><div class="line">end() 　　　　   //返回set容器的最后一个元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">erase(iterator)  //删除定位器iterator指向的值</div><div class="line">erase(first,second)    //删除定位器first和second之间的值</div><div class="line">erase(key_value)    //删除键值key_value的值</div><div class="line"></div><div class="line">insert(key_value)   //将key_value插入到set中</div><div class="line">insert(first,second)   //将定位器first到second之间的元素插入到set中</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">set&lt;int&gt;::iterator it;  //声明迭代器</div><div class="line">for(it = s.begin(); it!=s.end(); it++)   //迭代输出</div><div class="line">	&#123;</div><div class="line">		cout&lt;&lt;*it&lt;&lt;endl;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set本身就是有序的。</div></pre></td></tr></table></figure>
+</li>
+<li><p>翻转</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">reverse(s.begin(), s.end());  //翻转</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="map用法"><a href="#map用法" class="headerlink" title="map用法"></a>map用法</h4><ol>
+<li><p>头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">#include &lt;map&gt;</div></pre></td></tr></table></figure>
+</li>
+<li><p>声明及初始化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">map&lt;string,int&gt;   my_Map;</div></pre></td></tr></table></figure>
+</li>
+<li><p>容量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">my_Map.size()           //返回元素数目 </div><div class="line">my_Map.empty()          //判断是否为空 </div><div class="line">my_Map.clear()          //清空所有元素</div></pre></td></tr></table></figure>
+</li>
+<li><p>元素的访问</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">int i = my_Map[&quot;a&quot;]; </div><div class="line"></div><div class="line">MY_MAP::iterator   my_Itr; </div><div class="line">my_Itr.find(&quot;b&quot;); </div><div class="line">int j = my_Itr-&gt;second;       //first返回键，second返回值</div></pre></td></tr></table></figure>
+</li>
+<li><p>修改</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//插入数据</div><div class="line">my_Map[&quot;a&quot;]；		//只插入键，对应的值默认为0</div><div class="line">my_Map[&quot;a&quot;] = 1; 	//同时插入键和值</div><div class="line"></div><div class="line">my_Map.insert(map&lt;string,int&gt;::value_type(&quot;b&quot;,2)); </div><div class="line">my_Map.insert(pair&lt;string,int&gt;(&quot;c&quot;,3)); </div><div class="line">my_Map.insert(make_pair&lt;string,int&gt;(&quot;d&quot;,4)); </div><div class="line"></div><div class="line">//删除数据</div><div class="line">my_Map.erase(my_Itr); </div><div class="line">MY_MAP::iterator   my_Itr; </div><div class="line"></div><div class="line">my_Map.erase(&quot;c&quot;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>算法</p>
+</li>
+</ol>
+<ul>
+<li><p>遍历</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">map&lt;string,int&gt;::iterator it;  //声明迭代器</div><div class="line">	for(it = p.begin(); it!=p.end(); it++)   //迭代输出</div><div class="line">	&#123;</div><div class="line">		cout&lt;&lt;it-&gt;first&lt;&lt;it-&gt;second&lt;&lt;endl;</div><div class="line">	&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">map本身就是有序的</div></pre></td></tr></table></figure>
+</li>
+<li><p>翻转</p>
+</li>
+</ul>
+<h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><h2 id="代码举例"><a href="#代码举例" class="headerlink" title="代码举例"></a>代码举例</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;vector&gt;</div><div class="line"></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    vector&lt;int&gt; v;        // 定义一个vector容器</div><div class="line"></div><div class="line">    v.push_back(1);        // 向容器中添加3个元素</div><div class="line">    v.push_back(2);</div><div class="line">    v.push_back(3);</div><div class="line"></div><div class="line">    // 遍历向量的元素</div><div class="line">    vector&lt;int&gt;::iterator b = v.begin();        // 指向容器的第一个元素</div><div class="line">    vector&lt;int&gt;::iterator e = v.end();            // 指向容器尾元素的下一个位置</div><div class="line"></div><div class="line">    // C++11新标准的写法, auto关键字为类型推断，由编译器自动完成</div><div class="line">    // auto b = v.begin();</div><div class="line">    // auto e = v.end();</div><div class="line"></div><div class="line">    for (vector&lt;int&gt;::iterator iter = b; iter != e; ++iter)</div><div class="line">    &#123;</div><div class="line">        cout &lt;&lt; *iter &lt;&lt; endl;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="要点"><a href="#要点" class="headerlink" title="要点"></a>要点</h2><ul>
+<li>迭代器最常用到的就是begin和end成员。其中begin成员负责返回指向第一个元素。end成员则负责返回指向容器的“尾元素的下一个位置。要特别注意<strong>end成员不是指向尾元素，而是指向尾元素的下一个位置！</strong></li>
+<li>表达式语句 ++iter。 建议使用前置++而非后置++。 在迭代器中，前置++的效率高于后置++。</li>
+<li>初始化语句：vector<int>::iterator iter = b; 如果你的环境支撑C++11标准，那么强烈建议你写成auto iter = b;，即使用类型自动推断关键字auto。使用auto使程序更为简洁，也不会出错，由编译器自动推断。</int></li>
+</ul>
+<h2 id="迭代器的运算符"><a href="#迭代器的运算符" class="headerlink" title="迭代器的运算符"></a>迭代器的运算符</h2><ul>
+<li>*iter： 返回迭代器iter所指元素的引用</li>
+<li>iter-&gt;mem: 解引用iter并获取该元素的名为mem的成员，等价于(*item).mem</li>
+<li>++iter: 另iter指向容器的下一个元素</li>
+<li>–iter: 另iter指向元素的前一个元素</li>
+<li>iter1 == iter2：判断两个迭代器是否相等</li>
+<li>iter1 != iter2: 判断两个迭代器是否不相等</li>
+</ul>
+<h1 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h1><h2 id="算法模式"><a href="#算法模式" class="headerlink" title="算法模式"></a>算法模式</h2><p>大多数的算法具有如下4种形式之一：</p>
+<ul>
+<li>alg(beg, end, other args);</li>
+<li>alg(beg, end, dest, other args);</li>
+<li>alg(beg, end, beg2, other args);</li>
+<li>alg(beg, end, beg2, end2, other args);</li>
+</ul>
+<p>其中alg是算法的名字,beg和end表示算法所操作的输入范围。dest表示指定目的位置,beg2和end2表示接受第二个范围。</p>
+<h2 id="常用算法"><a href="#常用算法" class="headerlink" title="常用算法"></a>常用算法</h2><h3 id="find"><a href="#find" class="headerlink" title="find()"></a>find()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;vector&gt;</div><div class="line">#include &lt;algorithm&gt;</div><div class="line"></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    int val = 5;</div><div class="line">    int arr[10] = &#123; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 &#125;;</div><div class="line">    vector&lt;int&gt; vec = &#123; 11, 22, 33, 44, 55, 66, 77, 88, 99 &#125;;</div><div class="line"></div><div class="line">    // 查找元素的范围是第2个元素到第8个元素，支持内置数组</div><div class="line">    // 如果找到想要的元素，则返回结果指向它</div><div class="line">    auto result = find(arr + 1, arr + 7, val);</div><div class="line">    cout &lt;&lt; *result &lt;&lt; endl;    // 输出结果为 5,如果没找到返回7，想一下为什么</div><div class="line"></div><div class="line">    int val2 = 100;</div><div class="line">    // 没有找到这个值，返回vec.cend()</div><div class="line">    auto res = find(vec.begin(), vec.end(), val2);</div><div class="line">    if (res == vec.cend())</div><div class="line">    &#123;</div><div class="line">        cout &lt;&lt; &quot;没找到元素!&quot; &lt;&lt; endl;</div><div class="line">    &#125;</div><div class="line">    else</div><div class="line">    &#123;</div><div class="line">        cout &lt;&lt; *res &lt;&lt; endl;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="sort"><a href="#sort" class="headerlink" title="sort()"></a>sort()</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;vector&gt;</div><div class="line">#include &lt;string&gt;</div><div class="line">#include &lt;algorithm&gt;</div><div class="line"></div><div class="line">using namespace std;</div><div class="line"></div><div class="line">struct CoureSocre</div><div class="line">&#123;</div><div class="line">    string name;    // 姓名</div><div class="line">    int math;        // 数学成绩</div><div class="line">    int chinese;    // 语文成绩</div><div class="line">    int total;        // 总成绩</div><div class="line"></div><div class="line">    CoureSocre(string _name, int _math, int _chinese)</div><div class="line">    &#123;</div><div class="line">        name = _name;</div><div class="line">        math = _math;</div><div class="line">        chinese = _chinese;</div><div class="line">        total = math + chinese;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">bool myCmp(CoureSocre c1, CoureSocre c2)</div><div class="line">&#123;</div><div class="line">    // 如果总成绩相同</div><div class="line">    if (c1.total == c2.total)</div><div class="line">    &#123;</div><div class="line">        return c1.math &gt;= c2.math;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return c1.total &gt; c2.total;</div><div class="line">&#125;</div><div class="line"></div><div class="line">int main()</div><div class="line">&#123;</div><div class="line">    // 初始化5个学生的程序</div><div class="line">    CoureSocre c1(&quot;Ace&quot;, 90, 95);</div><div class="line">    CoureSocre c2(&quot;Shawna&quot;, 99, 100);</div><div class="line">    CoureSocre c3(&quot;Kelly&quot;, 100, 99);</div><div class="line">    CoureSocre c4(&quot;Jordan&quot;, 88, 90);</div><div class="line">    CoureSocre c5(&quot;Kobe&quot;, 90, 88);</div><div class="line"></div><div class="line">    // 加入容器</div><div class="line">    vector&lt;CoureSocre&gt; vecScoreList = &#123; c1, c2, c3, c4, c5 &#125;;</div><div class="line"></div><div class="line">    // 调用sort算法进行排序</div><div class="line">    sort(vecScoreList.begin(), vecScoreList.end(), myCmp);</div><div class="line"></div><div class="line">    cout &lt;&lt; &quot;学生的成绩排名为:&quot; &lt;&lt; endl;</div><div class="line">    for each (CoureSocre c in vecScoreList)        // 使用for each 算法进行遍历</div><div class="line">    &#123;</div><div class="line">        cout &lt;&lt; &quot;姓名:&quot; &lt;&lt; c.name &lt;&lt; &quot;\t总成绩:&quot; &lt;&lt; c.total &lt;&lt; &quot;\t数学:&quot; &lt;&lt; c.math &lt;&lt; &quot;\t语文:&quot; &lt;&lt; c.chinese &lt;&lt; endl;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>#容器适配器<br>STL提供了三个容器适配器：queue、priority_queue、stack。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/17/android-10/" rel="next" title="Android系统服务 —— WMS与AMS">
+                <i class="fa fa-chevron-left"></i> Android系统服务 —— WMS与AMS
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#简介"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用基本组件"><span class="nav-number">1.2.</span> <span class="nav-text">常用基本组件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#容器"><span class="nav-number">2.</span> <span class="nav-text">容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#顺序容器"><span class="nav-number">2.1.</span> <span class="nav-text">顺序容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#vector"><span class="nav-number">2.1.1.</span> <span class="nav-text">vector</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法总结"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">用法总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#list"><span class="nav-number">2.1.2.</span> <span class="nav-text">list</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法总结-1"><span class="nav-number">2.1.2.1.</span> <span class="nav-text">用法总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#forward-list"><span class="nav-number">2.1.3.</span> <span class="nav-text">forward_list</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法总结-2"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">用法总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#deque"><span class="nav-number">2.1.4.</span> <span class="nav-text">deque</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法总结-3"><span class="nav-number">2.1.4.1.</span> <span class="nav-text">用法总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#array"><span class="nav-number">2.1.5.</span> <span class="nav-text">array</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法总结-4"><span class="nav-number">2.1.5.1.</span> <span class="nav-text">用法总结</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#string"><span class="nav-number">2.1.6.</span> <span class="nav-text">string</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#用法总结-5"><span class="nav-number">2.1.6.1.</span> <span class="nav-text">用法总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联容器"><span class="nav-number">2.2.</span> <span class="nav-text">关联容器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用法总结-6"><span class="nav-number">2.2.1.</span> <span class="nav-text">用法总结</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#set用法"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">set用法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map用法"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">map用法</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#迭代器"><span class="nav-number">3.</span> <span class="nav-text">迭代器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码举例"><span class="nav-number">3.1.</span> <span class="nav-text">代码举例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#要点"><span class="nav-number">3.2.</span> <span class="nav-text">要点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#迭代器的运算符"><span class="nav-number">3.3.</span> <span class="nav-text">迭代器的运算符</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#算法"><span class="nav-number">4.</span> <span class="nav-text">算法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#算法模式"><span class="nav-number">4.1.</span> <span class="nav-text">算法模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用算法"><span class="nav-number">4.2.</span> <span class="nav-text">常用算法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#find"><span class="nav-number">4.2.1.</span> <span class="nav-text">find()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sort"><span class="nav-number">4.2.2.</span> <span class="nav-text">sort()</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
