@@ -1,0 +1,941 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="基础了解介绍 在Android中实现异步任务机制有两种方式：Handler和AsyncTask。 Handler模式需要为每一个任务创建一个新的线程，任务完成后通过Handler实例向UI线程发送消息，完成界面的更新，这种方式对于整个过程的控制比较精细，但也是有缺点的，例如代码相对臃肿，在多个任务同时执行时，不易对线程进行精确的控制。 为了简化操作，Android提供了工具类.AsyncTask，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AsyncTask源码分析">
+<meta property="og:url" content="http://yoursite.com/2017/07/23/android-12/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="基础了解介绍 在Android中实现异步任务机制有两种方式：Handler和AsyncTask。 Handler模式需要为每一个任务创建一个新的线程，任务完成后通过Handler实例向UI线程发送消息，完成界面的更新，这种方式对于整个过程的控制比较精细，但也是有缺点的，例如代码相对臃肿，在多个任务同时执行时，不易对线程进行精确的控制。 为了简化操作，Android提供了工具类.AsyncTask，">
+<meta property="og:updated_time" content="2017-07-23T16:06:05.125Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AsyncTask源码分析">
+<meta name="twitter:description" content="基础了解介绍 在Android中实现异步任务机制有两种方式：Handler和AsyncTask。 Handler模式需要为每一个任务创建一个新的线程，任务完成后通过Handler实例向UI线程发送消息，完成界面的更新，这种方式对于整个过程的控制比较精细，但也是有缺点的，例如代码相对臃肿，在多个任务同时执行时，不易对线程进行精确的控制。 为了简化操作，Android提供了工具类.AsyncTask，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/23/android-12/"/>
+
+
+
+
+
+  <title>AsyncTask源码分析 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/23/android-12/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AsyncTask源码分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T16:32:12+08:00">
+                2017-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/23/android-12/" class="leancloud_visitors" data-flag-title="AsyncTask源码分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="基础了解"><a href="#基础了解" class="headerlink" title="基础了解"></a>基础了解</h1><h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p> 在Android中实现异步任务机制有两种方式：<strong>Handler和AsyncTask。</strong></p>
+<p>Handler模式需要为<strong>每一个任务创建一个新的线程</strong>，任务完成后通过Handler实例向UI线程发送消息，完成界面的更新，这种方式对于整个过程的控制比较精细，但也是有缺点的，例如代码相对臃肿，在多个任务同时执行时，<strong>不易对线程进行精确的控制。</strong></p>
+<p>为了简化操作，Android提供了工具类.AsyncTask，它使创建异步任务变得更加简单，不再需要编写任务线程和Handler实例即可完成相同的任务，但其<strong>内部也是使用Handler</strong>来传递消息，而且<strong>基于线程池</strong>。因此明显的AsyncTask比Handler要重量级。</p>
+<a id="more"></a>
+<p>功能总结：</p>
+<ul>
+<li>能定义以下执行过程的操作：预执行、执行后台任务、执行进度反馈、执行完毕</li>
+<li>对于以上功能，可以提供友好方便的API供开发人员调用</li>
+<li>可以停止任务的执行</li>
+</ul>
+<h2 id="涉及的主要类"><a href="#涉及的主要类" class="headerlink" title="涉及的主要类"></a>涉及的主要类</h2><ul>
+<li><strong>AsyncTask<params, progress,="" result="">：</params,></strong>将要介绍的主角，这是一个抽象类</li>
+<li><strong>Params：</strong>泛型类，是启动任务执行的输入参数类型</li>
+<li><strong>Progress：</strong>泛型类，是后台任务完成的进度值的类型，如进度百分比</li>
+<li><strong>Result：</strong>泛型类，是后台任务完成后的返回值类型</li>
+</ul>
+<p>　</p>
+<h2 id="涉及的主要方法"><a href="#涉及的主要方法" class="headerlink" title="涉及的主要方法"></a>涉及的主要方法</h2><ul>
+<li><strong>doInBackground(Object[] params)：</strong>继承该类唯一必须要实现的方法，做一些耗时操作</li>
+<li><strong>onPreExecute()：</strong>耗时任务执行前的一些操作，运行在UI线程</li>
+<li><strong>publishProgress ()：</strong>在<code>doInBackground()</code>方法中进行调用，当这个方法被调用，会去执行<code>onProgressUpdate()</code>方法</li>
+<li><strong>onProgressUpdate(Object[] values)：</strong>当<code>publishProgress()</code>被调用时执行，用来实现进度的更新，运行在UI线程</li>
+<li><strong>onPostExecute(Object o)：</strong>任务结束后的操作，运行在UI线程</li>
+<li><strong>onCancelled()：</strong>取消执行</li>
+</ul>
+<h2 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h2><h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>1、新建一个类<code>MyAsyncTask</code>(随意命名)，继承<code>AsyncTask</code>。</p>
+<p>2、实现其中的<code>doInBackground()</code>方法，来进行耗时的操作，这个是必须实现的；然后，根据需要选择实现<code>onPreExecute()</code>、<code>onProgressUpdate()</code>、<code>onPostExecute()</code>方法，它们的功能在前面已有介绍。</p>
+<p> 3、最后调用<code>execute()</code>方法，来开启这个异步任务。</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li>异步任务的实例必须在UI线程中创建。</li>
+<li>execute(Params… params)方法必须在UI线程中调用。</li>
+<li>不能在doInBackground(Params… params)中更改UI组件的信息。</li>
+<li>一个任务实例只能执行一次，如果执行第二次将会抛出异常。</li>
+</ul>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a>代码示例</h3><p>对应上面第一、二步：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">private class MyAsyncTask extends AsyncTask&lt;String, Void, Bitmap&gt; &#123;</div><div class="line">     protected void onPreExecute() &#123;</div><div class="line"></div><div class="line">         // Good for toggling visibility of a progress indicator</div><div class="line">         progressBar.setVisibility(ProgressBar.VISIBLE);</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     protected Bitmap doInBackground(String... strings) &#123;</div><div class="line">         // Some long-running task like downloading an image.</div><div class="line">         Bitmap = downloadImageFromUrl(strings[0]);</div><div class="line">         return someBitmap;</div><div class="line">     &#125;</div><div class="line"></div><div class="line">     protected void onProgressUpdate(Progress... values) &#123;</div><div class="line">        // Executes whenever publishProgress is called from doInBackground</div><div class="line">        // Used to update the progress indicator</div><div class="line">        progressBar.setProgress(values[0]);</div><div class="line">     &#125;  </div><div class="line"></div><div class="line">     protected void onPostExecute(Bitmap result) &#123;</div><div class="line">         // This method is executed in the UIThread</div><div class="line">         // with access to the result of the long running task</div><div class="line">         imageView.setImageBitmap(result);</div><div class="line">         // Hide the progress bar</div><div class="line">         progressBar.setVisibility(ProgressBar.INVISIBLE);</div><div class="line">     &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>第三步：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public void onCreate(Bundle b) &#123;</div><div class="line"></div><div class="line">   new MyAsyncTask().execute(&quot;http://images.com/image.jpg&quot;);</div><div class="line">   </div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h1><h2 id="流程分析"><a href="#流程分析" class="headerlink" title="流程分析"></a>流程分析</h2><p>在分析源码时，针对于这种框架层源码，我采用流程分析法，也就是从我们最先开始调用的方法开始分析，逐步探寻里面是如何调用其它对象和其它方法的。</p>
+<p>还有一种方法是直接打开AsyncTask类，查看里面的方法、字段等，不过容易让人摸不着头脑，不容易搞清楚流程，所以这里我还是先找到一个入口，然后顺着这个入口去分析。</p>
+<p>毫无疑问，对于AsyncTask，我们最先调用的就是它的<code>execute()</code>方法，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public final AsyncTask&lt;Params, Progress, Result&gt; execute(Params... params) &#123;</div><div class="line">    return executeOnExecutor(sDefaultExecutor, params);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>只有一行代码，就是调用了<code>executeOnExecutor()</code>方法，我们进入这个方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">public final AsyncTask&lt;Params, Progress, Result&gt; executeOnExecutor(Executor exec,</div><div class="line">        Params... params) &#123;</div><div class="line">    if (mStatus != Status.PENDING) &#123;</div><div class="line">        switch (mStatus) &#123;</div><div class="line">            case RUNNING:</div><div class="line">                throw new IllegalStateException(&quot;Cannot execute task:&quot;</div><div class="line">                        + &quot; the task is already running.&quot;);</div><div class="line">            case FINISHED:</div><div class="line">                throw new IllegalStateException(&quot;Cannot execute task:&quot;</div><div class="line">                        + &quot; the task has already been executed &quot;</div><div class="line">                        + &quot;(a task can be executed only once)&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    mStatus = Status.RUNNING;</div><div class="line"></div><div class="line">    onPreExecute();</div><div class="line"></div><div class="line">    mWorker.mParams = params;</div><div class="line">    exec.execute(mFuture);</div><div class="line"></div><div class="line">    return this;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<ul>
+<li><code>mStatus</code>初始化是PENDING状态的，所以首先设置当前AsyncTask的状态为RUNNING。从上面的switch也可以看出，每个异步任务在完成前只能执行一次，否则报错。</li>
+<li>然后执行<code>onPreExecute()</code>，当前依然在UI线程，所以我们可以在其中做一些准备工作。</li>
+<li>将我们传入的参数赋值给<code>mWorker.mParams</code>。</li>
+<li>调用<code>exec.execute(mFuture)</code>。</li>
+</ul>
+<p>前两步没什么可说的，很容易理解，重点是最后两步，我们先分析<code>mWorker.mParams</code>，<code>mWorker</code>在代码中的声明如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private final WorkerRunnable&lt;Params, Result&gt; mWorker;</div></pre></td></tr></table></figure></p>
+<p>很明显，我们接下来要看看<code>WorkerRunnable</code>这个类是如何定义的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">private static abstract class WorkerRunnable&lt;Params, Result&gt; implements Callable&lt;Result&gt; &#123;</div><div class="line">        Params[] mParams;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>它是一个抽象类，实现了Callable接口，且包含一个mParams用于保存我们传入的参数，下面看一下它的初始化过程：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">mWorker = new WorkerRunnable&lt;Params, Result&gt;() &#123;</div><div class="line">            public Result call() throws Exception &#123;</div><div class="line">                mTaskInvoked.set(true);</div><div class="line">                Result result = null;</div><div class="line">                try &#123;</div><div class="line">                    Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);</div><div class="line">                    //noinspection unchecked</div><div class="line">                    result = doInBackground(mParams);</div><div class="line">                    Binder.flushPendingCommands();</div><div class="line">                &#125; catch (Throwable tr) &#123;</div><div class="line">                    mCancelled.set(true);</div><div class="line">                    throw tr;</div><div class="line">                &#125; finally &#123;</div><div class="line">                    postResult(result);</div><div class="line">                &#125;</div><div class="line">                return result;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div></pre></td></tr></table></figure></p>
+<p>mWorker在构造方法中完成了初始化，可以看到在这里new了一个实现类，实现了<code>call</code>方法，<code>call</code>方法中设置<code>mTaskInvoked=true</code>，且最终调用<code>doInBackground(mParams)</code>方法，<code>doInBackground(mParams)</code>由开发者来实现，然后返回Result值作为参数给<code>postResult()</code>方法，下面进入<code>postResult()</code>：（注意：这段代码是初始化，但是这个<code>call()</code>方法并不是在这里调用的，不过我们这里先把这一段的代码逻辑给讲了，后面的讲解会和这里衔接上）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">private Result postResult(Result result) &#123;</div><div class="line">    @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">    Message message = getHandler().obtainMessage(MESSAGE_POST_RESULT,</div><div class="line">            new AsyncTaskResult&lt;Result&gt;(this, result));</div><div class="line">    message.sendToTarget();</div><div class="line">    return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到postResult中出现了我们熟悉的异步消息机制，AsyncTaskResult就是一个简单的携带参数的对象，最终通过postResult将结果投递给UI线程。</p>
+<p>看到这一步，一定会想到在某处肯定存在一个Handler，且复写了其handleMessage方法等待消息的传入，以及消息的处理。所以我们进入<code>getHandler()</code>方法进行查找，最终找到代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">private static class InternalHandler extends Handler &#123;</div><div class="line">        public InternalHandler() &#123;</div><div class="line">            super(Looper.getMainLooper());</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @SuppressWarnings(&#123;&quot;unchecked&quot;, &quot;RawUseOfParameterizedType&quot;&#125;)</div><div class="line">        @Override</div><div class="line">        public void handleMessage(Message msg) &#123;</div><div class="line">            AsyncTaskResult&lt;?&gt; result = (AsyncTaskResult&lt;?&gt;) msg.obj;</div><div class="line">            switch (msg.what) &#123;</div><div class="line">                case MESSAGE_POST_RESULT:</div><div class="line">                    // There is only one result</div><div class="line">                    result.mTask.finish(result.mData[0]);</div><div class="line">                    break;</div><div class="line">                case MESSAGE_POST_PROGRESS:</div><div class="line">                    result.mTask.onProgressUpdate(result.mData);</div><div class="line">                    break;</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>对于<code>mWorker.mParams = params</code>方法就分析到这，这行代码的作用就是获得从UI现存传递来的参数，下面开始分析<code>exec.execute(mFuture)</code>方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public interface Executor &#123;</div><div class="line">    void execute(Runnable command);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>进入<code>execute(mFuture)</code>发现这是一个接口，所以我们需要找到它的实现类：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">private static class SerialExecutor implements Executor &#123;</div><div class="line">    final ArrayDeque&lt;Runnable&gt; mTasks = new ArrayDeque&lt;Runnable&gt;();</div><div class="line">    Runnable mActive;</div><div class="line"></div><div class="line">    public synchronized void execute(final Runnable r) &#123;</div><div class="line">        mTasks.offer(new Runnable() &#123;</div><div class="line">            public void run() &#123;</div><div class="line">                try &#123;</div><div class="line">                    r.run();</div><div class="line">                &#125; finally &#123;</div><div class="line">                    scheduleNext();</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        if (mActive == null) &#123;</div><div class="line">            scheduleNext();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    protected synchronized void scheduleNext() &#123;</div><div class="line">        if ((mActive = mTasks.poll()) != null) &#123;</div><div class="line">            THREAD_POOL_EXECUTOR.execute(mActive);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>找到了，可以看到它是一个SerialExecutor对象，我们直接看<code>execute()</code>方法，它有两步：</p>
+<ul>
+<li><p>第一步: 封装任务（目的是让任务串行），然后放入队列。新建一个Runable包裹提交进来的任务，在try作用域里面先执行r.run()，必须等任务执行完后（或者会执行失败也算是‘执行完’），要保证队列中的其他任务执行，所以在finally作用域中会执行 scheduleNext()调度下一个任务。所以任务是串行执行的。最后我们会把这个新建的Runnable对象放入队列mTasks中。</p>
+</li>
+<li><p>第二步:查看是否有可立即执行的任务mActive。 如果有执行的，则立即放入THREAD_POOL_EXECUTOR线程池调度器执行。</p>
+</li>
+</ul>
+<p>关于ThreadPoolExecutor这里不做介绍，下面直接进入到ThreadPoolExecutor的<code>execute()</code>方法，如下 ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">public void execute(Runnable command) &#123;</div><div class="line">    if (command == null)</div><div class="line">        throw new NullPointerException();</div><div class="line">    int c = ctl.get();</div><div class="line">    if (workerCountOf(c) &lt; corePoolSize) &#123;</div><div class="line">        if (addWorker(command, true))</div><div class="line">            return;</div><div class="line">        c = ctl.get();</div><div class="line">    &#125;</div><div class="line">    if (isRunning(c) &amp;&amp; workQueue.offer(command)) &#123;</div><div class="line">        int recheck = ctl.get();</div><div class="line">        if (! isRunning(recheck) &amp;&amp; remove(command))</div><div class="line">            reject(command);</div><div class="line">        else if (workerCountOf(recheck) == 0)</div><div class="line">            addWorker(null, false);</div><div class="line">    &#125;</div><div class="line">    else if (!addWorker(command, false))</div><div class="line">        reject(command);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>这段代码的主要功能是将异步任务mFuture加入到将要执行的队列中，重要的函数为<code>addWoker()</code>，这里就不再进入讲解了。<strong>需要说明的是，这个线程池是一个静态变量；那么在同一个进程之内，所有地方使用到的AsyncTask默认构造函数构造出来的AsyncTask都使用的是同一个线程池。</strong></p>
+<p>如果App模块比较多并且不加控制的话，那么超过了工作队列以及线程数目的限制导致这个线程池发生阻塞，那么悲剧发生，默认的处理方式会直接抛出一个异常导致进程挂掉。假设你自己写一个异步图片加载的框架，然后用AsyncTask实现的话，当你快速滑动ListView的时候很容易发生这种异常，这也是为什么各大ImageLoader都是自己写线程池和Handlder的原因。</p>
+<p>看到这里，我们发现接连使用了两个调度器，一个是SerialExecutor的<code>execute()</code>方法，一个是ThreadPoolExecutor的<code>execute()</code>，为什么要用两个调度器呢？</p>
+<p>那是因为它们负责的功能不同，从我们上面对SerialExecutor的分析可以看出，SerialExecutor是为了保证任务被一个一个的取出执行，也就是说<strong>AsyncTask中任务是串行执行的</strong>，只有一个AsyncTask实例执行结束，才能去调度另一个。我们从SerialExecutor的实例是个静态变量这一点也可以看出。那THREAD_POOL_EXECUTOR线程池调度器则是根据CPU数构造线程Thread缓存池，节约资源，提高AsyncTask执行性能。</p>
+<p>也许你不理解，<strong>为什么AsyncTask默认把它设计为串行执行的呢？</strong></p>
+<p>由于一个进程内所有的AsyncTask都是使用的同一个线程池执行任务；如果同时有几个AsyncTask一起并行执行的话，恰好AysncTask的使用者在doInbackgroud里面访问了相同的资源，但是自己没有处理同步问题；那么就有可能导致灾难性的后果！</p>
+<p>由于开发者通常不会意识到需要对他们创建的所有的AsyncTask对象里面的doInbackgroud做同步处理，因此，API的设计者为了避免这种无意中访问并发资源的问题，干脆把这个API设置为默认所有串行执行的了。如果你明确知道自己需要并行处理任务，那么你需要使用executeOnExecutor(Executor exec,Params… params)这个函数来指定你用来执行任务的线程池，同时为自己的行为负责。（处理同步问题）</p>
+<p>讲完<code>exe.execute(mFuture)</code>，其中的参数<code>mFuture</code>我们还没讲，下面看看它：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">private final FutureTask&lt;Result&gt; mFuture;</div></pre></td></tr></table></figure></p>
+<p><code>mFuture</code>是FutureTask的一个实例，它的初始化也是在AsyncTask的构造函数中，代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">mFuture = new FutureTask&lt;Result&gt;(mWorker) &#123;</div><div class="line">            @Override</div><div class="line">            protected void done() &#123;</div><div class="line">                try &#123;</div><div class="line">                    postResultIfNotInvoked(get());</div><div class="line">                &#125; catch (InterruptedException e) &#123;</div><div class="line">                    android.util.Log.w(LOG_TAG, e);</div><div class="line">                &#125; catch (ExecutionException e) &#123;</div><div class="line">                    throw new RuntimeException(&quot;An error occurred while executing doInBackground()&quot;,</div><div class="line">                            e.getCause());</div><div class="line">                &#125; catch (CancellationException e) &#123;</div><div class="line">                    postResultIfNotInvoked(null);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125;;</div></pre></td></tr></table></figure></p>
+<p>简单来说，mFuture包装了这个mWorker对象，在这个mFuture的run函数（文中没有给出这部分代码）中又会调用mWork对象的call方法，在call方法中又调用了<code>doInBackground()</code>方法。因为mFuture提交给了线程池来执行，所以，使得<code>doInBackground()</code>执行在非UI线程。得到<code>doInBackground()</code>的结果后，通过<code>postResult()</code>传递结果给UI线程。这一段逻辑我们已经在开始讲过了，这样就可以和前面连接起来了。</p>
+<p>而且我们可以看到，mFuture实例对象的<code>done()</code>方法中，如果捕捉到了CancellationException类型的异常，则发送一条“MESSAGE_POST_CANCEL”的消息；如果顺利执行，则发送一条“MESSAGE_POST_RESULT”的消息，而消息都与一个sHandler对象关联。</p>
+<h2 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h2><ul>
+<li><strong>模版方法模式</strong></li>
+</ul>
+<p>AsyncTask中用到的一个很明显的设计模式就是模版方法模式，一个<code>execute()</code>方法中封装了<code>onPreExecute()</code>、<code>doInBacground()</code>、<code>onPostExecute()</code>这几个流程，用户可以根据自己的需求再复写这几个方法。这个模式理解起来很简单，就不再做太多介绍。</p>
+<h2 id="疑惑"><a href="#疑惑" class="headerlink" title="疑惑"></a>疑惑</h2><ul>
+<li>既然AsyncTask的任务是串行执行的，也就是一个任务一个任务的执行，那使用线程池的意义又是什么呢？希望对这个有理解的同行可以在我的简书下留言，确实是不解。</li>
+</ul>
+<hr>
+<p><strong>参考：</strong></p>
+<ul>
+<li><a href="http://blog.csdn.net/bboyfeiyu/article/details/8973058" target="_blank" rel="external">Android中AsyncTask的使用与源码分析</a></li>
+<li><a href="http://blog.csdn.net/lmj623565791/article/details/38614699" target="_blank" rel="external">Android AsyncTask 源码解析</a></li>
+<li><a href="http://blog.csdn.net/majihua817/article/details/51658465" target="_blank" rel="external">你真的了解AsyncTask？</a></li>
+<li><a href="http://www.jianshu.com/p/46ee2ccb49a9" target="_blank" rel="external">AsyncTask源码分析</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/23/android-11/" rel="next" title="java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识">
+                <i class="fa fa-chevron-left"></i> java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基础了解"><span class="nav-number">1.</span> <span class="nav-text">基础了解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍"><span class="nav-number">1.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#涉及的主要类"><span class="nav-number">1.2.</span> <span class="nav-text">涉及的主要类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#涉及的主要方法"><span class="nav-number">1.3.</span> <span class="nav-text">涉及的主要方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用"><span class="nav-number">1.4.</span> <span class="nav-text">如何使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#步骤"><span class="nav-number">1.4.1.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项"><span class="nav-number">1.4.2.</span> <span class="nav-text">注意事项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码示例"><span class="nav-number">1.4.3.</span> <span class="nav-text">代码示例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#流程分析"><span class="nav-number">2.1.</span> <span class="nav-text">流程分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计模式"><span class="nav-number">2.2.</span> <span class="nav-text">设计模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#疑惑"><span class="nav-number">2.3.</span> <span class="nav-text">疑惑</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

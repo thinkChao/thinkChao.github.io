@@ -1,0 +1,934 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="这篇文章是对Java多线程中主要的几个类，包括Runnable、Callable、Future、FutureTask及Executor框架涉及的类做的一个梳理与介绍，介绍了它们之间的关系和功能，并没有深入探究。日后在需要的时候，再进行深入的学习和掌握。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识">
+<meta property="og:url" content="http://yoursite.com/2017/07/23/android-11/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="这篇文章是对Java多线程中主要的几个类，包括Runnable、Callable、Future、FutureTask及Executor框架涉及的类做的一个梳理与介绍，介绍了它们之间的关系和功能，并没有深入探究。日后在需要的时候，再进行深入的学习和掌握。">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-d53e3bc4845a88d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-07-23T08:32:02.432Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识">
+<meta name="twitter:description" content="这篇文章是对Java多线程中主要的几个类，包括Runnable、Callable、Future、FutureTask及Executor框架涉及的类做的一个梳理与介绍，介绍了它们之间的关系和功能，并没有深入探究。日后在需要的时候，再进行深入的学习和掌握。">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-d53e3bc4845a88d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/07/23/android-11/"/>
+
+
+
+
+
+  <title>java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/23/android-11/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-23T16:25:21+08:00">
+                2017-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/07/23/android-11/" class="leancloud_visitors" data-flag-title="java并发 —— Runnable、Callable、Future、FutureTask、Executor框架初识">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这篇文章是对Java多线程中主要的几个类，包括Runnable、Callable、Future、FutureTask及Executor框架涉及的类做的一个梳理与介绍，介绍了它们之间的关系和功能，并没有深入探究。日后在需要的时候，再进行深入的学习和掌握。</p>
+<a id="more"></a>
+<h2 id="Runnable、Callable"><a href="#Runnable、Callable" class="headerlink" title="Runnable、Callable"></a>Runnable、Callable</h2><ul>
+<li><p>Rubbable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package java.lang;</div><div class="line"></div><div class="line">public interface Runnable &#123;</div><div class="line"></div><div class="line">    public abstract void run();</div><div class="line">    </div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+<li><p>Callable</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package java.util.concurrent;</div><div class="line"></div><div class="line">@FunctionalInterface</div><div class="line">public interface Callable&lt;V&gt; &#123;</div><div class="line"></div><div class="line">    V call() throws Exception;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>在开始一个新的线程之前，你必须指定由这个线程执行的代码，通常称为task。这可以通过实现Runnable、Callable实现。</p>
+<p>其中Runnable应该是我们最熟悉的接口，从代码可以看出，它只有一个run()函数，用于将耗时操作写在其中，<strong>该函数没有返回值</strong>。然后使用某个线程去执行该runnable即可实现多线程，Thread类在调用start()函数后就是执行的是Runnable的<code>run()</code>函数。</p>
+<p>Callable与Runnable的功能大致相似，Callable中有一个call()函数，<strong>但是call()函数有返回值</strong>。</p>
+<p>所以它俩的区别就在于回调函数是否有返回值，单独来讲他们跟线程是一点关系都没有的，就是一个接口而已。</p>
+<h2 id="Future"><a href="#Future" class="headerlink" title="Future"></a>Future</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">package java.util.concurrent;</div><div class="line"></div><div class="line">public interface Future&lt;V&gt; &#123;</div><div class="line"></div><div class="line">    boolean cancel(boolean mayInterruptIfRunning);</div><div class="line">    </div><div class="line">    boolean isCancelled();</div><div class="line"></div><div class="line">    boolean isDone();</div><div class="line"></div><div class="line">    V get() throws InterruptedException, ExecutionException;</div><div class="line"></div><div class="line">    V get(long timeout, TimeUnit unit)</div><div class="line">        throws InterruptedException, ExecutionException, TimeoutException;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>Future就是对于具体的Runnable或者Callable任务的执行结果进行取消、查询是否完成、获取结果、设置结果操作。</p>
+<p><strong>Future提供了三种功能：</strong></p>
+<ul>
+<li>判断任务是否完成</li>
+<li>能够中断任务</li>
+<li>能够获取任务执行结果</li>
+</ul>
+<p><strong>方法介绍如下：</strong></p>
+<ul>
+<li><strong>cancel()：</strong>法用来取消任务，如果取消任务成功则返回true，如果取消任务失败则返回false。</li>
+<li><strong>isCancelled()：</strong>表示任务是否被取消成功，如果在任务正常完成前被取消成功，则返回 true。</li>
+<li><strong>isDone()：</strong>表示任务是否已经完成，若任务完成，则返回true。</li>
+<li><strong>get()：</strong>用来获取执行结果，这个方法会产生阻塞，会一直等到任务执行完毕才返回。</li>
+<li><strong>get(long timeout, TimeUnit unit)：</strong>用来获取执行结果，如果在指定时间内，还没获取到结果，就直接返回null。</li>
+</ul>
+<p>在Future接口的代码中似乎看不到它和Runnable或者Callable有任何“纠缠”，那它又是如何获得这些结果的呢？毕竟它只是一个接口，实现就在FutureTask类中。</p>
+<h2 id="FutureTask"><a href="#FutureTask" class="headerlink" title="FutureTask"></a>FutureTask</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">package java.util.concurrent;</div><div class="line">import java.util.concurrent.locks.LockSupport;</div><div class="line"></div><div class="line">public class FutureTask&lt;V&gt; implements RunnableFuture&lt;V&gt; &#123;</div><div class="line"></div><div class="line">   //代码省略</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>FutureTask实现了RunnableFuture接口，而RunnableFuture又是继承了Runnable和Future的，所以FutureTask就是实现了Runnable和Future的。所以它<strong>既可以作为Runnable被线程执行，又可以作为Future得到Callable的返回值,管理任务。</strong></p>
+<p>其中有两个构造方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">//接受一个 Callable 参数</div><div class="line">   public FutureTask(Callable&lt;V&gt; callable) &#123;</div><div class="line">       if (callable == null)</div><div class="line">           throw new NullPointerException();</div><div class="line">       this.callable = callable;</div><div class="line">       this.state = NEW;       // ensure visibility of callable</div><div class="line">   &#125;</div><div class="line"></div><div class="line">   //接受一个 Runnable ，利用 Executors.callable 将Runnable 转换为Callable</div><div class="line">   public FutureTask(Runnable runnable, V result) &#123;</div><div class="line">       this.callable = Executors.callable(runnable, result);</div><div class="line">       this.state = NEW;       // ensure visibility of callable</div><div class="line">   &#125;</div></pre></td></tr></table></figure></p>
+<p>可以看到，Runnable也会通过<code>Executors.callable()</code>方法被转换为Callable类型，所以FutureTask最终都是执行Callable类型的任务，毕竟只有Callable是有返回值的，Runnable没有返回值。猜测里面应该是用了适配器模式这一设计模式。</p>
+<h2 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p><strong>以上这些都与线程相关，用来实现任务的执行和结果的取回，但还未涉及到线程的调度执行，下面介绍的Executor框架就是用来完成这个操作的。</strong></p>
+<p>为什么要使用 Executor框架？</p>
+<ul>
+<li>new Thread()的缺点<br>每次new Thread()耗费性能 调用new Thread()创建的线程缺乏管理，被称为野线程，而且可以无限制创建，之间相互竞争，会导致过多占用系统资源导致系统瘫痪。 不利于扩展，比如如定时执行、定期执行、线程中断。</li>
+<li>采用线程池的优点<br>重用存在的线程，减少对象创建、消亡的开销，性能佳 可有效控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞 提供定时执行、定期执行、单线程、并发数控制等功能。</li>
+</ul>
+<p>在Executor框架中，使用执行器(Exectuor)来管理Thread对象，从而简化了并发编程。并发编程的一种编程方式把任务拆分为一系列的小任务，即Runnable，然后将这些任务提交给一个Executor执行，<code>Executor.execute(Runnalbe)</code> ，Executor在执行时使用其内部的线程池来完成操作。该框架能够支持多种不同类型的任务执行策略，它提供了一种标准的方法<strong>将任务的提交过程与执行过程解耦开来。</strong></p>
+<p>先上张类图，搞清楚Executor框架的类继承关系（截图取自互联网）：<br><img src="http://upload-images.jianshu.io/upload_images/2412005-d53e3bc4845a88d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<h3 id="Executor"><a href="#Executor" class="headerlink" title="Executor"></a>Executor</h3><p>Executor接口定义了一个接收Runnable对象的方法<code>executor(Runnable command)</code>。</p>
+<h3 id="ExecutorService"><a href="#ExecutorService" class="headerlink" title="ExecutorService"></a>ExecutorService</h3><p>是一个比Executor使用更广泛的子类接口，其提供了生命周期管理的方法，以及可跟踪一个或多个异步任务执行状况返回Future的方法。</p>
+<p>ExecutorService的生命周期有3种状态：运行、关闭和已终止。</p>
+<p>ExecutorService在初始创建时处于运行状态。</p>
+<p>shutdown方法将执行平缓的关闭过程，不再接受新的任务，同时等待已经提交的任务执行完成，包括那些还未开始执行的任务。</p>
+<p>shutdownNow方法将执行粗暴的关闭过程，它将尝试取消所有执行中的任务，并且不再启动队列中尚未开始执行的任务。</p>
+<p>在所有任务都完成后，ExecutorService将转入终止状态。可以调用<code>awaitTermination()</code>来等待ExecutorService到达终止状态，或者通过调用<code>isTerminated()</code>来轮询ExecutorService是否已经终止。通常在调用<code>awaitTermination()</code>之后会立即调用<code>shutdown()</code>，从而产生同步地关闭ExecutorService的效果。</p>
+<h3 id="AbstractExecutorService"><a href="#AbstractExecutorService" class="headerlink" title="AbstractExecutorService"></a>AbstractExecutorService</h3><p>ExecutorService执行方法的默认实现。</p>
+<h3 id="ScheduledExecutorService"><a href="#ScheduledExecutorService" class="headerlink" title="ScheduledExecutorService"></a>ScheduledExecutorService</h3><p>一个可定时调度任务的接口。</p>
+<h3 id="ThreadPoolExecutor"><a href="#ThreadPoolExecutor" class="headerlink" title="ThreadPoolExecutor"></a>ThreadPoolExecutor</h3><p>线程池，可以通过调用Executors的静态工厂方法来创建线程池并返回一个ExecutorService对象。</p>
+<p><strong>Executor框架的核心是线程池。</strong>线程池是指管理一组同构工作线程的资源池，在”线程池中执行任务”比”为每个任务分配一个线程”优势更多。通过重用现有的线程而不是创建新线程，可以在处理多个请求时分摊在线程创建和销毁过程中产生的巨大开销。另一个额外的好处是，当请求到达时，工作线程通常已经存在，因此不会由于等待创建线程而延迟任务的执行，从而提高了响应性。通过适当调整线程池大小，可以创建足够多的线程以便使处理器保持忙碌，同时还可以防止过多线程相互竞争资源而使应用程序耗尽内存而失败。</p>
+<p>ThreadPoolExecutor定义了很多构造函数，以下代码是该类最重要的构造函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public ThreadPoolExecutor(int corePoolSize,</div><div class="line">                          int maximumPoolSize,</div><div class="line">                          long keepAliveTime,</div><div class="line">                          TimeUnit unit,</div><div class="line">                          BlockingQueue&lt;Runnable&gt; workQueue,</div><div class="line">                          ThreadFactory threadFactory,</div><div class="line">                          RejectedExecutionHandler handler) &#123; ... &#125;</div></pre></td></tr></table></figure></p>
+<p><strong>参数说明：</strong></p>
+<p><strong>corePoolSize</strong>、<strong>maximumPoolSize</strong>、<strong>keepAliveTime</strong>以及unit这几个参数分别定义了线程池的基本大小、最大大小以及存活时间。corePoolSize定义了线程池的基本大小，也就是线程池的目标大小，即在没有任务执行时线程池的大小，并且只有在工作队列满了的情况下才会创建超出这个数量的线程。maximumPoolSize定义了线程池的最大大小，表示线程池可同时活动线程数量上限。keepAliveTime和unit共同定义了线程的存活时间，如果某个线程的空闲时间超过了存活时间，那么将被标记为可回收的，并且当线程池的当前大小超过基本大小时，这个线程将被终止。</p>
+<p><strong>workQueue</strong>参数包含Runnable的阻塞队列，当线程池达到基本大小时，新提交的任务将放入这个阻塞队列中，阻塞队列的实现包含三种：无界队列、有界队列以及同步移交队列。</p>
+<p><strong>threadFactory</strong>参数用于设置创建线程的工厂，可以通过线程工厂给每个创建出来的线程设置更有意义的名字，方便定位问题。</p>
+<p><strong>handler</strong>参数定义了线程池饱和策略。当有界队列被填满后，并且线程池活动线程达到最大线程数，饱和策略开始生效。</p>
+<h3 id="ScheduledThreadPoolExecutor"><a href="#ScheduledThreadPoolExecutor" class="headerlink" title="ScheduledThreadPoolExecutor"></a><strong>ScheduledThreadPoolExecutor</strong></h3><p>一个可定时调度任务的线程池。</p>
+<h3 id="Executors"><a href="#Executors" class="headerlink" title="Executors"></a>Executors</h3><p>从上一节内容看出，ThreadPoolExecutor的新建需要传入很多参数，使用起来极不方便。为了便于使用，Executors为我们提供了几个静态工厂方法，大大简化了线程池的创建，它们分别是：</p>
+<ul>
+<li><strong>newFixedThreadPool：</strong>newFixedThreadPool将创建一个固定大小的线程池，每当提交一个任务就创建一个线程，直到达到线程池的最大数量，这时线程池的规模将不再变化；</li>
+<li><strong>newCachedThreadPool：</strong>newCachedThreadPool将创建一个可缓存的线程池，如果线程池的当前规模超过了处理需求，那么将回收空闲线程；而当需求增加时，可以添加新的线程，线程池的规模不存在任何限制。</li>
+<li><strong>newSingleThreadExecutor：</strong>newSingleThreadExecutor是一个单线程的Executor，它创建单个工作者线程执行任务，如果这个线程异常结束，会创建另一个线程代替。</li>
+<li><strong>newScheduledThreadPool：</strong>创建一个可延迟执行或定期执行的线程池</li>
+</ul>
+<hr>
+<p><strong>参考：</strong></p>
+<ul>
+<li><a href="http://blog.csdn.net/bboyfeiyu/article/details/24851847" target="_blank" rel="external">Java中的Runnable、Callable、Future、FutureTask的区别与示例</a></li>
+<li><a href="http://www.cnblogs.com/MOBIN/p/5436482.html" target="_blank" rel="external">java并发编程–Executor框架(一)</a></li>
+<li><a href="http://www.cnblogs.com/timlearn/p/4023394.html" target="_blank" rel="external">Java并发（基础知识）—— Executor框架及线程池</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/19/suanfa-8/" rel="next" title="C++ STL初识及整理">
+                <i class="fa fa-chevron-left"></i> C++ STL初识及整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/23/android-12/" rel="prev" title="AsyncTask源码分析">
+                AsyncTask源码分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">生活需要琢磨!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">30</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Runnable、Callable"><span class="nav-number">1.</span> <span class="nav-text">Runnable、Callable</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Future"><span class="nav-number">2.</span> <span class="nav-text">Future</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FutureTask"><span class="nav-number">3.</span> <span class="nav-text">FutureTask</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Executor框架"><span class="nav-number">4.</span> <span class="nav-text">Executor框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">4.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executor"><span class="nav-number">4.2.</span> <span class="nav-text">Executor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ExecutorService"><span class="nav-number">4.3.</span> <span class="nav-text">ExecutorService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AbstractExecutorService"><span class="nav-number">4.4.</span> <span class="nav-text">AbstractExecutorService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ScheduledExecutorService"><span class="nav-number">4.5.</span> <span class="nav-text">ScheduledExecutorService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadPoolExecutor"><span class="nav-number">4.6.</span> <span class="nav-text">ThreadPoolExecutor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ScheduledThreadPoolExecutor"><span class="nav-number">4.7.</span> <span class="nav-text">ScheduledThreadPoolExecutor</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Executors"><span class="nav-number">4.8.</span> <span class="nav-text">Executors</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
