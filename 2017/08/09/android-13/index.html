@@ -96,13 +96,14 @@
 <meta property="og:url" content="http://yoursite.com/2017/08/09/android-13/index.html">
 <meta property="og:site_name" content="thinkChao">
 <meta property="og:description" content="在《Android源码设计模式》一书中看到这么一段话：Android的Binder机制是一个庞大的体系模块，平时能接触到的最难懂的莫过与View的运行机制，但Binder比它还要复杂百倍，而且View的底层通信也依赖于Binder。对于开发者来说，这么底层的东西没必要太过于接触，只要学会如何使用它即可。 之前也是一直想搞清楚Binder是怎么实现的，但一直停留在整体架构和流程上的粗浅了解，很难深入">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-1845537da1b9f29c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-4a0f8fb2c96109cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-60a6980838ad312c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2017-08-09T13:06:14.159Z">
+<meta property="og:updated_time" content="2017-08-09T13:11:51.106Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AIDL初识">
 <meta name="twitter:description" content="在《Android源码设计模式》一书中看到这么一段话：Android的Binder机制是一个庞大的体系模块，平时能接触到的最难懂的莫过与View的运行机制，但Binder比它还要复杂百倍，而且View的底层通信也依赖于Binder。对于开发者来说，这么底层的东西没必要太过于接触，只要学会如何使用它即可。 之前也是一直想搞清楚Binder是怎么实现的，但一直停留在整体架构和流程上的粗浅了解，很难深入">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-4a0f8fb2c96109cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-1845537da1b9f29c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 
 
@@ -371,7 +372,7 @@
 <p>其中对于开发者来说，Binder Server必须由自己来实现，但编写这么一个Binder Server的难度也很大，Android就充分考虑到这点，提供了一个简单的方式来生成Android Server端，也就是AIDL（Android Interface Description Language）。Android提供了AIDL工具，可以将AIDL文件编译成Java文件。</p>
 <a id="more"></a>
 <h2 id="Binder简介"><a href="#Binder简介" class="headerlink" title="Binder简介"></a>Binder简介</h2><h3 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h3><p>BInder主要涉及四大模块，这四者之间的关系类似于网络访问。</p>
-<p>![Binder通信架构]<a href="http://upload-images.jianshu.io/upload_images/2412005-1845537da1b9f29c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="external">}B]8(X5{H.png</a></p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-1845537da1b9f29c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="Binder通信架构"></p>
 <ul>
 <li><strong>Binder驱动：</strong>路由器</li>
 <li><strong>ServiceManager：</strong>DNS</li>
