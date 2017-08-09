@@ -1,0 +1,920 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="在《Android源码设计模式》一书中看到这么一段话：Android的Binder机制是一个庞大的体系模块，平时能接触到的最难懂的莫过与View的运行机制，但Binder比它还要复杂百倍，而且View的底层通信也依赖于Binder。对于开发者来说，这么底层的东西没必要太过于接触，只要学会如何使用它即可。 之前也是一直想搞清楚Binder是怎么实现的，但一直停留在整体架构和流程上的粗浅了解，很难深入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AIDL初识">
+<meta property="og:url" content="http://yoursite.com/2017/08/09/android-13/index.html">
+<meta property="og:site_name" content="thinkChao">
+<meta property="og:description" content="在《Android源码设计模式》一书中看到这么一段话：Android的Binder机制是一个庞大的体系模块，平时能接触到的最难懂的莫过与View的运行机制，但Binder比它还要复杂百倍，而且View的底层通信也依赖于Binder。对于开发者来说，这么底层的东西没必要太过于接触，只要学会如何使用它即可。 之前也是一直想搞清楚Binder是怎么实现的，但一直停留在整体架构和流程上的粗浅了解，很难深入">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-4a0f8fb2c96109cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2412005-60a6980838ad312c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2017-08-09T13:06:14.159Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AIDL初识">
+<meta name="twitter:description" content="在《Android源码设计模式》一书中看到这么一段话：Android的Binder机制是一个庞大的体系模块，平时能接触到的最难懂的莫过与View的运行机制，但Binder比它还要复杂百倍，而且View的底层通信也依赖于Binder。对于开发者来说，这么底层的东西没必要太过于接触，只要学会如何使用它即可。 之前也是一直想搞清楚Binder是怎么实现的，但一直停留在整体架构和流程上的粗浅了解，很难深入">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/2412005-4a0f8fb2c96109cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/09/android-13/"/>
+
+
+
+
+
+  <title>AIDL初识 | thinkChao</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?18c6cb9f3630408b3f598f5b07347226";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">thinkChao</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            作者
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/09/android-13/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="thinkChao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="thinkChao">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">AIDL初识</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-09T21:03:53+08:00">
+                2017-08-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/08/09/android-13/" class="leancloud_visitors" data-flag-title="AIDL初识">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在《Android源码设计模式》一书中看到这么一段话：Android的Binder机制是一个庞大的体系模块，平时能接触到的最难懂的莫过与View的运行机制，但Binder比它还要复杂百倍，而且View的底层通信也依赖于Binder。对于开发者来说，这么底层的东西没必要太过于接触，只要学会如何使用它即可。</p>
+<p>之前也是一直想搞清楚Binder是怎么实现的，但一直停留在整体架构和流程上的粗浅了解，很难深入下去。当看了这段话我也就不那么执着了，毕竟自己功力也确实还达不到，先学会怎么用，在逐渐加深了解更适合我，那“用”的是什么呢？</p>
+<p>下面我们会简单介绍，Binder主要包括四大模块，对于底层的Binder驱动和ServiceManager来说我们没有必要自己去实现，这一部分逻辑最复杂，而且这部分逻辑Android已经为我们封装的很完美了，我们只需要自己实现Binder Client和Binder Server部分就可以了。</p>
+<p>其中对于开发者来说，Binder Server必须由自己来实现，但编写这么一个Binder Server的难度也很大，Android就充分考虑到这点，提供了一个简单的方式来生成Android Server端，也就是AIDL（Android Interface Description Language）。Android提供了AIDL工具，可以将AIDL文件编译成Java文件。</p>
+<a id="more"></a>
+<h2 id="Binder简介"><a href="#Binder简介" class="headerlink" title="Binder简介"></a>Binder简介</h2><h3 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h3><p>BInder主要涉及四大模块，这四者之间的关系类似于网络访问。</p>
+<p>![Binder通信架构]<a href="http://upload-images.jianshu.io/upload_images/2412005-1845537da1b9f29c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" target="_blank" rel="external">}B]8(X5{H.png</a></p>
+<ul>
+<li><strong>Binder驱动：</strong>路由器</li>
+<li><strong>ServiceManager：</strong>DNS</li>
+<li><strong>Binder Client：</strong>客户端</li>
+<li><strong>Binder Server：</strong>服务器</li>
+</ul>
+<h3 id="通信步骤"><a href="#通信步骤" class="headerlink" title="通信步骤"></a>通信步骤</h3><p>1、ServiceManager建立，负责管理所有的进程号</p>
+<p>2、各个Server在启动后，在ServiceManager中进行注册</p>
+<p>3、Client要与某个Server通信，向ServiceManager进行查询，ServiceManager会返回给Client该Server的相关信息</p>
+<p>那Binder具体是如何跨进程通信的呢？先上张图：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-4a0f8fb2c96109cd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>假设我们的Client想要调用Server端的，返回值类型为Object的add()方法，这其实就是一个跨进程通信，我们来看下过程是怎么样的：</p>
+<p>在Server启动之初，Server会在SM（ServiceManager）中进行注册，并告诉它我这里都有哪些方法，于是SM会将这些方法存放在建立好的一张表中。</p>
+<p>接着Client端会向SM发来请求，请求调用Server端的Object类型的add()方法。我们知道，进程间进行通信，它们的数据都是在内核空间里，所以SM并不会返回给Client一个真正的Server端的Object对象，因为这是无法操作的。</p>
+<p>实际上返回的是一个代理对象，而这个代理对象里面包含add()方法，但这个add()方法是个空方法，这个代理方法唯一的作用就是当Client端调用add()方法的时候，它会返回给Binder驱动，Binder驱动收到这个代理方法就会明白，它真正要访问的是Server端的add()方法，于是Binder驱动就会通知Server端，调用它的add()方法，将结果返回给SM，SM再返回给Client端。</p>
+<h2 id="AIDL"><a href="#AIDL" class="headerlink" title="AIDL"></a>AIDL</h2><h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>AIDL是“Android Interface Definition Language”的缩写，翻译过来就是“Android接口定义语言”。从它的名字中我们可以提取这么两个关键词：<strong>接口定义</strong>和<strong>语言</strong>。</p>
+<h3 id="关于”定义“"><a href="#关于”定义“" class="headerlink" title="关于”定义“"></a>关于”定义“</h3><p>所有的AIDL文件大致可以分为两类：一类是用来定义parcelable对象，以供其他AIDL文件使用AIDL中非默认支持的数据类型的。一类是用来定义方法接口，以供系统使用来完成跨进程通信的。可以看到，两类文件都是在“定义”些什么，而不涉及具体的实现，而且定义的都是接口，这就是为什么它叫做“Android<strong>接口定义</strong>语言”。</p>
+<h3 id="关于”语言“"><a href="#关于”语言“" class="headerlink" title="关于”语言“"></a>关于”语言“</h3><p>既然是一语言，主要需要学习的就是它的”语法“，AIDL语法包括七大部分：</p>
+<ul>
+<li><strong>import：</strong>用于导入一个类，其与Java语言的不同之处在于，即便导入的类与当前AIDL文件在同一目录，也需要显示导入。</li>
+<li><strong>package：</strong>用于声明该AIDL生成的Java类文件所在的包名。</li>
+<li><strong>interface：</strong>用于声明一个AIDL的服务接口。</li>
+<li><strong>oneway：</strong>用于修饰interface和方法，表示CLient不需要等待Server端服务方法返回，oneway interface表示该interface中所有方法都是oneway，通常oneway方法的返回类型都为void。</li>
+<li><strong>数据类型：</strong>AIDL列出的支持的类型可以作为参数或返回值使用。其支持的数据类型主要有：<ul>
+<li>Java基础数据类型及其数组：int、long、char、boolean、byte</li>
+<li>String和CharSequence及其数组</li>
+<li>android.os.Ibinde</li>
+<li>List和Map</li>
+</ul>
+</li>
+<li><strong>方向标记：</strong>用于标记参数的输入/输出类型，方向标记有in、out、inout三种：<ul>
+<li>in表示参数由Client端设置并传递到Server端服务方法，服务端方法需要根据该参数做出处理。</li>
+<li>out表示参数由Client端传递到Server端服务方法，服务方法将设置该参数并将其返回Client端。</li>
+<li>inout表示Client端和Server端服务方法操作同一个参数。通常情况下，由Client提供一个参数值，server端服务方法修改该值并返回。</li>
+</ul>
+</li>
+<li><strong>parcelable：</strong>用于声明一个在AIDL中使用的自定义类。</li>
+</ul>
+<h3 id="开发步骤"><a href="#开发步骤" class="headerlink" title="开发步骤"></a>开发步骤</h3><h4 id="创建“-aidl”文件"><a href="#创建“-aidl”文件" class="headerlink" title="创建“.aidl”文件"></a>创建“.aidl”文件</h4><p>鼠标移到app上面去，点击右键，然后 new-&gt;AIDL-&gt;AIDL File，创建后Android Studio会自动把这个.aidl文件放到一个aidl的目录下，文件初始内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">// IMyAidl.aidl</div><div class="line">package com.cn.im;</div><div class="line"></div><div class="line">// Declare any non-default types here with import statements</div><div class="line"></div><div class="line">interface IMyAidl &#123;</div><div class="line">    /**</div><div class="line">     * Demonstrates some basic types that you can use as parameters</div><div class="line">     * and return values in AIDL.</div><div class="line">     */</div><div class="line">    void basicTypes(int anInt, long aLong, boolean aBoolean, float aFloat,</div><div class="line">            double aDouble, String aString);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>basicTypes方法中给我们展示了AIDL支持的基本数据类型。</p>
+<h4 id="向新建的aidl文件书写代码"><a href="#向新建的aidl文件书写代码" class="headerlink" title="向新建的aidl文件书写代码"></a>向新建的aidl文件书写代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">// IMyAidl.aidl</div><div class="line">package com.cn.im;</div><div class="line"></div><div class="line">// Declare any non-default types here with import statements</div><div class="line"></div><div class="line">interface IMyAidl &#123;</div><div class="line">    /**</div><div class="line">     * Demonstrates some basic types that you can use as parameters</div><div class="line">     * and return values in AIDL.</div><div class="line">     */</div><div class="line">    int add(in int value1, in int value2);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码写完之后，clean或rebuild一下工程会自动生成对应的.java文件，该Java文件的目录如下：</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/2412005-60a6980838ad312c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+<p>代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div></pre></td><td class="code"><pre><div class="line">package com.cn.im;</div><div class="line">// Declare any non-default types here with import statements</div><div class="line"></div><div class="line">public interface IMyAidl extends android.os.IInterface</div><div class="line">&#123;</div><div class="line">/** Local-side IPC implementation stub class. */</div><div class="line">public static abstract class Stub extends android.os.Binder implements com.cn.im.IMyAidl</div><div class="line">&#123;</div><div class="line">private static final java.lang.String DESCRIPTOR = &quot;com.cn.im.IMyAidl&quot;;</div><div class="line">/** Construct the stub at attach it to the interface. */</div><div class="line">public Stub()</div><div class="line">&#123;</div><div class="line">this.attachInterface(this, DESCRIPTOR);</div><div class="line">&#125;</div><div class="line">/**</div><div class="line"> * Cast an IBinder object into an com.cn.im.IMyAidl interface,</div><div class="line"> * generating a proxy if needed.</div><div class="line"> */</div><div class="line">public static com.cn.im.IMyAidl asInterface(android.os.IBinder obj)</div><div class="line">&#123;</div><div class="line">if ((obj==null)) &#123;</div><div class="line">return null;</div><div class="line">&#125;</div><div class="line">android.os.IInterface iin = obj.queryLocalInterface(DESCRIPTOR);</div><div class="line">if (((iin!=null)&amp;&amp;(iin instanceof com.cn.im.IMyAidl))) &#123;</div><div class="line">return ((com.cn.im.IMyAidl)iin);</div><div class="line">&#125;</div><div class="line">return new com.cn.im.IMyAidl.Stub.Proxy(obj);</div><div class="line">&#125;</div><div class="line">@Override public android.os.IBinder asBinder()</div><div class="line">&#123;</div><div class="line">return this;</div><div class="line">&#125;</div><div class="line">@Override public boolean onTransact(int code, android.os.Parcel data, android.os.Parcel reply, int flags) throws android.os.RemoteException</div><div class="line">&#123;</div><div class="line">switch (code)</div><div class="line">&#123;</div><div class="line">case INTERFACE_TRANSACTION:</div><div class="line">&#123;</div><div class="line">reply.writeString(DESCRIPTOR);</div><div class="line">return true;</div><div class="line">&#125;</div><div class="line">case TRANSACTION_add:</div><div class="line">&#123;</div><div class="line">data.enforceInterface(DESCRIPTOR);</div><div class="line">int _arg0;</div><div class="line">_arg0 = data.readInt();</div><div class="line">int _arg1;</div><div class="line">_arg1 = data.readInt();</div><div class="line">int _result = this.add(_arg0, _arg1);</div><div class="line">reply.writeNoException();</div><div class="line">reply.writeInt(_result);</div><div class="line">return true;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">return super.onTransact(code, data, reply, flags);</div><div class="line">&#125;</div><div class="line">private static class Proxy implements com.cn.im.IMyAidl</div><div class="line">&#123;</div><div class="line">private android.os.IBinder mRemote;</div><div class="line">Proxy(android.os.IBinder remote)</div><div class="line">&#123;</div><div class="line">mRemote = remote;</div><div class="line">&#125;</div><div class="line">@Override public android.os.IBinder asBinder()</div><div class="line">&#123;</div><div class="line">return mRemote;</div><div class="line">&#125;</div><div class="line">public java.lang.String getInterfaceDescriptor()</div><div class="line">&#123;</div><div class="line">return DESCRIPTOR;</div><div class="line">&#125;</div><div class="line">@Override public int add(int value1, int value2) throws android.os.RemoteException</div><div class="line">&#123;</div><div class="line">android.os.Parcel _data = android.os.Parcel.obtain();</div><div class="line">android.os.Parcel _reply = android.os.Parcel.obtain();</div><div class="line">int _result;</div><div class="line">try &#123;</div><div class="line">_data.writeInterfaceToken(DESCRIPTOR);</div><div class="line">_data.writeInt(value1);</div><div class="line">_data.writeInt(value2);</div><div class="line">mRemote.transact(Stub.TRANSACTION_add, _data, _reply, 0);</div><div class="line">_reply.readException();</div><div class="line">_result = _reply.readInt();</div><div class="line">&#125;</div><div class="line">finally &#123;</div><div class="line">_reply.recycle();</div><div class="line">_data.recycle();</div><div class="line">&#125;</div><div class="line">return _result;</div><div class="line">&#125;</div><div class="line">&#125;</div><div class="line">static final int TRANSACTION_add = (android.os.IBinder.FIRST_CALL_TRANSACTION + 0);</div><div class="line">&#125;</div><div class="line">public int add(int value1, int value2) throws android.os.RemoteException;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>主要内容包括：</p>
+<h4 id="移植相关文件"><a href="#移植相关文件" class="headerlink" title="移植相关文件"></a>移植相关文件</h4><p>使用AIDL进行客户端和服务端的通信有一个条件需要满足，那就是服务器端的各个AIDL文件必须要被拷贝到客户端的相同包名下，不然会不成功，所以，需要将 aidl 包复制到另一端的 main 目录。</p>
+<p>这一步还有别的坑需要注意，不过因为我们这里的客户端和服务端都写在同一个项目中，所以这一步不需要做，其中的一些问题先暂且不去考虑，等在实践中遇到了再去解决。</p>
+<h4 id="编写服务端代码"><a href="#编写服务端代码" class="headerlink" title="编写服务端代码"></a>编写服务端代码</h4><p>要编写的服务端代码，就是实现AIDL中定义的方法接口的具体逻辑。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">public class MyAidlService extends Service &#123;</div><div class="line">    @Nullable</div><div class="line">    @Override</div><div class="line">    public IBinder onBind(Intent intent) &#123;</div><div class="line">        return myAidl;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //这个方法进行一些初始化的操作</div><div class="line">    @Override</div><div class="line">    public void onCreate() &#123;</div><div class="line">        super.onCreate();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private final IMyAidl.Stub myAidl = new IMyAidl.Stub()&#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public int add(int value1, int value2) throws RemoteException &#123;</div><div class="line">            return value1 + value2;</div><div class="line">        &#125;</div><div class="line">    &#125;;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>整体的代码结构很清晰，大致可以分为三块：</p>
+<p>第一块是<strong>初始化</strong>：在 onCreate() 方法里面我进行了一些数据的初始化操作。</p>
+<p>第二块是<strong>重写 IMyAidl.Stub 中的方法</strong>：在这里面提供AIDL里面定义的方法接口的具体实现逻辑。</p>
+<p>第三块是<strong>重写 onBind() 方法</strong>：在里面返回写好的 IMyAidl.Stub实例 。</p>
+<h4 id="在清单文件中进行注册"><a href="#在清单文件中进行注册" class="headerlink" title="在清单文件中进行注册"></a>在清单文件中进行注册</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;service</div><div class="line">            android:name=&quot;.MyAidlService&quot;</div><div class="line">            android:exported=&quot;true&quot;</div><div class="line">            android:enabled=&quot;true&quot;&gt;</div><div class="line">            &lt;intent-filter&gt;</div><div class="line">                &lt;action android:name=&quot;com.cn.test&quot;/&gt;</div><div class="line">            &lt;/intent-filter&gt;</div><div class="line">        &lt;/service&gt;</div></pre></td></tr></table></figure>
+<p>到这里我们的服务端代码就编写完毕了。</p>
+<h4 id="编写客户端代码"><a href="#编写客户端代码" class="headerlink" title="编写客户端代码"></a>编写客户端代码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">public class MainActivity extends AppCompatActivity &#123;</div><div class="line">    private IMyAidl myAidlService;</div><div class="line">    private MyServiceConncetion connection;</div><div class="line">    @Override</div><div class="line">    protected void onCreate(Bundle savedInstanceState) &#123;</div><div class="line">        super.onCreate(savedInstanceState);</div><div class="line">        setContentView(R.layout.activity_main);</div><div class="line">        initService();</div><div class="line">        try &#123;</div><div class="line">            int result = myAidlService.add(1,2);</div><div class="line">            Log.e(&quot;Print:&quot;,&quot;result=&quot;+result);</div><div class="line">        &#125; catch (RemoteException e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onStop() &#123;</div><div class="line">        super.onStop();</div><div class="line">        releaseService();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    class MyServiceConncetion implements ServiceConnection &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServiceConnected(ComponentName name, IBinder service) &#123;</div><div class="line">            myAidlService =  IMyAidl.Stub.asInterface(service);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServiceDisconnected(ComponentName name) &#123;</div><div class="line">            myAidlService = null;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /*</div><div class="line">   * 这个方法使Activity（客户端）连接到服务（service）</div><div class="line">   */</div><div class="line">    private void initService() &#123;</div><div class="line">        connection = new MyServiceConncetion();</div><div class="line">        Intent i = new Intent();</div><div class="line">        i.setAction(&quot;com.cn.test&quot;);</div><div class="line">        i.setPackage(this.getPackageName());</div><div class="line">        bindService(i, connection, Context.BIND_AUTO_CREATE);</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /*</div><div class="line">     * 这个方法使Activity（客户端）从服务（service）断开</div><div class="line">     */</div><div class="line">    private void releaseService() &#123;</div><div class="line">        unbindService(connection);</div><div class="line">        connection = null;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>代码逻辑同样也很清晰，首先建立连接，然后在 ServiceConnection 里面获取 IMyAidl接口对象，接着通过它来调用服务端的方法。</p>
+<p>此时，我们的代码就全部编写完毕了，但运行却报错：<code>Attempt to invoke interface method &#39;int com.cn.test.IMyAidl.add(int, int)&#39; on a null object reference</code>，反复看代码逻辑并没有问题，在网上提出这个问题的人也很少，所以这个问题暂时还没有解决，只能靠自己深入学习，找出问题了。如果大家有遇到过这个问题的，欢迎在我的简书下留言，不胜感激。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/23/android-12/" rel="next" title="Android框架层 —— AsyncTask源码分析">
+                <i class="fa fa-chevron-left"></i> Android框架层 —— AsyncTask源码分析
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="thinkChao" />
+          <p class="site-author-name" itemprop="name">thinkChao</p>
+           
+              <p class="site-description motion-element" itemprop="description">事上练!</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-block">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.jianshu.com/u/0bb409c7df28" title="简书" target="_blank">简书</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://github.com/thinkChao" title="Github" target="_blank">Github</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Binder简介"><span class="nav-number">1.</span> <span class="nav-text">Binder简介</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#核心概念"><span class="nav-number">1.1.</span> <span class="nav-text">核心概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通信步骤"><span class="nav-number">1.2.</span> <span class="nav-text">通信步骤</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AIDL"><span class="nav-number">2.</span> <span class="nav-text">AIDL</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#介绍"><span class="nav-number">2.1.</span> <span class="nav-text">介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于”定义“"><span class="nav-number">2.2.</span> <span class="nav-text">关于”定义“</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于”语言“"><span class="nav-number">2.3.</span> <span class="nav-text">关于”语言“</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发步骤"><span class="nav-number">2.4.</span> <span class="nav-text">开发步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#创建“-aidl”文件"><span class="nav-number">2.4.1.</span> <span class="nav-text">创建“.aidl”文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#向新建的aidl文件书写代码"><span class="nav-number">2.4.2.</span> <span class="nav-text">向新建的aidl文件书写代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#移植相关文件"><span class="nav-number">2.4.3.</span> <span class="nav-text">移植相关文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写服务端代码"><span class="nav-number">2.4.4.</span> <span class="nav-text">编写服务端代码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#在清单文件中进行注册"><span class="nav-number">2.4.5.</span> <span class="nav-text">在清单文件中进行注册</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#编写客户端代码"><span class="nav-number">2.4.6.</span> <span class="nav-text">编写客户端代码</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        ﻿<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">thinkChao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+<div class="powered-by">
+</div>
+
+<span id="busuanzi_container_site_uv">
+   访客数：<span id="busuanzi_value_site_uv"></span>
+</span>
+
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("A6kotWv8hntcgjVO9M3VGD0I-gzGzoHsz", "TxKv92qErORKfwtUxl5IpsvC");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
